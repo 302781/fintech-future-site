@@ -13,6 +13,9 @@ const Navigation = () => {
     { name: 'SOBRE-NÓS', path: '/sobre' },
     { name: 'SERVIÇOS', path: '/servicos' },
     { name: 'PORQUE NÓS?', path: '/porque-nos' },
+    { name: 'EDUCAÇÃO', path: '/educacao' },
+    { name: 'CURSOS', path: '/cursos' },
+    { name: 'SIMULADORES', path: '/simuladores' },
     { name: 'EQUIPE', path: '/equipe' },
   ];
 
@@ -26,12 +29,12 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`text-white font-medium hover:text-blue-200 transition-colors relative group ${
+                className={`text-white font-medium hover:text-blue-200 transition-colors relative group text-sm ${
                   location.pathname === item.path ? 'text-blue-200' : ''
                 }`}
               >
