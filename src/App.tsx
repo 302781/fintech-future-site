@@ -14,6 +14,8 @@ import EducacaoInfantil from "./pages/EducacaoInfantil";
 import Cursos from "./pages/Cursos";
 import Simuladores from "./pages/Simuladores";
 import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
+import FAQ from "./pages/FAQ";
+import FormularioPagamento from "./pages/FormularioPagamento";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/corporativo" element={<AssinaturasCorporativas />} />
           <Route path="/equipe" element={<Equipe />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/pagamento" element={<FormularioPagamento />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

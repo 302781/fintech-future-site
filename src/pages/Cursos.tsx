@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookUser, Users, User, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Cursos = () => {
   const courses = [
@@ -143,10 +144,12 @@ const Cursos = () => {
                         </ul>
                       </div>
                       
-                      <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] group">
-                        Inscrever-se
-                        <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
-                      </Button>
+                      <Link to="/login">
+                        <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] group">
+                          Inscrever-se
+                          <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
@@ -164,9 +167,11 @@ const Cursos = () => {
             <p className="text-xl text-gray-600 mb-8">
               Entre em contato conosco e criaremos um curso personalizado para suas necessidades
             </p>
-            <Button size="lg" className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4">
-              Solicitar Curso Personalizado
-            </Button>
+            <Link to="/faq">
+              <Button size="lg" className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4">
+                Solicitar Curso Personalizado
+              </Button>
+            </Link>
           </div>
         </section>
       </div>

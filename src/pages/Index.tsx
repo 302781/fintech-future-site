@@ -5,6 +5,7 @@ import Services from '@/components/Services';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, Award, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   const stats = [
@@ -56,13 +57,15 @@ const Index = () => {
           <p className="text-xl text-gray-600 mb-8">
             Junte-se a milhares de pessoas que já descobriram o poder da educação financeira
           </p>
-          <Button 
-            size="lg" 
-            className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4 h-auto group"
-          >
-            Comece Gratuitamente
-            <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-          </Button>
+          <Link to="/login">
+            <Button 
+              size="lg" 
+              className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4 h-auto group"
+            >
+              Comece Gratuitamente
+              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -79,25 +82,25 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-4">Empresa</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Sobre Nós</li>
-                <li>Carreiras</li>
-                <li>Contato</li>
+                <li><Link to="/sobre" className="hover:text-white transition-colors">Sobre Nós</Link></li>
+                <li><Link to="/equipe" className="hover:text-white transition-colors">Equipe</Link></li>
+                <li><Link to="/login" className="hover:text-white transition-colors">Contato</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Produtos</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Investimentos</li>
-                <li>Planejamento</li>
-                <li>Educação</li>
+                <li><Link to="/servicos" className="hover:text-white transition-colors">Investimentos</Link></li>
+                <li><Link to="/servicos" className="hover:text-white transition-colors">Planejamento</Link></li>
+                <li><Link to="/educacao" className="hover:text-white transition-colors">Educação</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Suporte</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Central de Ajuda</li>
-                <li>FAQ</li>
-                <li>Segurança</li>
+                <li><Link to="/faq" className="hover:text-white transition-colors">Central de Ajuda</Link></li>
+                <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+                <li><Link to="/sobre" className="hover:text-white transition-colors">Segurança</Link></li>
               </ul>
             </div>
           </div>

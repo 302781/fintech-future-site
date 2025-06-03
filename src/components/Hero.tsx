@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -24,20 +25,24 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button 
-                size="lg" 
-                className="bg-white text-[#1A247E] hover:bg-blue-50 text-lg px-8 py-4 h-auto font-semibold group"
-              >
-                Comece Agora
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-[#1A247E] text-lg px-8 py-4 h-auto"
-              >
-                Saiba Mais
-              </Button>
+              <Link to="/login">
+                <Button 
+                  size="lg" 
+                  className="bg-white text-[#1A247E] hover:bg-blue-50 text-lg px-8 py-4 h-auto font-semibold group"
+                >
+                  Comece Agora
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                </Button>
+              </Link>
+              <Link to="/sobre">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-white hover:text-[#1A247E] text-lg px-8 py-4 h-auto"
+                >
+                  Saiba Mais
+                </Button>
+              </Link>
             </div>
           </div>
 

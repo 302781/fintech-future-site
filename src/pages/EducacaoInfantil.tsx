@@ -4,6 +4,7 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookUser, Users, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const EducacaoInfantil = () => {
   const [selectedAge, setSelectedAge] = useState('criancas');
@@ -112,9 +113,11 @@ const EducacaoInfantil = () => {
                   </div>
                   
                   <div className="mt-8 text-center">
-                    <Button size="lg" className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4">
-                      Começar Agora
-                    </Button>
+                    <Link to="/login">
+                      <Button size="lg" className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4">
+                        Começar Agora
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

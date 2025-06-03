@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TrendingUp, Shield, Wallet, Target, BookOpen, Users, BarChart, Smartphone } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Servicos = () => {
   const mainServices = [
@@ -100,9 +101,11 @@ const Servicos = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button className="bg-[#1A247E] hover:bg-[#2D4DE0]">
-                    Saiba Mais
-                  </Button>
+                  <Link to="/sobre">
+                    <Button className="bg-[#1A247E] hover:bg-[#2D4DE0]">
+                      Saiba Mais
+                    </Button>
+                  </Link>
                 </div>
                 <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
                   <img 
@@ -201,9 +204,19 @@ const Servicos = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button className={`w-full ${plan.popular ? 'bg-[#1A247E] hover:bg-[#2D4DE0]' : 'bg-gray-900 hover:bg-gray-800'}`}>
-                    {plan.price === "Gratuito" ? "Começar Grátis" : "Assinar Agora"}
-                  </Button>
+                  {plan.price === "Gratuito" ? (
+                    <Link to="/login">
+                      <Button className="w-full bg-gray-900 hover:bg-gray-800">
+                        Começar Grátis
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link to="/pagamento">
+                      <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]">
+                        Assinar Agora
+                      </Button>
+                    </Link>
+                  )}
                 </CardContent>
               </Card>
             ))}
