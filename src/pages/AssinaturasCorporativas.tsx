@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Building, School, Users, CheckCircle, Star, Mail, Phone } from 'lucide-react';
+import { Building, School, Users, CheckCircle, Star, Mail, Phone, Gamepad2, Heart, BookOpen } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 const AssinaturasCorporativas = () => {
@@ -90,6 +90,62 @@ const AssinaturasCorporativas = () => {
             <p className="text-xl text-blue-100 max-w-4xl mx-auto">
               Transforme a educação financeira na sua instituição. Oferecemos planos especiais para escolas, universidades e empresas.
             </p>
+          </div>
+        </section>
+
+        {/* Nossos Diferenciais */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Nossos Diferenciais
+              </h2>
+              <div className="max-w-4xl mx-auto bg-gradient-to-r from-[#1A247E] to-[#2D4DE0] rounded-2xl p-8 text-white">
+                <p className="text-lg leading-relaxed">
+                  Nosso aplicativo se destaca pela combinação de gamificação, aprendizado prático e engajamento familiar. 
+                  Além disso, oferecemos ferramentas para pais e escolas participarem ativamente da educação financeira dos jovens, 
+                  criando um ecossistema completo de aprendizado.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              <Card className="text-center hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <Gamepad2 className="w-16 h-16 text-[#1A247E] mx-auto mb-4" />
+                  <CardTitle>Gamificação Engajante</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Jogos e desafios que tornam o aprendizado financeiro divertido e motivador para crianças e adolescentes.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <BookOpen className="w-16 h-16 text-[#1A247E] mx-auto mb-4" />
+                  <CardTitle>Aprendizado Prático</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Simuladores e exercícios práticos que preparam os jovens para situações financeiras reais do dia a dia.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <Heart className="w-16 h-16 text-[#1A247E] mx-auto mb-4" />
+                  <CardTitle>Engajamento Familiar</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Ferramentas que conectam pais, professores e alunos, criando um ambiente colaborativo de aprendizado.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </section>
 
