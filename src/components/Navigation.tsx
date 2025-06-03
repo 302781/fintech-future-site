@@ -16,6 +16,7 @@ const Navigation = () => {
     { name: 'EDUCAÇÃO', path: '/educacao' },
     { name: 'CURSOS', path: '/cursos' },
     { name: 'SIMULADORES', path: '/simuladores' },
+    { name: 'CORPORATIVO', path: '/corporativo' },
     { name: 'EQUIPE', path: '/equipe' },
   ];
 
