@@ -1,12 +1,21 @@
-
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, ExternalLink, Users, Target, TrendingUp, Shield } from 'lucide-react';
-import { toast } from 'sonner';
+import LessonModal from './LessonModal';
 
 const CourseContent = () => {
-  const handlePlayLesson = (title: string) => {
-    toast.success(`Iniciando aula: ${title}`);
+  const [selectedLesson, setSelectedLesson] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePlayLesson = (lesson: any) => {
+    setSelectedLesson(lesson);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedLesson(null);
   };
 
   const handleExternalLink = (url: string) => {
@@ -237,7 +246,7 @@ const CourseContent = () => {
                     <Button 
                       size="sm" 
                       className="flex-1"
-                      onClick={() => handlePlayLesson(lesson.title)}
+                      onClick={() => handlePlayLesson(lesson)}
                     >
                       <Play className="w-4 h-4 mr-1" />
                       Assistir
@@ -286,6 +295,13 @@ const CourseContent = () => {
           ))}
         </div>
       </div>
+
+      {/* Modal para exibir as aulas */}
+      <LessonModal 
+        lesson={selectedLesson}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
