@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,31 +9,60 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Shield, Lock } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirecionar se já estiver logado
+  useEffect(() => {
+    if (user) {
+      navigate('/cursos');
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simular login
-    setTimeout(() => {
-      setIsLoading(false);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    const { error } = await signIn(email, password);
+    
+    if (error) {
+      toast.error('Erro ao fazer login: ' + error.message);
+    } else {
       toast.success('Login realizado com sucesso!');
-    }, 2000);
+      navigate('/cursos');
+    }
+    
+    setIsLoading(false);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simular cadastro
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success('Conta criada com sucesso! Verifique seu email.');
-    }, 2000);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get('registerEmail') as string;
+    const password = formData.get('registerPassword') as string;
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+
+    const { error } = await signUp(email, password, firstName, lastName);
+    
+    if (error) {
+      toast.error('Erro ao criar conta: ' + error.message);
+    } else {
+      toast.success('Conta criada com sucesso! Verifique seu email para confirmar.');
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -64,6 +94,7 @@ const Login = () => {
                       <Label htmlFor="email">Email</Label>
                       <Input
                         id="email"
+                        name="email"
                         type="email"
                         placeholder="seu@email.com"
                         required
@@ -76,6 +107,7 @@ const Login = () => {
                       <div className="relative mt-1">
                         <Input
                           id="password"
+                          name="password"
                           type={showPassword ? "text" : "password"}
                           placeholder="Sua senha"
                           required
@@ -150,6 +182,7 @@ const Login = () => {
                         <Label htmlFor="firstName">Nome</Label>
                         <Input
                           id="firstName"
+                          name="firstName"
                           type="text"
                           placeholder="João"
                           required
@@ -160,6 +193,7 @@ const Login = () => {
                         <Label htmlFor="lastName">Sobrenome</Label>
                         <Input
                           id="lastName"
+                          name="lastName"
                           type="text"
                           placeholder="Silva"
                           required
@@ -172,6 +206,7 @@ const Login = () => {
                       <Label htmlFor="registerEmail">Email</Label>
                       <Input
                         id="registerEmail"
+                        name="registerEmail"
                         type="email"
                         placeholder="seu@email.com"
                         required
@@ -183,6 +218,7 @@ const Login = () => {
                       <Label htmlFor="phone">Telefone</Label>
                       <Input
                         id="phone"
+                        name="phone"
                         type="tel"
                         placeholder="(11) 99999-9999"
                         required
@@ -195,6 +231,7 @@ const Login = () => {
                       <div className="relative mt-1">
                         <Input
                           id="registerPassword"
+                          name="registerPassword"
                           type={showPassword ? "text" : "password"}
                           placeholder="Crie uma senha forte"
                           required
