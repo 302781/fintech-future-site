@@ -1,14 +1,38 @@
 
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { CreditCard, Shield, CheckCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const FormularioPagamento = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleFinalizarAssinatura = async () => {
+    setIsProcessing(true);
+    
+    // Simular processamento do pagamento
+    setTimeout(() => {
+      setIsProcessing(false);
+      toast({
+        title: "Assinatura confirmada!",
+        description: "Seu pagamento foi processado com sucesso. Redirecionando para consultores...",
+      });
+      
+      // Redirecionar para a página de consultores após 2 segundos
+      setTimeout(() => {
+        navigate('/consultores');
+      }, 2000);
+    }, 3000);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
@@ -125,8 +149,12 @@ const FormularioPagamento = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3">
-                      Finalizar Assinatura
+                    <Button 
+                      className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3"
+                      onClick={handleFinalizarAssinatura}
+                      disabled={isProcessing}
+                    >
+                      {isProcessing ? "Processando..." : "Finalizar Assinatura"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -163,7 +191,8 @@ const FormularioPagamento = () => {
                           "Relatórios de progresso",
                           "Suporte prioritário",
                           "Certificados digitais",
-                          "App mobile premium"
+                          "App mobile premium",
+                          "Consultoria financeira personalizada"
                         ].map((feature, index) => (
                           <div key={index} className="flex items-center gap-2">
                             <CheckCircle className="w-4 h-4 text-green-500" />
