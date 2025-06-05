@@ -31,24 +31,139 @@ const CourseContent = () => {
       color: 'bg-blue-500',
       lessons: [
         {
-          title: 'Introdução à Gestão Financeira',
-          duration: '15 min',
-          description: 'Conceitos básicos de gestão financeira pessoal e empresarial'
-        },
-        {
-          title: 'Planejamento Financeiro',
+          title: 'Ep1: Fundamentos da Gestão Financeira',
           duration: '20 min',
-          description: 'Como criar e manter um planejamento financeiro eficaz'
+          description: 'Introdução aos conceitos básicos de gestão financeira',
+          videoUrl: 'https://youtu.be/CxIsRGh28nI'
         },
         {
-          title: 'Controle de Fluxo de Caixa',
+          title: 'Ep2: Planejamento Financeiro Estratégico',
           duration: '18 min',
-          description: 'Técnicas para controlar entradas e saídas de dinheiro'
+          description: 'Como desenvolver um planejamento financeiro eficaz',
+          videoUrl: 'https://youtu.be/EaMtjoOZls4'
         },
         {
-          title: 'Análise de Investimentos',
+          title: 'Ep3: Análise de Fluxo de Caixa',
+          duration: '22 min',
+          description: 'Técnicas para análise e controle do fluxo de caixa',
+          videoUrl: 'https://youtu.be/g6LqGWuNIRU'
+        },
+        {
+          title: 'Ep4: Gestão de Riscos Financeiros',
           duration: '25 min',
-          description: 'Como analisar oportunidades de investimento'
+          description: 'Como identificar e gerenciar riscos financeiros',
+          videoUrl: 'https://youtu.be/l5KCRvho4-o'
+        },
+        {
+          title: 'Ep5: Indicadores Financeiros',
+          duration: '19 min',
+          description: 'Principais indicadores para análise financeira',
+          videoUrl: 'https://youtu.be/smb3N7N5m2k'
+        },
+        {
+          title: 'Ep6: Tomada de Decisões Financeiras',
+          duration: '23 min',
+          description: 'Processo de tomada de decisões baseadas em dados',
+          videoUrl: 'https://youtu.be/qHlzruXgRPY'
+        },
+        {
+          title: 'Ep7: Orçamento e Controle',
+          duration: '21 min',
+          description: 'Elaboração e controle de orçamentos empresariais',
+          videoUrl: 'https://youtu.be/m1FSFxmWsRw'
+        },
+        {
+          title: 'Ep8: Financiamento e Investimento',
+          duration: '24 min',
+          description: 'Estratégias de financiamento e decisões de investimento',
+          videoUrl: 'https://youtu.be/mt4YTN8zmwQ'
+        },
+        {
+          title: 'Ep9: Gestão do Capital de Giro',
+          duration: '26 min',
+          description: 'Otimização do capital de giro empresarial',
+          videoUrl: 'https://youtu.be/-UGVURXszKA'
+        }
+      ]
+    },
+    {
+      id: 'planejamento-financeiro',
+      title: 'Planejamento Financeiro',
+      description: 'Aprenda a organizar suas finanças pessoais',
+      icon: <Target className="w-6 h-6" />,
+      color: 'bg-indigo-500',
+      lessons: [
+        {
+          title: 'Controle seus Gastos',
+          duration: '15 min',
+          description: 'Como controlar e monitorar seus gastos diários',
+          videoUrl: 'https://youtu.be/in0XbfQEm2A'
+        },
+        {
+          title: 'Como se Organizar Financeiramente',
+          duration: '18 min',
+          description: 'Métodos práticos para organizar sua vida financeira',
+          videoUrl: 'https://youtu.be/xIIa3A3kY-k'
+        }
+      ]
+    },
+    {
+      id: 'fluxo-caixa',
+      title: 'Controle de Fluxo de Caixa',
+      description: 'Domine o controle do seu fluxo de caixa',
+      icon: <TrendingUp className="w-6 h-6" />,
+      color: 'bg-teal-500',
+      lessons: [
+        {
+          title: 'O que é e Como Fazer seu Controle',
+          duration: '20 min',
+          description: 'Fundamentos do controle de fluxo de caixa',
+          videoUrl: 'https://youtu.be/osWhV1BqlBM'
+        },
+        {
+          title: 'Exemplos e Dicas Práticas',
+          duration: '16 min',
+          description: 'Exemplos práticos e dicas para melhorar seu controle',
+          videoUrl: 'https://youtu.be/ctHGseRyxTg'
+        }
+      ]
+    },
+    {
+      id: 'analise-investimentos',
+      title: 'Análise de Investimentos',
+      description: 'Aprenda a analisar oportunidades de investimento',
+      icon: <TrendingUp className="w-6 h-6" />,
+      color: 'bg-emerald-500',
+      lessons: [
+        {
+          title: 'Princípios e Análises',
+          duration: '25 min',
+          description: 'Fundamentos da análise de investimentos',
+          videoUrl: 'https://youtu.be/ejAfEVYCh5A'
+        },
+        {
+          title: 'Riscos de Mercado',
+          duration: '22 min',
+          description: 'Como identificar e avaliar riscos de mercado',
+          videoUrl: 'https://youtu.be/uW0BvgtJQPM'
+        },
+        {
+          title: 'Riscos de Liquidez',
+          duration: '18 min',
+          description: 'Entendendo e gerenciando riscos de liquidez',
+          videoUrl: 'https://youtu.be/wjt05_dl92I'
+        },
+        {
+          title: 'Índice Sharpe',
+          duration: '20 min',
+          description: 'Como usar o índice Sharpe na análise de investimentos',
+          videoUrl: 'https://youtu.be/DHUJ0n3EoU8'
+        },
+        {
+          title: 'Análise de Rentabilidade',
+          duration: '23 min',
+          description: 'Métodos para avaliar a rentabilidade de investimentos',
+          videoUrl: 'https://youtu.be/38OOw2xCmEk'
         }
       ]
     },
@@ -105,86 +220,148 @@ const CourseContent = () => {
       color: 'bg-purple-500',
       lessons: [
         {
-          title: 'Primeiros passos nas finanças',
-          duration: '20 min',
-          description: 'Baseado no Me Poupe - Como começar a se organizar financeiramente',
-          reference: 'https://mepoupe.com'
-        },
-        {
-          title: 'Economizando na adolescência',
+          title: 'Primeiros Passos nas Finanças',
           duration: '18 min',
-          description: 'Dicas do Economirna para jovens economizarem',
-          reference: 'https://economirna.com.br'
+          description: 'Como começar a se organizar financeiramente',
+          videoUrl: 'https://youtu.be/t0RzA9-9RX0'
         },
         {
-          title: 'Investimentos para jovens',
-          duration: '25 min',
-          description: 'Yubb - Como começar a investir sendo jovem',
-          reference: 'https://yubb.com.br'
+          title: 'Planejamento Financeiro para Jovens',
+          duration: '20 min',
+          description: 'Fundamentos do planejamento financeiro na juventude',
+          videoUrl: 'https://youtu.be/dSLhykOui3Y'
         },
         {
-          title: 'Educação financeira prática',
+          title: 'Economizando na Adolescência',
+          duration: '16 min',
+          description: 'Dicas práticas para economizar sendo jovem',
+          videoUrl: 'https://youtu.be/SWd4hGsLn1U'
+        },
+        {
+          title: 'Os 5 Melhores Investimentos para Jovens',
           duration: '22 min',
-          description: 'Dinheirama - Conceitos práticos para o dia a dia',
-          reference: 'https://dinheirama.com'
+          description: 'Investimentos adequados para o perfil jovem',
+          videoUrl: 'https://youtu.be/kXfjzvrcWf0'
+        },
+        {
+          title: 'Investimentos para Cada Fase da Vida',
+          duration: '25 min',
+          description: 'Como adequar investimentos às diferentes fases',
+          videoUrl: 'https://youtu.be/jXztjivu1G4'
+        },
+        {
+          title: 'Método 50-30-20',
+          duration: '14 min',
+          description: 'Regra prática para distribuição de renda',
+          videoUrl: 'https://youtu.be/Wyi4sPBPiCQ'
+        },
+        {
+          title: 'Aplicativo Dinheirama',
+          duration: '12 min',
+          description: 'Como usar aplicativos para controle financeiro',
+          videoUrl: 'https://youtu.be/G1fU4DOj-9A'
+        },
+        {
+          title: 'Como Funciona o Mercado Financeiro',
+          duration: '19 min',
+          description: 'Introdução ao funcionamento do mercado financeiro',
+          videoUrl: 'https://youtu.be/FY7q6weT1Tg'
+        },
+        {
+          title: 'Como Lidar com Dívidas',
+          duration: '17 min',
+          description: 'Estratégias para evitar e quitar dívidas',
+          videoUrl: 'https://youtu.be/zYqfRzmPWtY'
         }
       ]
     },
     {
       id: 'controle-gastos',
       title: 'Controle de Gastos',
-      description: 'Baseado no conteúdo do Serasa',
+      description: 'Aprenda a controlar e reduzir seus gastos',
       icon: <Shield className="w-6 h-6" />,
       color: 'bg-green-500',
       lessons: [
         {
-          title: 'Como organizar suas finanças',
+          title: 'Como Organizar suas Finanças',
           duration: '15 min',
-          description: 'Métodos eficazes para organizar sua vida financeira'
+          description: 'Métodos eficazes para organizar sua vida financeira',
+          videoUrl: 'https://youtu.be/in0XbfQEm2A'
         },
         {
-          title: 'Controle de gastos mensais',
-          duration: '18 min',
-          description: 'Técnicas para acompanhar e controlar gastos mensais'
-        },
-        {
-          title: 'Eliminando gastos desnecessários',
+          title: 'Planilha de Excel para Controle',
           duration: '20 min',
-          description: 'Como identificar e eliminar gastos supérfluos'
+          description: 'Como criar e usar planilhas para controle financeiro',
+          videoUrl: 'https://youtu.be/I8XXptohLJQ'
         },
         {
-          title: 'Criando uma reserva de emergência',
+          title: 'Como Gastar Menos',
+          duration: '16 min',
+          description: 'Estratégias práticas para reduzir gastos',
+          videoUrl: 'https://youtu.be/WvNcL-HpQik'
+        },
+        {
+          title: 'Eliminando Gastos Desnecessários',
+          duration: '18 min',
+          description: 'Como identificar e eliminar gastos supérfluos',
+          videoUrl: 'https://youtu.be/NgSnsZjjsC8'
+        },
+        {
+          title: 'Quanto Guardar na Reserva de Emergência',
+          duration: '14 min',
+          description: 'Como calcular o valor ideal para sua reserva',
+          videoUrl: 'https://youtu.be/RBpvCwvshnc'
+        },
+        {
+          title: 'Métodos Práticos de Economia',
           duration: '22 min',
-          description: 'Passo a passo para construir sua reserva de emergência'
+          description: 'Técnicas práticas para economizar no dia a dia',
+          videoUrl: 'https://youtu.be/bFLp81P4C-U'
         }
       ]
     },
     {
       id: 'pais',
       title: 'Educação Financeira para Pais',
-      description: 'Baseado no conteúdo da Modal Mais',
+      description: 'Como educar financeiramente seus filhos',
       icon: <Users className="w-6 h-6" />,
       color: 'bg-orange-500',
       lessons: [
         {
-          title: 'Como ensinar finanças aos filhos',
-          duration: '25 min',
-          description: 'Estratégias para educar financeiramente as crianças'
-        },
-        {
-          title: 'Mesada: sim ou não?',
-          duration: '18 min',
-          description: 'Como usar a mesada como ferramenta educativa'
-        },
-        {
-          title: 'Planejamento familiar',
-          duration: '22 min',
-          description: 'Como envolver toda a família no planejamento financeiro'
-        },
-        {
-          title: 'Preparando os filhos para o futuro',
+          title: 'Como Ensinar Finanças às Crianças',
           duration: '20 min',
-          description: 'Investimentos e planejamento para o futuro dos filhos'
+          description: 'Estratégias para educar financeiramente as crianças',
+          videoUrl: 'https://youtu.be/8mMIJwfE3Ik'
+        },
+        {
+          title: 'Métodos Inválidos de Educação',
+          duration: '15 min',
+          description: 'Erros comuns na educação financeira infantil',
+          videoUrl: 'https://youtu.be/LmgjSavgVEg'
+        },
+        {
+          title: 'Mesada: Como Implementar',
+          duration: '18 min',
+          description: 'Como usar a mesada como ferramenta educativa',
+          videoUrl: 'https://youtu.be/cnvEdeO4dJs'
+        },
+        {
+          title: 'Planejamento Financeiro Familiar',
+          duration: '22 min',
+          description: 'Como envolver toda a família no planejamento financeiro',
+          videoUrl: 'https://youtu.be/sfvn3K328aw'
+        },
+        {
+          title: 'Planejando a Faculdade dos Filhos',
+          duration: '25 min',
+          description: 'Como se preparar financeiramente para a educação superior',
+          videoUrl: 'https://youtu.be/ymgQ_NhLkGc'
+        },
+        {
+          title: 'Investimentos para os Filhos',
+          duration: '19 min',
+          description: 'Como investir pensando no futuro dos filhos',
+          videoUrl: 'https://youtu.be/6_QmHeTqqTM'
         }
       ]
     }
