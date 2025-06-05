@@ -1,4 +1,3 @@
-
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,7 +21,8 @@ const AssinaturasCorporativas = () => {
         "Material didático digital"
       ],
       icon: <School className="w-8 h-8" />,
-      popular: false
+      popular: false,
+      link: "/escola-basica"
     },
     {
       name: "Escola Premium",
@@ -37,7 +37,8 @@ const AssinaturasCorporativas = () => {
         "Consultoria pedagógica"
       ],
       icon: <Building2 className="w-8 h-8" />,
-      popular: true
+      popular: true,
+      link: "/escola-premium"
     },
     {
       name: "Rede de Ensino",
@@ -52,7 +53,8 @@ const AssinaturasCorporativas = () => {
         "Suporte 24/7"
       ],
       icon: <Users className="w-8 h-8" />,
-      popular: false
+      popular: false,
+      link: "/rede-ensino"
     }
   ];
 
@@ -160,9 +162,9 @@ const AssinaturasCorporativas = () => {
                         </li>
                       ))}
                     </ul>
-                    <Link to="/pagamento">
+                    <Link to={plan.link}>
                       <Button className={`w-full ${plan.popular ? 'bg-[#1A247E] hover:bg-[#2D4DE0]' : 'bg-gray-900 hover:bg-gray-800'}`}>
-                        Solicitar Proposta
+                        Ver Detalhes
                       </Button>
                     </Link>
                   </CardContent>

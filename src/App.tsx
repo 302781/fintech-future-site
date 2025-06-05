@@ -19,6 +19,9 @@ import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
 import FAQ from "./pages/FAQ";
 import FormularioPagamento from "./pages/FormularioPagamento";
 import ConsultoresFinanceiros from "./pages/ConsultoresFinanceiros";
+import EscolaBasica from "./pages/EscolaBasica";
+import EscolaPremium from "./pages/EscolaPremium";
+import RedeEnsino from "./pages/RedeEnsino";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +41,9 @@ const App = () => (
             <Route path="/educacao" element={<EducacaoInfantil />} />
             <Route path="/simuladores" element={<Simuladores />} />
             <Route path="/corporativo" element={<AssinaturasCorporativas />} />
+            <Route path="/escola-basica" element={<EscolaBasica />} />
+            <Route path="/escola-premium" element={<EscolaPremium />} />
+            <Route path="/rede-ensino" element={<RedeEnsino />} />
             <Route path="/equipe" element={<Equipe />} />
             <Route path="/login" element={<Login />} />
             <Route path="/faq" element={<FAQ />} />
