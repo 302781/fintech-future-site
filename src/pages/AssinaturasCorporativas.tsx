@@ -1,3 +1,4 @@
+
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -261,9 +262,11 @@ const AssinaturasCorporativas = () => {
                     />
                   </div>
 
-                  <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3">
-                    Solicitar Demonstração
-                  </Button>
+                  <Link to="/consultores">
+                    <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3">
+                      Solicitar Demonstração
+                    </Button>
+                  </Link>
                 </form>
               </CardContent>
             </Card>

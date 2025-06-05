@@ -3,9 +3,11 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Building2, BookOpen, BarChart3, Headphones, FileText, Calendar, GraduationCap, Gamepad2, Settings, MessageSquare } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useStripe } from '@/hooks/useStripe';
 
 const EscolaPremium = () => {
+  const { redirectToCheckout, loading } = useStripe();
+
   const features = [
     {
       icon: <BookOpen className="w-6 h-6" />,
@@ -49,6 +51,11 @@ const EscolaPremium = () => {
     "Gamificação premium",
     "Acesso por 12 meses"
   ];
+
+  const handleSubscribe = () => {
+    // ID do preço do Stripe para o plano premium (você deve configurar isso no dashboard do Stripe)
+    redirectToCheckout('price_escola_premium_mensal');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -131,11 +138,13 @@ const EscolaPremium = () => {
             </Card>
 
             <div className="text-center">
-              <Link to="/pagamento">
-                <Button className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-3">
-                  Contratar Plano Premium
-                </Button>
-              </Link>
+              <Button 
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-3"
+              >
+                {loading ? 'Processando...' : 'Contratar Plano Premium'}
+              </Button>
               <p className="text-sm text-gray-600 mt-4">
                 Sem compromisso • Cancele quando quiser • Suporte prioritário
               </p>

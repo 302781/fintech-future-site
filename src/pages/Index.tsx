@@ -4,7 +4,7 @@ import Hero from '@/components/Hero';
 import Services from '@/components/Services';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Users, Award, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Users, Award, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Index = () => {
@@ -62,8 +62,8 @@ const Index = () => {
               size="lg" 
               className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4 h-auto group"
             >
+              <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
               Comece Gratuitamente
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
             </Button>
           </Link>
         </div>

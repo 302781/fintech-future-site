@@ -3,9 +3,11 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Users, BookOpen, BarChart3, Headphones, FileText } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useStripe } from '@/hooks/useStripe';
 
 const EscolaBasica = () => {
+  const { redirectToCheckout, loading } = useStripe();
+
   const features = [
     {
       icon: <BookOpen className="w-6 h-6" />,
@@ -41,6 +43,11 @@ const EscolaBasica = () => {
     "Certificado digital",
     "Suporte por email"
   ];
+
+  const handleSubscribe = () => {
+    // ID do preço do Stripe para o plano básico (você deve configurar isso no dashboard do Stripe)
+    redirectToCheckout('price_escola_basica_mensal');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -120,11 +127,13 @@ const EscolaBasica = () => {
             </Card>
 
             <div className="text-center">
-              <Link to="/pagamento">
-                <Button className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-3">
-                  Contratar Plano Básico
-                </Button>
-              </Link>
+              <Button 
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-3"
+              >
+                {loading ? 'Processando...' : 'Contratar Plano Básico'}
+              </Button>
               <p className="text-sm text-gray-600 mt-4">
                 Sem compromisso • Cancele quando quiser
               </p>

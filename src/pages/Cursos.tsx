@@ -4,7 +4,7 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookUser, Clock, Award, LogOut, GraduationCap, TrendingUp } from 'lucide-react';
+import { BookUser, Clock, Award, LogIn, GraduationCap, TrendingUp } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import CourseContent from '@/components/CourseContent';
@@ -49,9 +49,9 @@ const Cursos = () => {
               <Button 
                 onClick={handleLogout}
                 variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-[#1A247E]"
+                className="border-white text-white hover:bg-white hover:text-[#1A247E] group"
               >
-                <LogOut className="mr-2" size={16} />
+                <LogIn className="mr-2 group-hover:-translate-x-1 transition-transform" size={16} />
                 Sair
               </Button>
             </div>

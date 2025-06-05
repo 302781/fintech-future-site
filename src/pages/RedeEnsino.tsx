@@ -138,7 +138,7 @@ const RedeEnsino = () => {
             </Card>
 
             <div className="text-center">
-              <Link to="/pagamento">
+              <Link to="/consultores">
                 <Button className="bg-purple-600 hover:bg-purple-700 text-lg px-8 py-3">
                   Solicitar Proposta Personalizada
                 </Button>
