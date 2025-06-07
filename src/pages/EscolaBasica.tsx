@@ -45,8 +45,8 @@ const EscolaBasica = () => {
   ];
 
   const handleSubscribe = () => {
-    // ID do preço do Stripe para o plano básico (você deve configurar isso no dashboard do Stripe)
-    redirectToCheckout('price_escola_basica_mensal');
+    // Usando o Price ID correto do Stripe para o plano básico
+    redirectToCheckout('price_1RWfhmRvHw6hJ7Pc5SKfc6Oo');
   };
 
   return (

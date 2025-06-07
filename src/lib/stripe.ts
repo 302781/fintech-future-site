@@ -24,3 +24,15 @@ export const createCheckoutSession = async (priceId: string, customerEmail?: str
 
   return response.json();
 };
+
+// IDs dos produtos e preços configurados no Stripe
+export const STRIPE_PRODUCTS = {
+  ESCOLA_BASICA: {
+    productId: 'prod_SRYprhWJIABi0a',
+    priceId: 'price_1RWfhmRvHw6hJ7Pc5SKfc6Oo', // R$ 299/mês
+  },
+  ESCOLA_PREMIUM: {
+    productId: 'prod_SRYrdnCahxGch3',
+    priceId: 'price_1RWfjgRvHw6hJ7PcLaTee9gT', // R$ 599/mês
+  },
+};

@@ -53,8 +53,8 @@ const EscolaPremium = () => {
   ];
 
   const handleSubscribe = () => {
-    // ID do preço do Stripe para o plano premium (você deve configurar isso no dashboard do Stripe)
-    redirectToCheckout('price_escola_premium_mensal');
+    // Usando o Price ID correto do Stripe para o plano premium
+    redirectToCheckout('price_1RWfjgRvHw6hJ7PcLaTee9gT');
   };
 
   return (
