@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -127,9 +126,9 @@ const Login = () => {
                         <input type="checkbox" className="mr-2" />
                         <span className="text-sm text-gray-600">Lembrar-me</span>
                       </label>
-                      <a href="#" className="text-sm text-[#1A247E] hover:underline">
+                      <Link to="/forgot-password" className="text-sm text-[#1A247E] hover:underline">
                         Esqueceu a senha?
-                      </a>
+                      </Link>
                     </div>
 
                     <Button 

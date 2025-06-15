@@ -23,6 +23,8 @@ import EscolaBasica from "./pages/EscolaBasica";
 import EscolaPremium from "./pages/EscolaPremium";
 import RedeEnsino from "./pages/RedeEnsino";
 import NotFound from "./pages/NotFound";
+import ForgotPassword from "./pages/ForgotPassword";
+import UpdatePassword from "./pages/UpdatePassword";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +48,8 @@ const App = () => (
             <Route path="/rede-ensino" element={<RedeEnsino />} />
             <Route path="/equipe" element={<Equipe />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/pagamento" element={<FormularioPagamento />} />
             <Route path="/consultores" element={<ConsultoresFinanceiros />} />
