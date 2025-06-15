@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
@@ -26,6 +25,16 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) {
+      const errorMessage = "A chave secreta do Stripe (STRIPE_SECRET_KEY) não está configurada no ambiente. Por favor, adicione a chave para continuar.";
+      logStep("ERROR in create-checkout-session", { message: errorMessage });
+      return new Response(JSON.stringify({ error: errorMessage }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      });
+    }
+
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
     const { data } = await supabaseClient.auth.getUser(token);
@@ -39,7 +48,7 @@ serve(async (req) => {
     
     logStep("Payload received", { priceId, successPath });
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
+    const stripe = new Stripe(stripeKey, { 
       apiVersion: "2023-10-16" 
     });
 
@@ -88,7 +97,7 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR in create-checkout-session", { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    return new Response(JSON.stringify({ error: "Ocorreu um erro interno ao processar o pagamento." }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

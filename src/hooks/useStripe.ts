@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -12,6 +13,7 @@ export const useStripe = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error('Você precisa estar logado para fazer uma assinatura.');
+        setLoading(false);
         return;
       }
 
@@ -23,7 +25,19 @@ export const useStripe = () => {
 
       if (error) {
         console.error('Error creating checkout session:', error);
-        throw new Error(error.message);
+        let errorMessage = 'Erro ao processar pagamento. Tente novamente.';
+        // The error object from Supabase functions is a FunctionsHttpError
+        if (error.context && typeof error.context.json === 'function') {
+          try {
+            const functionError = await error.context.json();
+            if (functionError.error) {
+              errorMessage = functionError.error;
+            }
+          } catch(e) {
+            console.error("Could not parse error from function", e);
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       if (data?.url) {
@@ -33,7 +47,7 @@ export const useStripe = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('Erro ao processar pagamento. Tente novamente.');
+      toast.error(error.message || 'Erro ao processar pagamento. Tente novamente.');
     } finally {
       setLoading(false);
     }
