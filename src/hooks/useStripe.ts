@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -6,7 +5,7 @@ import { toast } from 'sonner';
 export const useStripe = () => {
   const [loading, setLoading] = useState(false);
 
-  const redirectToCheckout = async (priceId: string) => {
+  const redirectToCheckout = async (priceId: string, successPath?: string) => {
     try {
       setLoading(true);
       
@@ -16,10 +15,10 @@ export const useStripe = () => {
         return;
       }
 
-      console.log('Calling create-checkout-session with priceId:', priceId);
+      console.log('Calling create-checkout-session with priceId:', priceId, 'and successPath:', successPath);
       
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-        body: { priceId },
+        body: { priceId, successPath },
       });
 
       if (error) {
@@ -28,7 +27,6 @@ export const useStripe = () => {
       }
 
       if (data?.url) {
-        // Abrir Stripe checkout em uma nova aba
         window.open(data.url, '_blank');
       } else {
         throw new Error('No checkout URL received');

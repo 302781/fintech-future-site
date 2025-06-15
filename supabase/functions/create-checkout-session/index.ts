@@ -34,10 +34,10 @@ serve(async (req) => {
     
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    const { priceId } = await req.json();
+    const { priceId, successPath } = await req.json();
     if (!priceId) throw new Error("Price ID is required");
     
-    logStep("Price ID received", { priceId });
+    logStep("Payload received", { priceId, successPath });
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
       apiVersion: "2023-10-16" 
@@ -53,6 +53,15 @@ serve(async (req) => {
       logStep("No existing customer found, will create new one");
     }
 
+    const origin = req.headers.get("origin");
+    const defaultSuccessUrl = `${origin}/cursos?session_id={CHECKOUT_SESSION_ID}`;
+    
+    const success_url = successPath
+      ? `${origin}${successPath}?session_id={CHECKOUT_SESSION_ID}`
+      : defaultSuccessUrl;
+    
+    const cancel_url = `${origin}/corporativo`;
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
@@ -63,8 +72,8 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      success_url: `${req.headers.get("origin")}/cursos?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/corporativo`,
+      success_url: success_url,
+      cancel_url: cancel_url,
       metadata: {
         user_id: user.id,
       },

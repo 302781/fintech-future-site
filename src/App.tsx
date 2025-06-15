@@ -25,6 +25,7 @@ import RedeEnsino from "./pages/RedeEnsino";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
+import CursosBasico from "./pages/CursosBasico";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,14 @@ const App = () => (
             <Route path="/faq" element={<FAQ />} />
             <Route path="/pagamento" element={<FormularioPagamento />} />
             <Route path="/consultores" element={<ConsultoresFinanceiros />} />
+            <Route 
+              path="/cursos-basico" 
+              element={
+                <ProtectedRoute>
+                  <CursosBasico />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/cursos" 
               element={

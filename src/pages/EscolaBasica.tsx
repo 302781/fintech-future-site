@@ -45,8 +45,8 @@ const EscolaBasica = () => {
   ];
 
   const handleSubscribe = () => {
-    // Usando o Price ID correto do Stripe para o plano básico
-    redirectToCheckout('price_1RWfhmRvHw6hJ7Pc5SKfc6Oo');
+    // Usando o Price ID correto e o novo caminho de sucesso
+    redirectToCheckout('price_1RWfhmRvHw6hJ7Pc5SKfc6Oo', '/cursos-basico');
   };
 
   return (
