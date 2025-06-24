@@ -2,6 +2,7 @@
 
 ## Project info
 
+**Figma**: https://www.figma.com/design/eZNb8BkXNTK8IoQc1fKDmi/FinTech---Educa%C3%A7%C3%A3o-Financeira?node-id=2089-275&p=f&t=AbAR6IFuKM9nx76X-0
 **URL**: https://lovable.dev/projects/5768821e-d1ff-4c89-bff2-c17446ac9767
 
 ## How can I edit this code?
