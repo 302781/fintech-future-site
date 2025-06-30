@@ -173,36 +173,6 @@ const PorqueNos = () => {
           </div>
         </div>
       </section>
-
-      {/* Certificações e Prêmios */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Reconhecimento do Mercado
-            </h2>
-            <p className="text-xl text-gray-600">
-              Prêmios e certificações que validam nossa qualidade
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              "Melhor FinTech 2023",
-              "Certificação ISO 27001",
-              "Top 10 Startups Brasil",
-              "Prêmio Inovação Digital"
-            ].map((award, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-all">
-                <CardContent className="p-6">
-                  <Award className="w-16 h-16 text-[#1A247E] mx-auto mb-4" />
-                  <h3 className="font-bold text-gray-900">{award}</h3>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

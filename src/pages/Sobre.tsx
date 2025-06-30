@@ -92,33 +92,6 @@ const Sobre = () => {
           </div>
         </div>
       </section>
-
-      {/* Conquistas */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Nossas Conquistas
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { year: "2020", achievement: "Fundação da empresa" },
-              { year: "2021", achievement: "10.000 clientes cadastrados" },
-              { year: "2022", achievement: "R$ 500M em patrimônio gerido" },
-              { year: "2023", achievement: "Prêmio Melhor FinTech do Ano" },
-            ].map((item, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-all">
-                <CardContent className="p-6">
-                  <div className="text-3xl font-bold text-[#1A247E] mb-2">{item.year}</div>
-                  <p className="text-gray-600">{item.achievement}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
