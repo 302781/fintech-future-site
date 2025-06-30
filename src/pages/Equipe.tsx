@@ -3,12 +3,25 @@ import Navigation from '@/components/Navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Linkedin, Mail } from 'lucide-react';
 
+import imgEduarda from '@/assets/equipe/Eduarda.jpeg';
+import imgVitoria from '@/assets/equipe/perfil.png';
+import imgLuis from '@/assets/equipe/Luis.png';
+import imgPedro from '@/assets/equipe/Pedro.jpeg';
+
 const Equipe = () => {
   const teamMembers = [
+       {
+      name: "Luis Guilherme",
+      role: "Design & Front-end",
+      description: "- Colaboração no Figma (interface e experiência do usuário)<br> Auxílio no desenvolvimento do site (código e integrações básicas).",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      linkedin: "#",
+      email: "luis.guilherme@fintech.com"
+    },
     {
       name: "Maria Eduarda Sodre Alves",
       role: "Product Owner",
-      description: "Responsável pela visão estratégica do produto e coordenação das equipes. Especialista em gestão de produtos digitais e experiência do usuário.",
+      description: "- Liderança do projeto e tomada de decisões estratégicas.<br> Gerenciamento do Trello(tasks, prazos e prioridades).<br>Desenvolvimento e atualização do Canvas(modelo de negócios e validação)."
       image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       linkedin: "#",
       email: "maria.eduarda@fintech.com"
@@ -16,23 +29,16 @@ const Equipe = () => {
     {
       name: "Maria Vitoria",
       role: "Design & Front-end",
-      description: "Designer UX/UI e desenvolvedora front-end. Especializada em criar interfaces intuitivas e experiências digitais envolventes para educação financeira.",
+      description: "-Criação do protótipo no Figma (UI/UX Design). <br>Desenvolvimento do site<br>(implementação do frontend com HTML/CSS/JS)."
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       linkedin: "#",
       email: "maria.vitoria@fintech.com"
     },
-    {
-      name: "Luis Guilherme",
-      role: "Design & Front-end",
-      description: "Desenvolvedor front-end e designer. Focado em desenvolvimento de interfaces responsivas e implementação de soluções criativas para educação digital.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      linkedin: "#",
-      email: "luis.guilherme@fintech.com"
-    },
+
     {
       name: "Pedro Henrique",
       role: "Estratégia de Negócios",
-      description: "Especialista em estratégia de negócios e desenvolvimento de mercado. Responsável por parcerias estratégicas e crescimento da empresa.",
+      description: "-Elaboração e refinamento do Business Model Canvas(BMC).<br>Pesquisa de mercado e análise de viabilidade financeira.",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       linkedin: "#",
       email: "pedro.henrique@fintech.com"
