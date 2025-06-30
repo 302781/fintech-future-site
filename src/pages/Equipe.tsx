@@ -8,29 +8,30 @@ import imgVitoria from '@/assets/equipe/perfil.png';
 import imgLuis from '@/assets/equipe/Luis.png';
 import imgPedro from '@/assets/equipe/Pedro.jpeg';
 
+
 const Equipe = () => {
   const teamMembers = [
        {
       name: "Luis Guilherme",
       role: "Design & Front-end",
       description: "- Colaboração no Figma (interface e experiência do usuário)<br> Auxílio no desenvolvimento do site (código e integrações básicas).",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      image: imgLuis,
       linkedin: "#",
       email: "luis.guilherme@fintech.com"
     },
     {
       name: "Maria Eduarda Sodre Alves",
       role: "Product Owner",
-      description: "- Liderança do projeto e tomada de decisões estratégicas.<br> Gerenciamento do Trello(tasks, prazos e prioridades).<br>Desenvolvimento e atualização do Canvas(modelo de negócios e validação)."
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      description: "- Liderança do projeto e tomada de decisões estratégicas. Gerenciamento do Trello(tasks, prazos e prioridades).Desenvolvimento e atualização do Canvas(modelo de negócios e validação).",
+      image: imgEduarda,
       linkedin: "#",
       email: "maria.eduarda@fintech.com"
     },
     {
       name: "Maria Vitoria",
       role: "Design & Front-end",
-      description: "-Criação do protótipo no Figma (UI/UX Design). <br>Desenvolvimento do site<br>(implementação do frontend com HTML/CSS/JS)."
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      description: "-Criação do protótipo no Figma (UI/UX Design). Desenvolvimento do site(implementação do frontend com HTML/CSS/JS).",
+      image: imgVitoria,
       linkedin: "#",
       email: "maria.vitoria@fintech.com"
     },
@@ -38,8 +39,8 @@ const Equipe = () => {
     {
       name: "Pedro Henrique",
       role: "Estratégia de Negócios",
-      description: "-Elaboração e refinamento do Business Model Canvas(BMC).<br>Pesquisa de mercado e análise de viabilidade financeira.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      description: "-Elaboração e refinamento do Business Model Canvas(BMC).Pesquisa de mercado e análise de viabilidade financeira.",
+      image: imgPedro,
       linkedin: "#",
       email: "pedro.henrique@fintech.com"
     }
