@@ -28,16 +28,10 @@ const Sobre = () => {
             <div>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Nossa História</h2>
               <p className="text-lg text-gray-600 mb-6">
-                Fundada em 2020, a FinTech nasceu da necessidade de tornar a educação 
-                financeira acessível a todos os brasileiros. Nossos fundadores, com mais 
-                de 20 anos de experiência no mercado financeiro, identificaram que a 
+                Fundada em 2025, a FinTech nasceu da necessidade de tornar a educação 
+                financeira acessível a todos os brasileiros. Nossos desenvolvedores identificaram que a 
                 falta de conhecimento financeiro era o principal obstáculo para a 
                 prosperidade das pessoas.
-              </p>
-              <p className="text-lg text-gray-600">
-                Hoje, somos referência em educação financeira digital, atendendo mais 
-                de 50 mil clientes em todo o Brasil e gerindo mais de R$ 2 bilhões 
-                em patrimônio.
               </p>
             </div>
             <div>
