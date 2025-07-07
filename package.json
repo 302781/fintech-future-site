@@ -40,7 +40,7 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@stripe/stripe-js": "^7.3.1",
-    "@supabase/supabase-js": "^2.49.9",
+    "@supabase/supabase-js": "^2.50.3",
     "@tanstack/react-query": "^5.56.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -81,5 +81,18 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
-  }
+  },
+  "description": "**Figma**: https://www.figma.com/design/eZNb8BkXNTK8IoQc1fKDmi/FinTech---Educa%C3%A7%C3%A3o-Financeira?node-id=2089-275&p=f&t=AbAR6IFuKM9nx76X-0\r **URL**: https://lovable.dev/projects/5768821e-d1ff-4c89-bff2-c17446ac9767",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/302781/fintech-future-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/302781/fintech-future-site/issues"
+  },
+  "homepage": "https://github.com/302781/fintech-future-site#readme"
 }
