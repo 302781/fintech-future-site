@@ -55,6 +55,7 @@ const Login = () => {
 
     const { error } = await signUp(email, password, firstName, lastName);
     
+    
     if (error) {
       toast.error('Erro ao criar conta: ' + error.message);
     } else {
