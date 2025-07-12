@@ -1,11 +1,14 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from 'src/lib/db'; 
+import Stripe from 'stripe';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; 
 import { toast } from 'sonner';
 import Navigation from '@/components/Navigation';
 
@@ -19,7 +22,7 @@ const ForgotPassword = () => {
 
     const redirectTo = `${window.location.origin}/update-password`;
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await MySql.auth.resetPasswordForEmail(email, {
       redirectTo,
     });
 

@@ -1,8 +1,10 @@
 
 import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-
+import { db } from 'src/lib/db';
+import Stripe from 'stripe';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+ 
 export const useStripe = () => {
   const [loading, setLoading] = useState(false);
 
@@ -10,7 +12,7 @@ export const useStripe = () => {
     try {
       setLoading(true);
       
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await MySql.auth.getSession();
       if (!session) {
         toast.error('Você precisa estar logado para fazer uma assinatura.');
         setLoading(false);
@@ -19,14 +21,14 @@ export const useStripe = () => {
 
       console.log('Calling create-checkout-session with priceId:', priceId, 'and successPath:', successPath);
       
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+      const { data, error } = await MySql.functions.invoke('create-checkout-session', {
         body: { priceId, successPath },
       });
 
       if (error) {
         console.error('Error creating checkout session:', error);
         let errorMessage = 'Erro ao processar pagamento. Tente novamente.';
-        // The error object from Supabase functions is a FunctionsHttpError
+       
         if (error.context && typeof error.context.json === 'function') {
           try {
             const functionError = await error.context.json();
@@ -55,12 +57,12 @@ export const useStripe = () => {
 
   const checkSubscription = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await MySql.auth.getSession();
       if (!session) {
         return { subscribed: false };
       }
 
-      const { data, error } = await supabase.functions.invoke('check-subscription');
+      const { data, error } = await MySql.functions.invoke('check-subscription');
       
       if (error) {
         console.error('Error checking subscription:', error);
@@ -78,13 +80,13 @@ export const useStripe = () => {
     try {
       setLoading(true);
       
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await MySql.auth.getSession();
       if (!session) {
         toast.error('Você precisa estar logado para gerenciar sua assinatura.');
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke('customer-portal');
+      const { data, error } = await MySql.functions.invoke('customer-portal');
 
       if (error) {
         console.error('Error opening customer portal:', error);

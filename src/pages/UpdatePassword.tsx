@@ -1,11 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { db } from 'src/lib/db';
+import Stripe from 'stripe';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; 
 import { toast } from 'sonner';
 import Navigation from '@/components/Navigation';
 import { Eye, EyeOff } from 'lucide-react';
@@ -38,13 +41,13 @@ const UpdatePassword = () => {
 
     setIsLoading(true);
 
-    const { error } = await supabase.auth.updateUser({ password });
+    const { error } = await MySql.auth.updateUser({ password });
 
     if (error) {
       toast.error('Erro ao atualizar a senha: ' + error.message);
     } else {
       toast.success('Senha atualizada com sucesso! Você pode fazer login agora.');
-      await supabase.auth.signOut();
+      await MySql.auth.signOut();
       navigate('/login');
     }
 
