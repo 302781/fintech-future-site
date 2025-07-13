@@ -1,4 +1,3 @@
-
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +8,33 @@ import { School, Building2, Users, BookOpen, Trophy, Heart, Gamepad2, Users2, Ta
 import { Link } from 'react-router-dom';
 
 const AssinaturasCorporativas = () => {
+  // Flag para controlar se a página está em manutenção
+  const isUnderMaintenance = true; // Altere para `false` quando quiser ativar a página novamente
+
+  // Se a página estiver em manutenção, exibe a mensagem
+  if (isUnderMaintenance) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Navigation /> {/* Opcional: manter a navegação no topo */}
+        <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md mx-auto">
+          <h2 className="text-4xl font-bold text-[#1A247E] mb-4">Em atualização!</h2>
+          <p className="text-lg text-gray-700">
+            Nossa página de Assinaturas Corporativas está sendo aprimorada e logo estará disponível com novidades.
+          </p>
+          <p className="text-md text-gray-500 mt-4">
+            Agradecemos a sua compreensão!
+          </p>
+          <Link to="/" className="mt-6 inline-block">
+            <Button className="bg-[#1A247E] hover:bg-[#2D4DE0] text-white py-2 px-6 rounded-md">
+              Voltar para a Página Inicial
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // --- O restante do seu código da página (SE NÃO ESTIVER EM MANUTENÇÃO) ---
   const plans = [
     {
       name: "Escola Básica",
