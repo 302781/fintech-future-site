@@ -23,7 +23,11 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
 // Cadastro
 app.post('/signup', (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-  db.run(
+  console.log('Recebido no signup:', req.body);
+  if (!email || !password || !firstName || !lastName) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+  }
+  b.run(
     `INSERT INTO users (email, password, firstName, lastName) VALUES (?, ?, ?, ?)`,
     [email, password, firstName, lastName],
     function (err) {
@@ -35,7 +39,6 @@ app.post('/signup', (req, res) => {
     }
   );
 });
-
 // Login
 app.post('/signin', (req, res) => {
   const { email, password } = req.body;

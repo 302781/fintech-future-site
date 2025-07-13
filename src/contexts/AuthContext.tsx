@@ -28,21 +28,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
-    setLoading(true);
+ const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
+  setLoading(true);
+  try {
     await axios.post('http://localhost:3001/signup', { email, password, firstName, lastName });
     setLoading(false);
-  };
-
-  const signIn = async (email: string, password: string) => {
-    setLoading(true);
-    try {
-      const res = await axios.post('http://localhost:3001/signin', { email, password });
-      setUser(res.data.user);
-    } finally {
-      setLoading(false);
+    return { error: null };
+  } catch (err: any) {
+    setLoading(false);
+    // Extrair a mensagem de erro do axios
+    let message = 'Erro desconhecido';
+    
+    if (err.response && err.response.data) {
+      if (typeof err.response.data === 'string') {
+        message = err.response.data;
+      } else if (err.response.data.error) {
+        message = err.response.data.error;
+      } else if (err.response.data.message) {
+        message = err.response.data.message;
+      }
+    } else if (err.message) {
+      message = err.message;
     }
-  };
+
+    return { error: { message } };
+  }
+};
+
+
+ const signIn = async (email: string, password: string, firstName: string, lastName: string) => {
+  setLoading(true);
+  try {
+    await axios.post('http://localhost:3001/signin', { email, password, firstName, lastName });
+    setUser(res.data.user);
+    setLoading(false);
+    return { error: null };
+  } catch (err: any) {
+    setLoading(false);
+    let message = 'Erro desconhecido';
+    
+    if (err.response && err.response.data) {
+      if (typeof err.response.data === 'string') {
+        message = err.response.data;
+      } else if (err.response.data.error) {
+        message = err.response.data.error;
+      } else if (err.response.data.message) {
+        message = err.response.data.message;
+      }
+    } else if (err.message) {
+      message = err.message;
+    }
+    return { error: err.response?.data || { message: 'Erro desconhecido' } };
+  }
+};
+
 
   const signOut = () => {
     setUser(null);
