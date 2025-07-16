@@ -5,7 +5,7 @@ import { TrendingUp, Shield, Wallet, Target, BookOpen, Users, BarChart, Smartpho
 import { Link } from 'react-router-dom';
 
 // Importe o componente de consultores
-import ConsultoresFinanceirosContent from '@/components/ConsultoresFinanceiros'; // Ajuste o caminho se necessário
+import ConsultoresFinanceirosContent from '@/pages/ConsultoresFinanceiros'; // Ajuste o caminho se necessário
 
 const Servicos = () => {
   const mainServices = [
