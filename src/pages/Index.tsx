@@ -8,11 +8,6 @@ import { ArrowLeft, Users, Award, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Index = () => {
-  const stats = [
-    { icon: <Users className="w-8 h-8" />, number: "50K+", label: "Clientes Ativos" },
-    { icon: <TrendingUp className="w-8 h-8" />, number: "R$ 2B+", label: "Patrimônio Gerido" },
-    { icon: <Award className="w-8 h-8" />, number: "98%", label: "Satisfação" },
-  ];
 
   return (
     <div className="min-h-screen">
@@ -20,34 +15,6 @@ const Index = () => {
       <Hero />
       <Services />
       
-      {/* Seção de Estatísticas */}
-      <section className="py-20 fintech-gradient">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-              Números que Impressionam
-            </h2>
-            <p className="text-xl text-blue-100">
-              Resultados que comprovam nossa excelência
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {stats.map((stat, index) => (
-              <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all">
-                <CardContent className="p-8 text-center">
-                  <div className="flex justify-center text-white mb-4">
-                    {stat.icon}
-                  </div>
-                  <div className="text-4xl font-bold text-white mb-2">{stat.number}</div>
-                  <div className="text-blue-100">{stat.label}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Call to Action */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">

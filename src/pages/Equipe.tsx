@@ -6,15 +6,23 @@ import { Linkedin, Mail } from 'lucide-react';
 import imgEduarda from '@/assets/equipe/Eduarda.jpeg';
 import imgVitoria from '@/assets/equipe/perfil.png';
 import imgLuis from '@/assets/equipe/Luis.png';
-import imgPedro from '@/assets/equipe/Pedro.jpeg';
 
-
+interface Member {
+  name: string;
+  role: string;
+  description: Array;
+  image: string; 
+  linkedin: string;
+  email: string;
+}
 const Equipe = () => {
   const teamMembers = [
        {
       name: "Luis Guilherme",
       role: "Design & Front-end",
-      description: "- Colaboração no Figma (interface e experiência do usuário)<br> Auxílio no desenvolvimento do site (código e integrações básicas).",
+      description:[ 
+        "- Colaboração no Figma (interface e experiência do usuário)",
+        "-Auxílio no desenvolvimento do site (código e integrações básicas)."].join("-"),
       image: imgLuis,
       linkedin: "#",
       email: "luis.guilherme@fintech.com"
@@ -22,7 +30,12 @@ const Equipe = () => {
     {
       name: "Maria Eduarda Sodre Alves",
       role: "Product Owner",
-      description: "- Liderança do projeto e tomada de decisões estratégicas. Gerenciamento do Trello(tasks, prazos e prioridades).Desenvolvimento e atualização do Canvas(modelo de negócios e validação).",
+      description: [
+        "- Liderança do projeto e tomada de decisões estratégicas. - Gerenciamento do Trello(tasks, prazos e prioridades).",
+        "- Desenvolvimento e atualização do Canvas(modelo de negócios e validação).",
+        "- Elaboração e refinamento do Business Model Canvas(BMC).",
+        " -Pesquisa de mercado e análise de viabilidade financeira."
+      ].join("-"),
       image: imgEduarda,
       linkedin: "#",
       email: "maria.eduarda@fintech.com"
@@ -30,20 +43,12 @@ const Equipe = () => {
     {
       name: "Maria Vitoria",
       role: "Design & Front-end",
-      description: "-Criação do protótipo no Figma (UI/UX Design). Desenvolvimento do site(implementação do frontend com HTML/CSS/JS).",
+      description: ["-Criação do protótipo no Figma (UI/UX Design).",
+        "-Desenvolvimento do site(implementação do frontend e backend)."].join("-"),
       image: imgVitoria,
       linkedin: "#",
       email: "maria.vitoria@fintech.com"
     },
-
-    {
-      name: "Pedro Henrique",
-      role: "Estratégia de Negócios",
-      description: "-Elaboração e refinamento do Business Model Canvas(BMC).Pesquisa de mercado e análise de viabilidade financeira.",
-      image: imgPedro,
-      linkedin: "#",
-      email: "pedro.henrique@fintech.com"
-    }
   ];
 
   return (
@@ -124,7 +129,7 @@ const Equipe = () => {
           </p>
           <div className="grid md:grid-cols-3 gap-8 mt-12">
             <div className="text-center">
-              <div className="text-3xl font-bold text-[#1A247E] mb-2">4+</div>
+              <div className="text-3xl font-bold text-[#1A247E] mb-2">3</div>
               <div className="text-gray-600">Anos de Experiência</div>
             </div>
             <div className="text-center">

@@ -1,12 +1,30 @@
+// Remova Navigation, div.min-h-screen, pt-20 e o Header section
+// Mantenha apenas o conteúdo principal dos consultores e o "Como Funciona"
 
-import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Calendar, MessageCircle, Award, Clock, Phone } from 'lucide-react';
+// import { Link } from 'react-router-dom'; // Certifique-se que Link ainda é necessário se não houver navegação interna aqui
 
-const ConsultoresFinanceiros = () => {
-  const consultores = [
+// **** ADICIONE ESTA INTERFACE AQUI ****
+interface Consultor {
+  id: number;
+  nome: string;
+  especialidade: string;
+  experiencia: string;
+  rating: number;
+  avaliacoes: number;
+  certificacoes: string[];
+  foto: string;
+  descricao: string;
+  valorConsulta: string;
+  disponibilidade: string;
+}
+
+const ConsultoresFinanceirosContent = () => {
+  // **** AGORA TIPAMOS O ARRAY consultores COM A INTERFACE ****
+  const consultores: Consultor[] = [
     {
       id: 1,
       nome: "Ana Paula Silva",
@@ -87,182 +105,160 @@ const ConsultoresFinanceiros = () => {
     }
   ];
 
-  const handleAgendarConsulta = (consultor: any) => {
-    // Aqui você pode implementar a lógica para agendar consulta
+  // **** AGORA TIPAMOS O PARÂMETRO consultor COM A INTERFACE ****
+  const handleAgendarConsulta = (consultor: Consultor) => {
     console.log(`Agendando consulta com ${consultor.nome}`);
+    // Implementar lógica de agendamento, talvez redirecionar para uma página de agendamento
+    // window.location.href = `/agendamento/${consultor.id}`;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navigation />
-      
-      <div className="pt-20">
-        {/* Header */}
-        <section className="fintech-gradient py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-              Consultores Financeiros
-            </h1>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Conecte-se com especialistas certificados para acelerar seus objetivos financeiros
+    <>
+      {/* Opcional: Você pode manter uma "Chamada" específica para consultores se quiser */}
+      <section className="fintech-gradient py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+            Nossos Consultores Financeiros
+          </h1>
+          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+            Conecte-se com especialistas certificados para acelerar seus objetivos financeiros
+          </p>
+        </div>
+      </section>
+
+      {/* Seção de Consultores */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Encontre seu Especialista
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Escolha o consultor ideal para sua situação e agende uma sessão personalizada
             </p>
           </div>
-        </section>
 
-        {/* Success Message */}
-        <section className="py-8 bg-green-50 border-b border-green-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-green-800 mb-2">Assinatura Confirmada!</h2>
-              <p className="text-green-700">
-                Parabéns! Agora você tem acesso completo à nossa plataforma e pode agendar consultorias personalizadas.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Consultores */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Nossos Consultores Especialistas
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Escolha o consultor ideal para sua situação e agende uma sessão personalizada
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {consultores.map((consultor) => (
-                <Card key={consultor.id} className="hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="text-center pb-4">
-                    <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
-                      <img 
-                        src={consultor.foto} 
-                        alt={consultor.nome}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <CardTitle className="text-xl font-bold">{consultor.nome}</CardTitle>
-                    <CardDescription className="text-[#1A247E] font-semibold">
-                      {consultor.especialidade}
-                    </CardDescription>
-                    
-                    {/* Rating */}
-                    <div className="flex items-center justify-center gap-2 mt-2">
-                      <div className="flex items-center">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="ml-1 font-semibold">{consultor.rating}</span>
-                      </div>
-                      <span className="text-gray-500">({consultor.avaliacoes} avaliações)</span>
-                    </div>
-                  </CardHeader>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {consultores.map((consultor) => (
+              <Card key={consultor.id} className="hover:shadow-xl transition-all duration-300">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
+                    <img 
+                      src={consultor.foto} 
+                      alt={consultor.nome}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <CardTitle className="text-xl font-bold">{consultor.nome}</CardTitle>
+                  <CardDescription className="text-[#1A247E] font-semibold">
+                    {consultor.especialidade}
+                  </CardDescription>
                   
-                  <CardContent className="space-y-4">
-                    <p className="text-gray-600 text-sm">{consultor.descricao}</p>
-                    
-                    {/* Certificações */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Award className="w-4 h-4 text-[#1A247E]" />
-                        <span className="text-sm font-semibold">Certificações:</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {consultor.certificacoes.map((cert, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
-                            {cert}
-                          </Badge>
-                        ))}
-                      </div>
+                  <div className="flex items-center justify-center gap-2 mt-2">
+                    <div className="flex items-center">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="ml-1 font-semibold">{consultor.rating}</span>
                     </div>
-                    
-                    {/* Experiência */}
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-[#1A247E]" />
-                      <span className="text-sm">{consultor.experiencia} de experiência</span>
+                    <span className="text-gray-500">({consultor.avaliacoes} avaliações)</span>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  <p className="text-gray-600 text-sm">{consultor.descricao}</p>
+                  
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Award className="w-4 h-4 text-[#1A247E]" />
+                      <span className="text-sm font-semibold">Certificações:</span>
                     </div>
-                    
-                    {/* Disponibilidade */}
-                    <div className="flex items-start gap-2">
-                      <Calendar className="w-4 h-4 text-[#1A247E] mt-0.5" />
-                      <span className="text-xs text-gray-600">{consultor.disponibilidade}</span>
+                    <div className="flex flex-wrap gap-1">
+                      {consultor.certificacoes.map((cert, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {cert}
+                        </Badge>
+                      ))}
                     </div>
-                    
-                    {/* Valor */}
-                    <div className="text-center py-2 bg-gray-50 rounded-lg">
-                      <span className="text-lg font-bold text-[#1A247E]">{consultor.valorConsulta}</span>
-                      <span className="text-sm text-gray-600"> / sessão</span>
-                    </div>
-                    
-                    {/* Botões de Ação */}
-                    <div className="space-y-2">
-                      <Button 
-                        className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]"
-                        onClick={() => handleAgendarConsulta(consultor)}
-                      >
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Agendar Consulta
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="w-full border-[#1A247E] text-[#1A247E] hover:bg-[#1A247E] hover:text-white"
-                      >
-                        <MessageCircle className="w-4 h-4 mr-2" />
-                        Enviar Mensagem
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-[#1A247E]" />
+                    <span className="text-sm">{consultor.experiencia} de experiência</span>
+                  </div>
+                  
+                  <div className="flex items-start gap-2">
+                    <Calendar className="w-4 h-4 text-[#1A247E] mt-0.5" />
+                    <span className="text-xs text-gray-600">{consultor.disponibilidade}</span>
+                  </div>
+                  
+                  <div className="text-center py-2 bg-gray-100 rounded-lg">
+                    <span className="text-lg font-bold text-[#1A247E]">{consultor.valorConsulta}</span>
+                    <span className="text-sm text-gray-600"> / sessão</span>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Button 
+                      className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]"
+                      onClick={() => handleAgendarConsulta(consultor)}
+                    >
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Agendar Consulta
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-[#1A247E] text-[#1A247E] hover:bg-[#1A247E] hover:text-white"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      Enviar Mensagem
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Como Funciona */}
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Como Funciona a Consultoria
-              </h2>
+      {/* Como Funciona */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Como Funciona a Consultoria
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Simples passos para você começar sua jornada rumo à independência financeira.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-[#1A247E] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white text-2xl font-bold">1</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Escolha seu Consultor</h3>
+              <p className="text-gray-600">Selecione o especialista que melhor atende suas necessidades financeiras</p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#1A247E] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white text-2xl font-bold">1</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Escolha seu Consultor</h3>
-                <p className="text-gray-600">Selecione o especialista que melhor atende suas necessidades financeiras</p>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-[#1A247E] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white text-2xl font-bold">2</span>
               </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#1A247E] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white text-2xl font-bold">2</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Agende sua Sessão</h3>
-                <p className="text-gray-600">Escolha data e horário convenientes para sua consulta personalizada</p>
+              <h3 className="text-xl font-semibold mb-2">Agende sua Sessão</h3>
+              <p className="text-gray-600">Escolha data e horário convenientes para sua consulta personalizada</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-[#1A247E] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white text-2xl font-bold">3</span>
               </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#1A247E] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white text-2xl font-bold">3</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Receba Orientação</h3>
-                <p className="text-gray-600">Obtenha estratégias personalizadas para alcançar seus objetivos financeiros</p>
-              </div>
+              <h3 className="text-xl font-semibold mb-2">Receba Orientação</h3>
+              <p className="text-gray-600">Obtenha estratégias personalizadas para alcançar seus objetivos financeiros</p>
             </div>
           </div>
-        </section>
-      </div>
-    </div>
+        </div>
+      </section>
+    </>
   );
 };
 
-export default ConsultoresFinanceiros;
+export default ConsultoresFinanceirosContent;

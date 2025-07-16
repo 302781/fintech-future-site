@@ -1,9 +1,11 @@
-
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TrendingUp, Shield, Wallet, Target, BookOpen, Users, BarChart, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+// Importe o componente de consultores
+import ConsultoresFinanceirosContent from '@/components/ConsultoresFinanceiros'; // Ajuste o caminho se necessário
 
 const Servicos = () => {
   const mainServices = [
@@ -35,7 +37,7 @@ const Servicos = () => {
     },
     {
       icon: <Users className="w-12 h-12 text-[#1A247E]" />,
-      title: "Consultoria Personalizada",
+      title: "Consultoria Personalizada", // Este serviço aqui pode ser ajustado para ser um "Chamada" para a seção de consultores abaixo
       description: "Acesso a especialistas certificados para orientação financeira individual."
     },
     {
@@ -109,7 +111,11 @@ const Servicos = () => {
                 </div>
                 <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
                   <img 
-                    src={`https://images.unsplash.com/photo-${index === 0 ? '1551288049-bebda4e38f71' : index === 1 ? '1460925895917-afdab827c52f' : '1554224154-26032fced8bd'}?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`}
+                    src={`https://images.unsplash.com/photo-${
+                      index === 0 ? '1551288049-bebda4e38f71' : // Imagem para Investimentos Inteligentes
+                      index === 1 ? '1460925895917-afdab827c52f' : // Imagem para Gestão Financeira Pessoal
+                      'ck0i9Dnjtj0' // Imagem para Planejamento Financeiro
+                    }?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`}
                     alt={service.title}
                     className="rounded-2xl shadow-xl"
                   />
@@ -152,77 +158,51 @@ const Servicos = () => {
         </div>
       </section>
 
-      {/* Planos e Preços */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Escolha Seu Plano
-            </h2>
-            <p className="text-xl text-gray-600">
-              Opções flexíveis para cada perfil de investidor
-            </p>
-          </div>
+      {/* Seção de Consultores Financeiros Integrada */}
+      <ConsultoresFinanceirosContent />
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Básico",
-                price: "Gratuito",
-                features: ["Gestão básica de gastos", "3 metas financeiras", "Relatórios mensais", "Suporte por email"]
-              },
-              {
-                name: "Premium",
-                price: "R$ 29,90/mês",
-                features: ["Todos os recursos básicos", "Investimentos automatizados", "Consultoria mensal", "App mobile premium", "Relatórios avançados"],
-                popular: true
-              },
-              {
-                name: "Enterprise",
-                price: "R$ 99,90/mês",
-                features: ["Todos os recursos premium", "Consultoria semanal", "Gestor dedicado", "Análises personalizadas", "Acesso prioritário"]
-              }
-            ].map((plan, index) => (
-              <Card key={index} className={`relative hover:shadow-xl transition-all ${plan.popular ? 'border-[#1A247E] border-2' : ''}`}>
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-[#1A247E] text-white px-4 py-1 rounded-full text-sm font-semibold">
-                      Mais Popular
-                    </span>
-                  </div>
-                )}
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                  <div className="text-3xl font-bold text-[#1A247E] mt-4">{plan.price}</div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 mb-6">
-                    {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  {plan.price === "Gratuito" ? (
-                    <Link to="/login">
-                      <Button className="w-full bg-gray-900 hover:bg-gray-800">
-                        Começar Grátis
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Link to="/pagamento">
-                      <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]">
-                        Assinar Agora
-                      </Button>
-                    </Link>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+      {/* Adicione o Footer se ele não estiver no seu layout principal */}
+      {/* Exemplo de Footer para manter a consistência se ele não estiver sendo importado */}
+      {/* <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-2xl font-bold mb-4">FinTech</h3>
+              <p className="text-gray-400">
+                Transformando vidas através da educação financeira
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Empresa</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link to="/sobre" className="hover:text-white transition-colors">Sobre Nós</Link></li>
+                <li><Link to="/equipe" className="hover:text-white transition-colors">Equipe</Link></li>
+                <li><Link to="/contato" className="hover:text-white transition-colors">Contato</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Produtos</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link to="/servicos" className="hover:text-white transition-colors">Investimentos</Link></li>
+                <li><Link to="/servicos" className="hover:text-white transition-colors">Planejamento</Link></li>
+                <li><Link to="/educacao" className="hover:text-white transition-colors">Educação</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Suporte</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link to="/faq" className="hover:text-white transition-colors">Central de Ajuda</Link></li>
+                <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+                <li><Link to="/seguranca" className="hover:text-white transition-colors">Segurança</Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 FinTech. Todos os direitos reservados.</p>
           </div>
         </div>
-      </section>
+      </footer>
+      */}
     </div>
   );
 };

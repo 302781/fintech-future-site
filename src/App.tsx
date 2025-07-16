@@ -26,6 +26,7 @@ import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import CursosBasico from "./pages/CursosBasico";
+import BibliotecaCompleta from './pages/BibliotecaCompleta'; 
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/faq" element={<FAQ />} />
             <Route path="/pagamento" element={<FormularioPagamento />} />
             <Route path="/consultores" element={<ConsultoresFinanceiros />} />
+             <Route path="/biblioteca-completa" element={<BibliotecaCompleta />} />
             <Route 
               path="/cursos-basico" 
               element={
