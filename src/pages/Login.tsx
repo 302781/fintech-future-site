@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import Navigation from '@/components/Navigation';
+import Navigation from '@/components/ui/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,7 +13,8 @@ import { useAuth } from '@/contexts/AuthContext';
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  // Agora importamos 'signUp' do useAuth
+  const { signIn, signUp, user } = useAuth(); 
   const navigate = useNavigate();
 
   // Redirecionar se já estiver logado
@@ -31,16 +32,22 @@ const Login = () => {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    const { error } = await signIn(email, password);
-    
-    if (error) {
-      toast.error('Erro ao fazer login: ' + error.message);
-    } else {
-      toast.success('Login realizado com sucesso!');
-      navigate('/cursos');
+    // Validação básica no frontend
+    if (!email || !password) {
+      toast.error('Por favor, preencha todos os campos para fazer login.');
+      setIsLoading(false);
+      return;
     }
-    
-    setIsLoading(false);
+
+    try {
+      await signIn(email, password); 
+      // O navigate('/cursos') e o toast.success já são tratados dentro de signIn no AuthContext
+    } catch (err: unknown) {
+      // Erro já tratado e tostado no AuthContext
+      console.error("Erro capturado na UI de Login:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,17 +59,33 @@ const Login = () => {
     const password = formData.get('registerPassword') as string;
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
+    // O campo 'phone' está presente no formulário, mas não é enviado para o backend no modelo atual.
+    // Se precisar dele, o backend e o `signUp` no AuthContext/sqliteClient precisarão ser atualizados.
+    // const phone = formData.get('phone') as string; 
 
-    const { error } = await signUp(email, password, firstName, lastName);
-    
-    
-    if (error) {
-      toast.error('Erro ao criar conta: ' + error.message);
-    } else {
-      toast.success('Conta criada com sucesso! Verifique seu email para confirmar.');
+    // Validações básicas no frontend para o cadastro
+    if (!email || !password || !firstName || !lastName) {
+      toast.error('Por favor, preencha todos os campos obrigatórios para o cadastro.');
+      setIsLoading(false);
+      return;
     }
-    
-    setIsLoading(false);
+    if (password.length < 8) {
+      toast.error('A senha deve ter no mínimo 8 caracteres.');
+      setIsLoading(false);
+      return;
+    }
+    // Adicione mais validações de senha (números, símbolos, etc.) se desejar
+
+    try {
+      // Chamada para a função signUp do AuthContext
+      await signUp(email, password, firstName, lastName);
+      // O navigate('/cursos') e o toast.success/error já são tratados dentro de signUp no AuthContext
+    } catch (err: unknown) {
+      // Erro já tratado e tostado no AuthContext
+      console.error("Erro capturado na UI de Cadastro:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -221,7 +244,8 @@ const Login = () => {
                         name="phone"
                         type="tel"
                         placeholder="(11) 99999-9999"
-                        required
+                        // Removi 'required' aqui, pois o backend atual não usa o telefone no signup.
+                        // Se for necessário no futuro, adicione 'required' e atualize o backend.
                         className="mt-1"
                       />
                     </div>

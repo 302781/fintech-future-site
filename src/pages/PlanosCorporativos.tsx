@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import emailjs from '@emailjs/browser';
+import emailjs from '@emailjs/browser'; // Importar o EmailJS
 
 const ContratarPlanoForm = () => {
   const [searchParams] = useSearchParams();
@@ -30,7 +30,8 @@ const ContratarPlanoForm = () => {
       setPlanoSelecionado(plano);
     } else {
       // Redireciona de volta se nenhum plano for especificado
-      navigate('/educacao-e-corporativo');
+      // Ou redirecione para uma página de erro/seleção de plano corporativo
+      navigate('/educacao-e-corporativo'); // Ou para uma nova página onde os planos são listados
       toast.error('Nenhum plano selecionado. Por favor, escolha um plano.');
     }
   }, [searchParams, navigate]);
@@ -64,8 +65,8 @@ const ContratarPlanoForm = () => {
           email_contato: formData.emailContato,
           telefone: formData.telefone,
           nome_instituicao: formData.nomeInstituicao,
-          numero_aluno: formData.numeroAlunos || 'Não especificado',
-          mensagem: formData.mensagem || 'Nenhuma mensagem adicional.',
+          numero_aluno: formData.numeroAlunos || 'Não especificado', // Campo opcional
+          mensagem: formData.mensagem || 'Nenhuma mensagem adicional.', // Campo opcional
         },
         'YOUR_PUBLIC_KEY' // Substitua pela sua Public Key (User ID) do EmailJS
       );
@@ -73,9 +74,14 @@ const ContratarPlanoForm = () => {
       setSubmissionSuccess(true);
       toast.success('Sua solicitação foi enviada com sucesso! Entraremos em contato em breve.');
 
+      // --- Simulação de Aprovação e Redirecionamento ---
+      // Em uma aplicação real, essa aprovação seria feita por você no backend
+      // e só depois o usuário teria seu plano ativado e seria redirecionado.
+      // Para fins de demonstração, vamos simular isso após alguns segundos.
       setTimeout(() => {
+        // Redireciona para a tela de cursos com o plano "ativado"
         navigate(`/cursos?planoAtivo=${encodeURIComponent(planoSelecionado)}`);
-      }, 5000);
+      }, 5000); // Redireciona após 5 segundos para o usuário ler a mensagem
       
     } catch (error) {
       console.error('Erro ao enviar a solicitação:', error);

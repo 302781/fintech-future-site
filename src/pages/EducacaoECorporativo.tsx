@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
@@ -6,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { BookUser, Users, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const EducacaoInfantil = () => {
-  const [selectedAge, setSelectedAge] = useState('criancas');
+const EducacaoECorporativo = () => {
+  const [selectedAge, setSelectedAge] = useState('adultos'); // Definindo adultos como padrão inicial
 
   const ageGroups = {
     criancas: {
@@ -56,7 +55,7 @@ const EducacaoInfantil = () => {
       <Navigation />
       
       <div className="pt-20">
-        {/* Header */}
+        {/* Header - Educação */}
         <section className="fintech-gradient py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
@@ -68,7 +67,7 @@ const EducacaoInfantil = () => {
           </div>
         </section>
 
-        {/* Age Selection */}
+        {/* Seção de Seleção de Idade (Educação) */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center mb-12">
@@ -76,7 +75,7 @@ const EducacaoInfantil = () => {
                 {Object.entries(ageGroups).map(([key, group]) => (
                   <Button
                     key={key}
-                    onClick={() => setSelectedAge(key)}
+                    onClick={() => setSelectedAge(key as keyof typeof ageGroups)}
                     variant={selectedAge === key ? "default" : "ghost"}
                     className={`mx-1 ${selectedAge === key ? 'bg-[#1A247E] text-white' : ''}`}
                   >
@@ -86,7 +85,7 @@ const EducacaoInfantil = () => {
               </div>
             </div>
 
-            {/* Selected Age Content */}
+            {/* Conteúdo da Idade Selecionada */}
             <div className="max-w-4xl mx-auto">
               <Card className="overflow-hidden">
                 <div className={`bg-gradient-to-r ${ageGroups[selectedAge].color} p-8 text-white`}>
@@ -124,9 +123,57 @@ const EducacaoInfantil = () => {
             </div>
           </div>
         </section>
+
+        ---
+
+        {/* Seção Corporativa */}
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                Programas Corporativos
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Ofereça educação financeira de alta qualidade para sua equipe.
+                Invista no bem-estar e na produtividade dos seus colaboradores.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Imagem ou ilustração representativa para o corporativo */}
+              <div>
+                <img
+                  src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  alt="Equipe trabalhando em ambiente corporativo"
+                  className="rounded-2xl shadow-xl w-full"
+                />
+              </div>
+
+              {/* Área de Chamada para Ação para a página de contratação */}
+              <Card className="shadow-lg p-6 text-center">
+                <CardHeader className="pb-4">
+                  <h3 className="text-2xl font-bold text-[#1A247E] mb-2">
+                    Invista na Saúde Financeira da Sua Empresa
+                  </h3>
+                  <CardDescription className="text-gray-600">
+                    Oferecemos soluções personalizadas de educação financeira para empresas de todos os portes.
+                    Conheça nossos planos e solicite uma proposta.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link to="/contratar-plano?plano=Soluções Corporativas">
+                    <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4">
+                      Ver Planos e Solicitar Proposta
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
 };
 
-export default EducacaoInfantil;
+export default EducacaoECorporativo;

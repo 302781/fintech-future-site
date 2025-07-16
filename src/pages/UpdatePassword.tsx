@@ -41,7 +41,7 @@ const UpdatePassword = () => {
 
     setIsLoading(true);
 
-    const { error } = await MySql.auth.updateUser({ password });
+    const { error } = await SQLite.auth.updateUser({ password });
 
     if (error) {
       toast.error('Erro ao atualizar a senha: ' + error.message);

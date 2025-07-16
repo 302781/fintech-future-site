@@ -1,56 +1,62 @@
 // src/components/CourseContent.tsx
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { PlayCircle } from 'lucide-react';
-import React from 'react'; // Importar React para usar React.ReactNode
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge'; 
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react'; // Ícone padrão para o link
 
-interface Course {
+// Tipos, se não estiverem em um arquivo de tipos global
+interface CourseItem {
   id: string;
   title: string;
   description: string;
-  icon: React.ReactNode; // Ícone para o curso
-  tags: string[]; // Tags para categorizar o curso
-  link?: string; // Opcional, se cada curso tiver um link direto
+  icon?: string;
+  tags: string[];
 }
 
 interface CourseContentProps {
-  courses: Course[];
+  courses: CourseItem[];
+  IconMap: { [key: string]: React.ElementType }; // Adicionar IconMap como prop
 }
 
-const CourseContent = ({ courses }: CourseContentProps) => {
-  if (courses.length === 0) {
+const CourseContent: React.FC<CourseContentProps> = ({ courses, IconMap }) => {
+  if (!courses || courses.length === 0) {
     return (
       <div className="text-center py-10 text-gray-600">
-        <p className="text-lg mb-4">No momento, não há cursos disponíveis para o seu plano ou eles estão em atualização.</p>
-        <p>Volte em breve para novidades ou entre em contato para mais informações.</p>
+        <p>Nenhum curso disponível no momento para o seu plano.</p>
+        <p className="mt-2 text-sm">Verifique as configurações do seu plano ou entre em contato com o suporte.</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {courses.map((course) => (
-        <Card key={course.id} className="hover:shadow-lg transition-all">
-          <CardHeader className="flex flex-row items-center space-x-4 pb-2">
-            <div className="flex-shrink-0">{course.icon}</div>
-            <CardTitle className="text-xl font-bold text-gray-900">{course.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-3 text-sm">{course.description}</p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {course.tags.map((tag, idx) => (
-                <span key={idx} className="bg-blue-100 text-[#1A247E] text-xs font-medium px-2.5 py-0.5 rounded-full">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]">
-              <PlayCircle className="w-4 h-4 mr-2" />
-              Acessar Curso
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {courses.map((course) => {
+        const IconComponent = course.icon ? IconMap[course.icon] : null; // Obtém o componente do ícone
+        return (
+          <Card key={course.id} className="flex flex-col h-full hover:shadow-lg transition-shadow duration-200">
+            <CardContent className="flex-grow p-6">
+              <div className="flex items-start mb-4">
+                {IconComponent && <IconComponent className="w-8 h-8 text-[#1A247E] mr-3 flex-shrink-0" />}
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{course.title}</h3>
+                  <p className="text-sm text-gray-600">{course.description}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {course.tags.map((tag, idx) => (
+                  <Badge key={idx} variant="outline">{tag}</Badge>
+                ))}
+              </div>
+              <div className="mt-auto pt-4 text-right">
+                <Link to={`/curso/${course.id}`} className="inline-flex items-center text-[#1A247E] hover:text-[#2D4DE0] font-medium">
+                  Detalhes do Curso <ArrowRight className="ml-1 w-4 h-4" />
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 };
