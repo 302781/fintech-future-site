@@ -6,13 +6,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Importe TODOS os ícones que você pode usar, incluindo User e Users
 import { BookUser, Clock, Award, LogIn, GraduationCap, TrendingUp, DollarSign, Lightbulb, PiggyBank, Briefcase, Landmark, Handshake, Info, PlusCircle, CheckCircle, User, Users } from 'lucide-react'; 
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext'; // Certifique-se de que o caminho está correto
 import { toast } from 'sonner';
 
-import CourseContent from '@/components/CourseContent';
-import InvestmentPlatforms from '@/components/InvestmentPlatforms';
+import CourseContent from '@/components/CourseContent'; // Certifique-se de que o caminho está correto
+import InvestmentPlatforms from '@/components/InvestmentPlatforms'; // Certifique-se de que o caminho está correto
 
 // --- DEFINIÇÃO DAS INTERFACES (MOVIDAS PARA CÁ) ---
+// Estas interfaces devem ser consistentes em todo o seu projeto onde são usadas.
+// Idealmente, estariam em um arquivo de tipos compartilhado (ex: src/types/plan.ts)
 interface CourseItem {
   id: string;
   title: string;
@@ -51,6 +53,14 @@ interface AllPlansContent {
   'Escola Básica': PlanContent;
   'Escola Premium': PlanContent;
   'Rede de Ensino': PlanContent;
+}
+
+// Interface para o estado do perfil do usuário neste componente
+interface UserProfileState {
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  planType: keyof AllPlansContent; // Tipado para ser uma das chaves de AllPlansContent
 }
 
 // --- CONFIGURAÇÃO INICIAL DOS PLANOS (MOVIDA PARA CÁ) ---
@@ -164,13 +174,12 @@ const IconMap: { [key: string]: React.ElementType } = {
 };
 
 const Cursos = () => {
-  const { user, signOut } = useAuth();
-  const [userProfile, setUserProfile] = useState<{
-    firstName: string;
-    lastName: string;
-    email: string | null;
-    planType: string;
-  } | null>(null);
+  // O 'user' vindo de useAuth() agora deve ser tipado como 'User | null'
+  // conforme a definição em src/contexts/AuthContext.tsx
+  const { user, signOut } = useAuth(); 
+
+  // Usando a nova interface UserProfileState
+  const [userProfile, setUserProfile] = useState<UserProfileState | null>(null);
   const [userPlan, setUserPlan] = useState<keyof AllPlansContent>('Escola Básica'); 
   const [allContent, setAllContent] = useState<AllPlansContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -207,8 +216,11 @@ const Cursos = () => {
 
   useEffect(() => {
     if (user && allContent) {
-      // Use um tipo mais seguro para user.user_metadata se estiver disponível
-      const userMetadata = user.user_metadata as { plan_type?: string; first_name?: string; last_name?: string; } | undefined;
+      // user.user_metadata agora é corretamente tipado pela interface User em AuthContext.tsx
+      // Não precisamos mais do 'as' aqui, pois o TypeScript já sabe o tipo
+      const userMetadata = user.user_metadata; 
+      
+      // O 'plan_type' pode ser undefined, então fornecemos um fallback
       const detectedPlan = (userMetadata?.plan_type || 'Escola Básica') as keyof AllPlansContent; 
       
       if (!(detectedPlan in allContent)) {
@@ -222,7 +234,7 @@ const Cursos = () => {
         firstName: userMetadata?.first_name || 'Usuário',
         lastName: userMetadata?.last_name || '',
         email: user.email,
-        planType: detectedPlan, 
+        planType: detectedPlan, // Já é do tipo correto
       });
     }
   }, [user, allContent]);
@@ -251,15 +263,18 @@ const Cursos = () => {
   }
 
   // Conteúdo filtrado baseado no plano do usuário
-  const currentPlanContent = allContent?.[userPlan] || { 
+  // allContent é AllPlansContent | null. Se for null, usamos um objeto vazio como fallback.
+  const currentPlanContent: PlanContent = allContent?.[userPlan] || { 
     details: { description: '', additionalFeatures: [] }, 
     courses: [], 
     investmentPlatforms: [], 
     tips: [] 
   };
+  
+  // As variáveis abaixo já são corretamente tipadas devido ao currentPlanContent
   const currentPlanDetails = currentPlanContent.details; 
-  const availableCourses = currentPlanContent.courses;
-  const availablePlatforms = currentPlanContent.investmentPlatforms;
+  const availableCourses = currentPlanContent.courses; // Tipo: CourseItem[]
+  const availablePlatforms = currentPlanContent.investmentPlatforms; // Tipo: PlatformItem[]
   const planTips = currentPlanContent.tips;
 
   return (
@@ -429,10 +444,12 @@ const Cursos = () => {
               </TabsContent>
 
               <TabsContent value="courses" className="space-y-8">
+                {/* As props 'courses' e 'IconMap' são passadas com os tipos corretos */}
                 <CourseContent courses={availableCourses} IconMap={IconMap} />
               </TabsContent>
               
               <TabsContent value="platforms" className="space-y-8">
+                {/* As props 'platforms' e 'IconMap' são passadas com os tipos corretos */}
                 <InvestmentPlatforms platforms={availablePlatforms} IconMap={IconMap} />
               </TabsContent>
             </Tabs>

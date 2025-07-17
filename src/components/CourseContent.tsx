@@ -1,11 +1,11 @@
-
-import { useState } from 'react';
+// src/components/CourseContent.tsx
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Play, Clock } from 'lucide-react';
-import LessonModal from './LessonModal';
+import LessonModal from './LessonModal'; 
 
 interface Lesson {
   title: string;
@@ -14,6 +14,7 @@ interface Lesson {
   videoUrl: string;
 }
 
+// Dados mockados para as lições de cada curso
 const gestaoFinanceiraLessons: Lesson[] = [
   {
     title: "Introdução à Gestão Financeira",
@@ -182,14 +183,28 @@ const paisLessons: Lesson[] = [
   },
 ];
 
-const CourseContent = () => {
-  const [selectedLesson, setSelectedLesson] = useState<any>(null);
+// Interface para as props do componente CourseContent
+interface CourseItem { // Esta interface deve ser a mesma que em Cursos.tsx
+  id: string;
+  title: string;
+  description: string;
+  icon?: string;
+  tags: string[];
+}
 
-  const handleWatchLesson = (lesson: any) => {
+interface CourseContentProps {
+  courses: CourseItem[]; // A prop 'courses' é um array de CourseItem
+  IconMap: { [key: string]: React.ElementType }; // A prop 'IconMap' é um objeto de mapeamento de ícones
+}
+
+const CourseContent: React.FC<CourseContentProps> = ({ courses, IconMap }) => {
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+
+  const handleWatchLesson = (lesson: Lesson) => {
     setSelectedLesson(lesson);
   };
 
-  const renderLessonCard = (lesson: any, index: number) => (
+  const renderLessonCard = (lesson: Lesson, index: number) => (
     <Card key={index} className="hover:shadow-lg transition-all duration-300">
       <CardHeader>
         <div className="flex items-start justify-between">

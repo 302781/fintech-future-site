@@ -21,7 +21,6 @@ import PlanosCorporativos from "./pages/PlanosCorporativos";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
-import CursosBasico from "./pages/CursosBasico";
 import BibliotecaCompleta from './pages/BibliotecaCompleta'; 
 import SettingsPage from "./pages/SettingsPage";
 
@@ -91,7 +90,7 @@ const App = () => (
               path="/cursos-basico" 
               element={
                 <ProtectedRoute>
-                  <CursosBasico />
+                  <Cursos />
                 </ProtectedRoute>
               } 
             />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import Navigation from '@/components/ui/navigation';
+import Navigation from 'src/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,7 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   // Agora importamos 'signUp' do useAuth
-  const { signIn, signUp, user } = useAuth(); 
+  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
   // Redirecionar se já estiver logado
@@ -27,7 +27,7 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -40,7 +40,7 @@ const Login = () => {
     }
 
     try {
-      await signIn(email, password); 
+      await signIn(email, password);
       // O navigate('/cursos') e o toast.success já são tratados dentro de signIn no AuthContext
     } catch (err: unknown) {
       // Erro já tratado e tostado no AuthContext
@@ -53,7 +53,7 @@ const Login = () => {
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get('registerEmail') as string;
     const password = formData.get('registerPassword') as string;
@@ -91,7 +91,7 @@ const Login = () => {
   return (
     <div className="min-h-screen fintech-gradient">
       <Navigation />
-      
+
       <div className="flex items-center justify-center min-h-screen pt-20 px-4">
         <div className="w-full max-w-md">
           <Tabs defaultValue="login" className="w-full">
@@ -124,7 +124,7 @@ const Login = () => {
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="password">Senha</Label>
                       <div className="relative mt-1">
@@ -155,8 +155,8 @@ const Login = () => {
                       </Link>
                     </div>
 
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]"
                       disabled={isLoading}
                     >
@@ -249,7 +249,7 @@ const Login = () => {
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="registerPassword">Senha</Label>
                       <div className="relative mt-1">
@@ -274,8 +274,15 @@ const Login = () => {
                     </div>
 
                     <div className="flex items-start space-x-2">
-                      <input type="checkbox" required className="mt-1" />
-                      <span className="text-sm text-gray-600">
+                      {/* 1. Adicionamos um ID único ao input */}
+                      <input
+                        id="termos-privacidade-checkbox" // ID único para o checkbox
+                        type="checkbox"
+                        required
+                        className="mt-1"
+                      />
+                      {/* 2. Envolvemos o texto em um <label> e o associamos ao input pelo 'htmlFor' */}
+                      <label htmlFor="termos-privacidade-checkbox" className="text-sm text-gray-600 cursor-pointer">
                         Aceito os{' '}
                         <a href="#" className="text-[#1A247E] hover:underline">
                           Termos de Uso
@@ -284,11 +291,11 @@ const Login = () => {
                         <a href="#" className="text-[#1A247E] hover:underline">
                           Política de Privacidade
                         </a>
-                      </span>
+                      </label>
                     </div>
 
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]"
                       disabled={isLoading}
                     >
