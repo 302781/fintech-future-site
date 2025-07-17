@@ -1,24 +1,192 @@
-// db.js (versão ESModules)
-import sqlite3 from 'sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
+// backend/server.js
+import express from 'express';
 import cors from 'cors';
+import bodyParser from 'body-parser';
+import db from './db.js'; // Importa a instância do banco de dados de db.js
+import crypto from 'crypto'; // Para simular hashing de senha (USE BCRYPTJS EM PRODUÇÃO!)
 
-// Emular __dirname em ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const app = express();
+const PORT = 3001;
 
-const dbPath = path.resolve(__dirname, 'db.sqlite3');
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Erro ao conectar no banco de dados:', err.message);
+app.use(cors());
+app.use(bodyParser.json());
+
+// Helper para hashing SIMPLIFICADO (APENAS PARA DEMONSTRAÇÃO - NÃO SEGURO PARA PROD)
+// USE UMA BIBLIOTECA COMO 'bcryptjs' EM PRODUÇÃO!
+const hashPassword = (password) => {
+  return crypto.createHash('sha256').update(password).digest('hex');
+};
+
+// Criação da tabela
+// Adicionei 'password_hash' e 'plan_type', e 'user_metadata' para firstName/lastName
+db.serialize(() => {
+  db.run(`CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    plan_type TEXT DEFAULT 'Escola Básica',
+    user_metadata TEXT
+  )`, (err) => {
+    if (err) console.error("Erro ao criar tabela 'users':", err.message);
+    else console.log("Tabela 'users' verificada/criada.");
+  });
+});
+
+// Rota de Cadastro (Signup)
+app.post('/signup', (req, res) => {
+  const { email, password, firstName, lastName } = req.body;
+
+  if (!email || !password || !firstName || !lastName) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+  }
+
+  const passwordHash = hashPassword(password);
+  const userMetadata = JSON.stringify({ first_name: firstName, last_name: lastName });
+
+  db.run(
+    `INSERT INTO users (email, password_hash, plan_type, user_metadata) VALUES (?, ?, ?, ?)`,
+    [email, passwordHash, 'Escola Básica', userMetadata],
+    function (err) {
+      if (err) {
+        console.error('Erro no cadastro:', err.message);
+        if (err.message.includes('UNIQUE constraint failed')) {
+          return res.status(409).json({ error: 'E-mail já cadastrado.' });
+        }
+        return res.status(500).json({ error: 'Erro ao cadastrar usuário.' });
+      }
+      res.status(201).json({
+        success: true,
+        message: 'Usuário cadastrado com sucesso!',
+        user: {
+          id: String(this.lastID),
+          email,
+          user_metadata: {
+            first_name: firstName,
+            last_name: lastName,
+            plan_type: 'Escola Básica'
+          }
+        }
+      });
+    }
+  );
+});
+
+// Rota de Login (Signin)
+app.post('/signin', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'E-mail e senha são obrigatórios.' });
+  }
+
+  const hashedPasswordInput = hashPassword(password);
+
+  db.get(
+    `SELECT * FROM users WHERE email = ?`,
+    [email],
+    (err, user) => {
+      if (err) {
+        console.error('Erro no login:', err.message);
+        return res.status(500).json({ error: 'Erro interno do servidor.' });
+      }
+      if (!user || user.password_hash !== hashedPasswordInput) {
+        return res.status(401).json({ error: 'Credenciais inválidas.' });
+      }
+
+      let userMetadata = {};
+      try {
+        userMetadata = JSON.parse(user.user_metadata || '{}');
+      } catch (parseError) {
+        console.warn('Erro ao parsear user_metadata:', parseError);
+      }
+
+      res.json({
+        success: true,
+        user: {
+          id: String(user.id),
+          email: user.email,
+          user_metadata: {
+            first_name: userMetadata.first_name,
+            last_name: userMetadata.last_name,
+            plan_type: user.plan_type
+          }
+        }
+      });
+    }
+  );
+});
+
+// Simula obter usuário logado
+app.get('/user', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const userId = authHeader.split(' ')[1];
+    db.get(`SELECT * FROM users WHERE id = ?`, [userId], (err, user) => {
+      if (err || !user) return res.json({ data: { user: null } });
+
+      let userMetadata = {};
+      try {
+        userMetadata = JSON.parse(user.user_metadata || '{}');
+      } catch (parseError) {
+        console.warn('Erro ao parsear user_metadata para /user:', parseError);
+      }
+
+      res.json({
+        data: {
+          user: {
+            id: String(user.id),
+            email: user.email,
+            user_metadata: {
+              first_name: userMetadata.first_name,
+              last_name: userMetadata.last_name,
+              plan_type: user.plan_type
+            }
+          }
+        }
+      });
+    });
   } else {
-    console.log(`Conectado ao banco de dados SQLite em: ${dbPath}`);
+    res.json({ data: { user: null } });
   }
 });
-app.use(cors({
-  origin: 'http://localhost:5173', // Substitua pela porta do seu frontend se for diferente
-  credentials: true
-}));
 
-export default db; // ← agora o import no server.js funciona
+// Atualização do plano do usuário
+app.put('/users/:id/plan', (req, res) => {
+  const userId = req.params.id;
+  const { plan_type } = req.body;
+
+  if (!plan_type) {
+    return res.status(400).json({ error: 'O tipo de plano é obrigatório.' });
+  }
+
+  db.run(
+    `UPDATE users SET plan_type = ? WHERE id = ?`,
+    [plan_type, userId],
+    function (err) {
+      if (err) {
+        console.error('Erro ao atualizar plano:', err.message);
+        return res.status(500).json({ error: 'Erro ao atualizar plano do usuário.' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Usuário não encontrado.' });
+      }
+      res.json({ success: true, message: 'Plano atualizado com sucesso.' });
+    }
+  );
+});
+
+app.listen(PORT, () => {
+  console.log(`Backend rodando na porta ${PORT}`);
+});
+
+// Fecha conexão com o banco ao encerrar
+process.on('SIGINT', () => {
+  db.close((err) => {
+    if (err) {
+      console.error('Erro ao fechar o banco de dados:', err.message);
+    } else {
+      console.log('Conexão com o banco de dados SQLite fechada.');
+    }
+    process.exit(0);
+  });
+});
