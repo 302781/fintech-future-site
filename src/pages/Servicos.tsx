@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { TrendingUp, Shield, Wallet, Target, BookOpen, Users, BarChart, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Importe o componente de consultores
 import ConsultoresFinanceirosContent from '@/pages/ConsultoresFinanceiros'; // Ajuste o caminho se necessário
 
 const Servicos = () => {

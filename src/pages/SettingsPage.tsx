@@ -10,7 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle, Trash2, Edit, Save, X } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Importe as interfaces e a constante de outro arquivo
 import {
   CourseItem,
   PlatformItem,

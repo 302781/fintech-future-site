@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { TrendingUp, Shield, Wallet, Target } from 'lucide-react';
 
 const Services = () => {
-  const services = [
+  const services = [ 
     {
       icon: <TrendingUp className="w-12 h-12 text-[#1A247E]" />,
       title: "Investimentos Inteligentes",

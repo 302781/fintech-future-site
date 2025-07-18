@@ -1,20 +1,31 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { getErrorMessage } from '../utils/errorUtils'; 
 
+// --- Interfaces de Tipagem ---
 interface User {
   id: number;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
+  planType?: string; 
+}
+
+// Tipos de retorno para as funções de autenticação
+interface AuthResult {
+  error: { message: string } | null;
+  success?: boolean; // Opcional, usado mais para signUp
+  message?: string; // Opcional, para mensagens de sucesso/erro
 }
 
 interface AuthContextType {
   user: User | null;
-  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<AuthResult>; // Corrigido o tipo de retorno
+  signIn: (email: string, password: string) => Promise<AuthResult>; // Corrigido o tipo de retorno
   signOut: () => void;
   loading: boolean;
 }
+// --- Fim das Interfaces de Tipagem ---
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -25,107 +36,110 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true); // Começa como true para indicar que estamos verificando a sessão
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-    // Função auxiliar para obter a mensagem de erro (conforme sugerido acima)
-    const getErrorMessage = (err: any): string => {
-        if (axios.isAxiosError(err)) {
-            if (err.response && err.response.data) {
-                if (typeof err.response.data === 'string') {
-                    return err.response.data;
-                }
-                if (err.response.data.error) {
-                    return err.response.data.error;
-                }
-                if (err.response.data.message) {
-                    return err.response.data.message;
-                }
-            }
-            if (err.message === 'Network Error') { // Erro de rede explícito
-                return 'Não foi possível conectar ao servidor. Verifique sua conexão ou o status do servidor.';
-            }
-            return err.message || 'Erro de servidor desconhecido.';
-        }
-        return 'Ocorreu um erro inesperado.';
-    };
+  const signIn = async (email: string, password: string): Promise<AuthResult> => {
+    setLoading(true);
+    try {
+      const res = await axios.post('http://localhost:3001/signin', { email, password });
 
-    // Função para lidar com o login (com as correções)
-    const signIn = async (email: string, password: string) => { // Removidos firstName, lastName
-        setLoading(true);
-        try {
-            // Supondo que o backend retorne o token e os dados do usuário
-            const res = await axios.post('http://localhost:3001/signin', { email, password });
-            
-            // Supondo que o token esteja em res.data.token
-            const token = res.data.token; 
-            localStorage.setItem('authToken', token); // Armazena o token
-            
-            // Supondo que os dados do usuário estejam em res.data.user
-            setUser(res.data.user); 
-            
-            // Configura o cabeçalho Authorization para futuras requisições com Axios
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const token = res.data.token;
+      if (token) {
+        localStorage.setItem('authToken', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-            setLoading(false);
-            return { error: null };
-        } catch (err: any) {
-            setLoading(false);
-            const message = getErrorMessage(err);
-            return { error: { message } };
-        }
-    };
-
-    // Função para lidar com o cadastro
-    const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
-        setLoading(true);
-        try {
-            const res = await axios.post('http://localhost:3001/signup', { email, password, firstName, lastName });
-            // Após o cadastro, você pode querer logar o usuário automaticamente
-            // Ou apenas indicar sucesso e redirecionar para a tela de login.
-            // Se o backend retorna um token, pode fazer o mesmo que signIn aqui.
-            setLoading(false);
-            return { error: null, success: true, message: "Cadastro realizado com sucesso! Agora você pode fazer login." };
-        } catch (err: any) {
-            setLoading(false);
-            const message = getErrorMessage(err);
-            return { error: { message } };
-        }
-    };
-
-    // Função para lidar com o logout
-    const signOut = () => {
-        setUser(null);
-        localStorage.removeItem('authToken'); // Remove o token do localStorage
-        delete axios.defaults.headers.common['Authorization']; // Limpa o cabeçalho de autenticação do Axios
-    };
-
-    // Efeito para verificar a autenticação ao carregar a aplicação
-    useEffect(() => {
-        const checkAuth = async () => {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                // Tenta validar o token com o backend (opcional, mas recomendado para segurança)
-                try {
-                    // Endpoint no backend para validar o token e retornar dados do usuário
-                    const res = await axios.get('http://localhost:3001/validate-token', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    setUser(res.data.user);
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                } catch (error) {
-                    console.error('Erro ao validar token:', error);
-                    localStorage.removeItem('authToken'); // Token inválido, remove-o
-                }
-            }
-            setLoading(false); // Marca o carregamento como concluído
+        // Adapta o objeto de usuário do backend para a interface User do frontend
+        const backendUser = res.data.user;
+        const formattedUser: User = {
+            id: Number(backendUser.id),
+            email: backendUser.email,
+            firstName: backendUser.user_metadata?.first_name,
+            lastName: backendUser.user_metadata?.last_name,
+            planType: backendUser.user_metadata?.plan_type || backendUser.plan_type, // Ajuste para como seu backend retorna
         };
-        checkAuth();
-    }, []); // O array vazio garante que este efeito roda apenas uma vez, no montagem do componente
+        setUser(formattedUser);
 
-    return (
-        <AuthContext.Provider value={{ user, signUp, signIn, signOut, loading }}>
-            {children}
-        </AuthContext.Provider>
-    );
+        setLoading(false);
+        return { error: null };
+      } else {
+          // Caso o backend não retorne um token por algum motivo (mesmo com sucesso)
+          setLoading(false);
+          return { error: { message: "Login bem-sucedido, mas nenhum token recebido." } };
+      }
+    } catch (err) { // 'err' agora é inferido corretamente ou você pode tipá-lo como 'unknown'
+      setLoading(false);
+      const message = getErrorMessage(err);
+      return { error: { message } };
+    }
+  };
+
+  const signUp = async (email: string, password: string, firstName: string, lastName: string): Promise<AuthResult> => {
+    setLoading(true);
+    try {
+      const res = await axios.post('http://localhost:3001/signup', { email, password, firstName, lastName });
+
+      setLoading(false);
+      // Sua rota de signup retorna 'success: true' e 'message' no backend.
+      // Adapte a tipagem do retorno para combinar com o que o backend realmente envia.
+      return {
+        error: null,
+        success: res.data.success, // O backend já envia isso
+        message: res.data.message || "Cadastro realizado com sucesso! Agora você pode fazer login."
+      };
+    } catch (err) {
+      setLoading(false);
+      const message = getErrorMessage(err);
+      return { error: { message } };
+    }
+  };
+
+  const signOut = () => {
+    setUser(null);
+    localStorage.removeItem('authToken');
+    delete axios.defaults.headers.common['Authorization'];
+  };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        try {
+          // Configure o token para esta requisição específica
+          const res = await axios.get('http://localhost:3001/user', { // Usando /user que já é protegida
+            headers: { Authorization: `Bearer ${token}` }
+          });
+
+          // Seu backend /user retorna { data: { user: {...} } }
+          const backendUser = res.data.data.user;
+          if (backendUser) {
+            const formattedUser: User = {
+                id: Number(backendUser.id),
+                email: backendUser.email,
+                firstName: backendUser.user_metadata?.first_name,
+                lastName: backendUser.user_metadata?.last_name,
+                planType: backendUser.user_metadata?.plan_type,
+            };
+            setUser(formattedUser);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          } else {
+            console.warn('Backend /user retornou usuário nulo ou inválido.');
+            localStorage.removeItem('authToken');
+          }
+        } catch (error) {
+          console.error('Erro ao validar token ou carregar usuário:', error);
+          localStorage.removeItem('authToken');
+          delete axios.defaults.headers.common['Authorization'];
+        }
+      }
+      setLoading(false);
+    };
+    checkAuth();
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, signUp, signIn, signOut, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

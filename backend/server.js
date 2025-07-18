@@ -1,9 +1,9 @@
-// backend/server.js
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import db from './db.js'; // Importa a instância do banco de dados de db.js
-import crypto from 'crypto'; // Para simular hashing de senha (USE BCRYPTJS EM PRODUÇÃO!)
+import db from './db.js';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 const app = express();
 const PORT = 3001;
@@ -11,14 +11,30 @@ const PORT = 3001;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Helper para hashing SIMPLIFICADO (APENAS PARA DEMONSTRAÇÃO - NÃO SEGURO PARA PROD)
-// USE UMA BIBLIOTECA COMO 'bcryptjs' EM PRODUÇÃO!
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secreto_e_forte_chave_aqui_12345';
+
 const hashPassword = (password) => {
   return crypto.createHash('sha256').update(password).digest('hex');
 };
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  // Formato esperado: 'Bearer TOKEN_AQUI'
+  const token = authHeader && authHeader.split(' ')[1];
 
-// Criação da tabela
-// Adicionei 'password_hash' e 'plan_type', e 'user_metadata' para firstName/lastName
+  if (token == null) {
+    // console.log('Token não fornecido.');
+    return res.status(401).json({ error: 'Token de autenticação não fornecido.' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Token de autenticação inválido ou expirado.' });
+    }
+    req.user = user;
+    next();
+  });
+};
+
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,7 +48,6 @@ db.serialize(() => {
   });
 });
 
-// Rota de Cadastro (Signup)
 app.post('/signup', (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -71,15 +86,18 @@ app.post('/signup', (req, res) => {
   );
 });
 
-// Rota de Login (Signin)
 app.post('/signin', (req, res) => {
   const { email, password } = req.body;
+
+  console.log(`Tentativa de login para o e-mail: ${email}`);
+  console.log(`Senha recebida (texto claro): ${password}`);
 
   if (!email || !password) {
     return res.status(400).json({ error: 'E-mail e senha são obrigatórios.' });
   }
 
   const hashedPasswordInput = hashPassword(password);
+  console.log(`Senha de entrada hashed: ${hashedPasswordInput}`);
 
   db.get(
     `SELECT * FROM users WHERE email = ?`,
@@ -88,6 +106,12 @@ app.post('/signin', (req, res) => {
       if (err) {
         console.error('Erro no login:', err.message);
         return res.status(500).json({ error: 'Erro interno do servidor.' });
+      }
+      if (user) {
+        console.log(`Usuário encontrado no DB: ${user.email}`);
+        console.log(`Hash da senha armazenada no DB: ${user.password_hash}`);
+      } else {
+        console.log(`Usuário com e-mail ${email} NÃO encontrado no DB.`);
       }
       if (!user || user.password_hash !== hashedPasswordInput) {
         return res.status(401).json({ error: 'Credenciais inválidas.' });
@@ -116,7 +140,6 @@ app.post('/signin', (req, res) => {
   );
 });
 
-// Simula obter usuário logado
 app.get('/user', (req, res) => {
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -150,7 +173,6 @@ app.get('/user', (req, res) => {
   }
 });
 
-// Atualização do plano do usuário
 app.put('/users/:id/plan', (req, res) => {
   const userId = req.params.id;
   const { plan_type } = req.body;
@@ -179,7 +201,6 @@ app.listen(PORT, () => {
   console.log(`Backend rodando na porta ${PORT}`);
 });
 
-// Fecha conexão com o banco ao encerrar
 process.on('SIGINT', () => {
   db.close((err) => {
     if (err) {
@@ -190,3 +211,4 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
+
