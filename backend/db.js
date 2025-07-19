@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3';
-import dbpath from './database.db';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 // __dirname equivalente para ESModules:

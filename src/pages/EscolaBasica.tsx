@@ -1,145 +1,203 @@
-
+import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Users, BookOpen, BarChart3, Headphones, FileText } from 'lucide-react';
-import { useStripe } from '@/hooks/useStripe';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Play, Filter, BookOpen, Gamepad2, Video, CheckCircle, Smile, Frown } from 'lucide-react';
 
 const EscolaBasica = () => {
-  const { redirectToCheckout, loading } = useStripe();
+  const [currentProgress, setCurrentProgress] = useState(35);
+  const [selectedFilter, setSelectedFilter] = useState('todos');
+  const [completedActivities, setCompletedActivities] = useState(['game1', 'video1']);
 
-  const features = [
-    {
-      icon: <BookOpen className="w-6 h-6" />,
-      title: "Acesso completo ao conteúdo educativo",
-      description: "Todo o material didático disponível na plataforma"
-    },
-    {
-      icon: <BarChart3 className="w-6 h-6" />,
-      title: "Dashboard para professores",
-      description: "Interface completa para acompanhamento dos alunos"
-    },
-    {
-      icon: <FileText className="w-6 h-6" />,
-      title: "Relatórios de progresso",
-      description: "Acompanhe o desenvolvimento de cada aluno"
-    },
-    {
-      icon: <Headphones className="w-6 h-6" />,
-      title: "Suporte técnico",
-      description: "Atendimento especializado para resolver dúvidas"
-    },
-    {
-      icon: <FileText className="w-6 h-6" />,
-      title: "Material didático digital",
-      description: "Recursos educacionais interativos e atualizados"
+  const contentLibrary = [
+    { id: 'game1', type: 'game', title: 'Jogo da Poupança', description: 'Aprenda a guardar dinheiro de forma divertida', theme: 'poupança', completed: true },
+    { id: 'game2', type: 'game', title: 'Mercadinho Virtual', description: 'Faça compras conscientes no mercado virtual', theme: 'consumo', completed: false },
+    { id: 'video1', type: 'video', title: 'O que é Dinheiro?', description: 'Vídeo explicativo sobre moedas e notas', theme: 'moeda', completed: true },
+    { id: 'video2', type: 'video', title: 'Necessidade vs Desejo', description: 'Aprenda a diferença entre o que precisamos e queremos', theme: 'consumo', completed: false },
+    { id: 'activity1', type: 'activity', title: 'Quiz: Cofre ou Gasto?', description: 'Atividade de múltipla escolha sobre onde gastar', theme: 'poupança', completed: false },
+    { id: 'activity2', type: 'activity', title: 'Arrastar Moedas', description: 'Organize as moedas do menor para o maior valor', theme: 'moeda', completed: false }
+  ];
+
+  const filteredContent = contentLibrary.filter(item => {
+    if (selectedFilter === 'todos') return true;
+    return item.type === selectedFilter || item.theme === selectedFilter;
+  });
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'game': return <Gamepad2 className="w-4 h-4" />;
+      case 'video': return <Video className="w-4 h-4" />;
+      case 'activity': return <BookOpen className="w-4 h-4" />;
+      default: return <BookOpen className="w-4 h-4" />;
     }
-  ];
+  };
 
-  const benefits = [
-    "Até 100 alunos inclusos",
-    "Acesso por 12 meses",
-    "Atualizações gratuitas",
-    "Certificado digital",
-    "Suporte por email"
-  ];
-
-  const handleSubscribe = () => {
-    // Usando o Price ID correto e o novo caminho de sucesso
-    redirectToCheckout('price_1RWfhmRvHw6hJ7Pc5SKfc6Oo', '/cursos-basico');
+  const handleActivityComplete = (activityId: string) => {
+    if (!completedActivities.includes(activityId)) {
+      setCompletedActivities([...completedActivities, activityId]);
+      setCurrentProgress(prev => Math.min(prev + 10, 100));
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <Navigation />
       
-      <div className="pt-20">
-        {/* Header */}
-        <section className="fintech-gradient py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="flex justify-center mb-6">
-              <Users className="w-16 h-16 text-white" />
+      <div className="pt-20 px-4 max-w-6xl mx-auto">
+        {/* Header do Estudante */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+          <div className="flex items-center gap-6 mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+              J
             </div>
-            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-              Plano Escola Básica
-            </h1>
-            <div className="text-5xl font-bold text-white mb-4">
-              R$ 299<span className="text-2xl">/mês</span>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Olá, João!</h1>
+              <p className="text-gray-600">Plano Escola Básica</p>
             </div>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Ideal para escolas pequenas com até 100 alunos que desejam iniciar a educação financeira
-            </p>
           </div>
-        </section>
 
-        {/* Features */}
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                O que está incluído
-              </h2>
-              <p className="text-xl text-gray-600">
-                Todos os recursos essenciais para implementar educação financeira na sua escola
-              </p>
+          {/* Barra de Progresso */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-700">Progresso do Módulo</span>
+              <span className="text-sm text-gray-600">{currentProgress}%</span>
+            </div>
+            <Progress value={currentProgress} className="h-3" />
+          </div>
+
+          {/* Botão Principal */}
+          <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-4 text-lg">
+            <Play className="w-5 h-5 mr-2" />
+            {currentProgress > 0 ? 'Continuar onde parei' : 'Iniciar primeira aula'}
+          </Button>
+        </div>
+
+        {/* Filtros */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="w-5 h-5" />
+              Biblioteca de Conteúdo
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <Button 
+                variant={selectedFilter === 'todos' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedFilter('todos')}
+              >
+                Todos
+              </Button>
+              <Button 
+                variant={selectedFilter === 'game' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedFilter('game')}
+              >
+                <Gamepad2 className="w-4 h-4 mr-1" />
+                Jogos
+              </Button>
+              <Button 
+                variant={selectedFilter === 'video' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedFilter('video')}
+              >
+                <Video className="w-4 h-4 mr-1" />
+                Vídeos
+              </Button>
+              <Button 
+                variant={selectedFilter === 'activity' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedFilter('activity')}
+              >
+                <BookOpen className="w-4 h-4 mr-1" />
+                Atividades
+              </Button>
+              <Button 
+                variant={selectedFilter === 'poupança' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedFilter('poupança')}
+              >
+                Poupança
+              </Button>
+              <Button 
+                variant={selectedFilter === 'consumo' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedFilter('consumo')}
+              >
+                Consumo
+              </Button>
+              <Button 
+                variant={selectedFilter === 'moeda' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedFilter('moeda')}
+              >
+                Moeda
+              </Button>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {features.map((feature, index) => (
-                <Card key={index} className="hover:shadow-lg transition-all">
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="text-[#1A247E]">
-                        {feature.icon}
+            {/* Grid de Conteúdo */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredContent.map((item) => (
+                <Card key={item.id} className={`cursor-pointer transition-all hover:shadow-md ${item.completed ? 'ring-2 ring-green-200' : ''}`}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        {getTypeIcon(item.type)}
+                        <Badge variant="secondary" className="text-xs">
+                          {item.theme}
+                        </Badge>
                       </div>
-                      <CardTitle className="text-lg">{feature.title}</CardTitle>
+                      {item.completed && <CheckCircle className="w-5 h-5 text-green-500" />}
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{feature.description}</p>
+                    <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-600 mb-4">{item.description}</p>
+                    <Button 
+                      size="sm" 
+                      className="w-full"
+                      variant={item.completed ? 'outline' : 'default'}
+                      onClick={() => handleActivityComplete(item.id)}
+                    >
+                      {item.completed ? 'Revisar' : 'Iniciar'}
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
             </div>
-          </div>
-        </section>
+          </CardContent>
+        </Card>
 
-        {/* Benefits */}
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Benefícios inclusos
-              </h2>
-            </div>
-
-            <Card className="mb-8">
-              <CardContent className="p-8">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{benefit}</span>
-                    </div>
-                  ))}
+        {/* Feedback Simples */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Meu Desempenho</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl mb-2">🎉</div>
+                <p className="font-semibold text-gray-900">Muito bem!</p>
+                <p className="text-sm text-gray-600">Continue assim!</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <Smile className="w-8 h-8 text-green-500" />
+                  <span className="text-2xl font-bold text-green-600">75%</span>
                 </div>
-              </CardContent>
-            </Card>
-
-            <div className="text-center">
-              <Button 
-                onClick={handleSubscribe}
-                disabled={loading}
-                className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-3"
-              >
-                {loading ? 'Processando...' : 'Contratar Plano Básico'}
-              </Button>
-              <p className="text-sm text-gray-600 mt-4">
-                Sem compromisso • Cancele quando quiser
-              </p>
+                <p className="text-sm text-gray-600">Acertos</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <Frown className="w-8 h-8 text-red-400" />
+                  <span className="text-2xl font-bold text-red-500">25%</span>
+                </div>
+                <p className="text-sm text-gray-600">Erros</p>
+              </div>
             </div>
-          </div>
-        </section>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

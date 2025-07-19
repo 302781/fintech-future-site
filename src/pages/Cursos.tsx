@@ -4,17 +4,12 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// Importe TODOS os ícones que você pode usar, incluindo User e Users
 import { BookUser, Clock, Award, LogIn, GraduationCap, TrendingUp, DollarSign, Lightbulb, PiggyBank, Briefcase, Landmark, Handshake, Info, PlusCircle, CheckCircle, User, Users } from 'lucide-react'; 
-import { useAuth } from '@/contexts/AuthContext'; // Certifique-se de que o caminho está correto
+import { useAuth } from '@/contexts/AuthContext'; 
 import { toast } from 'sonner';
 
-import CourseContent from '@/components/CourseContent'; // Certifique-se de que o caminho está correto
-import InvestmentPlatforms from '@/components/InvestmentPlatforms'; // Certifique-se de que o caminho está correto
-
-// --- DEFINIÇÃO DAS INTERFACES (MOVIDAS PARA CÁ) ---
-// Estas interfaces devem ser consistentes em todo o seu projeto onde são usadas.
-// Idealmente, estariam em um arquivo de tipos compartilhado (ex: src/types/plan.ts)
+import CourseContent from '@/components/CourseContent'
+import InvestmentPlatforms from '@/components/InvestmentPlatforms'; 
 interface CourseItem {
   id: string;
   title: string;

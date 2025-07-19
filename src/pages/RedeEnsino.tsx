@@ -1,189 +1,374 @@
-
+import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Users, Building2, Calendar, GraduationCap, Gamepad2, Settings, MessageSquare, Cog, User, Zap, Code, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { 
+  Trophy, Crown, MessageCircle, Users, Target, Calendar,
+  TrendingUp, Globe, Award, MapPin, Zap, BarChart3,
+  QrCode, HeadphonesIcon, FileText, Brain, Lightbulb
+} from 'lucide-react';
 
 const RedeEnsino = () => {
-  const features = [
-    {
-      icon: <Building2 className="w-6 h-6" />,
-      title: "Todos os recursos Premium",
-      description: "Acesso completo a todas as funcionalidades do plano Premium"
+  const [globalRank, setGlobalRank] = useState(147);
+  const [networkStats, setNetworkStats] = useState({
+    totalSchools: 45,
+    activeStudents: 12500,
+    completedCourses: 45000
+  });
+
+  const adaptiveSuggestions = [
+    { 
+      title: 'Foque em Matemática Financeira', 
+      reason: 'Baseado no seu desempenho, você se beneficiaria destes exercícios',
+      difficulty: 'medium',
+      estimatedTime: '20 min'
     },
-    {
-      icon: <Cog className="w-6 h-6" />,
-      title: "Implementação personalizada",
-      description: "Customização completa da plataforma conforme suas necessidades"
+    { 
+      title: 'Revisão: Conceitos de Juros', 
+      reason: 'Identifiquei algumas dificuldades neste tópico',
+      difficulty: 'easy',
+      estimatedTime: '15 min'
     },
-    {
-      icon: <User className="w-6 h-6" />,
-      title: "Gestor de conta dedicado",
-      description: "Profissional exclusivo para atender sua instituição"
-    },
-    {
-      icon: <GraduationCap className="w-6 h-6" />,
-      title: "Treinamentos especializados",
-      description: "Capacitação avançada para toda sua equipe"
-    },
-    {
-      icon: <Code className="w-6 h-6" />,
-      title: "API para integração",
-      description: "Integração completa com seus sistemas existentes"
-    },
-    {
-      icon: <Clock className="w-6 h-6" />,
-      title: "Suporte 24/7",
-      description: "Atendimento especializado disponível 24 horas por dia"
+    { 
+      title: 'Desafio Avançado: Portfólio', 
+      reason: 'Você está pronto para conteúdos mais complexos',
+      difficulty: 'hard',
+      estimatedTime: '45 min'
     }
   ];
 
-  const benefits = [
-    "Acima de 1000 alunos",
-    "Implementação personalizada",
-    "Gestor de conta dedicado",
-    "Treinamentos ilimitados",
-    "API completa para integração",
-    "Suporte técnico 24/7",
-    "Consultoria pedagógica mensal",
-    "Relatórios executivos",
-    "Customizações sob demanda",
-    "SLA garantido",
-    "Backup e segurança avançada",
-    "Acesso vitalício a atualizações"
+  const networkChallenges = [
+    { 
+      id: 1, 
+      title: 'Campeonato Regional de Finanças', 
+      period: 'Dezembro 2024',
+      participants: 850,
+      prize: 'Certificado + Tablet',
+      status: 'active'
+    },
+    { 
+      id: 2, 
+      title: 'Desafio Sustentabilidade', 
+      period: 'Janeiro 2025',
+      participants: 1200,
+      prize: 'Viagem Educativa',
+      status: 'upcoming'
+    }
+  ];
+
+  const learningPaths = [
+    { 
+      id: 1, 
+      title: 'Trilha Sudeste: Empreendedorismo', 
+      region: 'SP, RJ, MG, ES',
+      progress: 65,
+      modules: 8,
+      difficulty: 'intermediate'
+    },
+    { 
+      id: 2, 
+      title: 'Trilha Norte: Economia Local', 
+      region: 'AM, PA, AC, RO',
+      progress: 30,
+      modules: 6,
+      difficulty: 'basic'
+    }
+  ];
+
+  const globalRanking = [
+    { position: 1, school: 'Colégio Santa Maria - SP', students: 145, avgScore: 94.5 },
+    { position: 2, school: 'Instituto Federal - RJ', students: 280, avgScore: 92.1 },
+    { position: 3, school: 'Escola Técnica - MG', students: 95, avgScore: 91.8 },
+    { position: 4, school: 'Colégio Dom Bosco - RS', students: 180, avgScore: 89.5 },
+    { position: 5, school: 'Nossa Escola - BA', students: 120, avgScore: 88.7, isMe: true }
+  ];
+
+  const certificates = [
+    { id: 1, title: 'Especialista em Investimentos Básicos', date: '2024-10-15', verified: true },
+    { id: 2, title: 'Consumo Consciente Avançado', date: '2024-09-22', verified: true },
+    { id: 3, title: 'Planejamento Financeiro Familiar', date: '2024-08-10', verified: false }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-100">
       <Navigation />
       
-      <div className="pt-20">
-        {/* Header */}
-        <section className="fintech-gradient py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="flex justify-center mb-6">
-              <Users className="w-16 h-16 text-white" />
+      <div className="pt-20 px-4 max-w-7xl mx-auto">
+        {/* Header Personalizado da Rede */}
+        <div className="bg-gradient-to-r from-emerald-600 to-blue-600 rounded-2xl shadow-lg p-8 mb-8 text-white">
+          <div className="flex flex-col md:flex-row items-start justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                <img src="/placeholder-logo.png" alt="Logo da Rede" className="w-12 h-12" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">Bem-vindo, Estudante!</h1>
+                <p className="text-emerald-100">Rede Nacional de Educação Financeira</p>
+                <div className="flex items-center gap-4 mt-2">
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4" />
+                    <span className="text-sm">Ranking Global: #{globalRank}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    <span className="text-sm">{networkStats.activeStudents.toLocaleString()} estudantes ativos</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="inline-block bg-purple-400 text-white px-4 py-1 rounded-full text-sm font-semibold mb-4">
-              ENTERPRISE
+            
+            <div className="flex gap-3">
+              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-600">
+                <QrCode className="w-4 h-4 mr-2" />
+                QR Login
+              </Button>
+              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-600">
+                <HeadphonesIcon className="w-4 h-4 mr-2" />
+                Suporte 24/7
+              </Button>
             </div>
-            <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">
-              Plano Rede de Ensino
-            </h1>
-            <div className="text-5xl font-bold text-white mb-4">
-              Sob consulta
-            </div>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Solução enterprise para grandes redes de ensino com mais de 1000 alunos
-            </p>
           </div>
-        </section>
 
-        {/* Features */}
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Solução Enterprise Completa
-              </h2>
-              <p className="text-xl text-gray-600">
-                Recursos avançados para grandes instituições de ensino
-              </p>
+          {/* Estatísticas da Rede */}
+          <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <TrendingUp className="w-8 h-8" />
+                <div>
+                  <div className="text-2xl font-bold">{networkStats.totalSchools}</div>
+                  <div className="text-emerald-100 text-sm">Escolas na Rede</div>
+                </div>
+              </div>
             </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-8 h-8" />
+                <div>
+                  <div className="text-2xl font-bold">{networkStats.completedCourses.toLocaleString()}</div>
+                  <div className="text-emerald-100 text-sm">Cursos Concluídos</div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <Award className="w-8 h-8" />
+                <div>
+                  <div className="text-2xl font-bold">98%</div>
+                  <div className="text-emerald-100 text-sm">Taxa de Satisfação</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {features.map((feature, index) => (
-                <Card key={index} className="hover:shadow-lg transition-all border-2 border-purple-500/20">
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="text-purple-600">
-                        {feature.icon}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Coluna Principal */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Inteligência Adaptativa */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-purple-600" />
+                  Sugestões Personalizadas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {adaptiveSuggestions.map((suggestion, index) => (
+                    <div key={index} className="p-4 border rounded-lg hover:shadow-md transition-all cursor-pointer">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="font-semibold flex items-center gap-2">
+                          <Lightbulb className="w-4 h-4 text-yellow-500" />
+                          {suggestion.title}
+                        </h4>
+                        <Badge variant={
+                          suggestion.difficulty === 'easy' ? 'secondary' : 
+                          suggestion.difficulty === 'medium' ? 'default' : 
+                          'destructive'
+                        }>
+                          {suggestion.difficulty === 'easy' ? 'Fácil' : 
+                           suggestion.difficulty === 'medium' ? 'Médio' : 'Avançado'}
+                        </Badge>
                       </div>
-                      <CardTitle className="text-lg">{feature.title}</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Benefits */}
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Benefícios Exclusivos
-              </h2>
-              <p className="text-lg text-gray-600">
-                Tudo que sua rede de ensino precisa para implementar educação financeira em larga escala
-              </p>
-            </div>
-
-            <Card className="mb-8 border-2 border-purple-500">
-              <CardContent className="p-8">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-purple-500 flex-shrink-0" />
-                      <span className="text-gray-700">{benefit}</span>
+                      <p className="text-sm text-gray-600 mb-3">{suggestion.reason}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">⏱ {suggestion.estimatedTime}</span>
+                        <Button size="sm">Começar</Button>
+                      </div>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            <div className="text-center">
-              <Link to="/consultores">
-                <Button className="bg-purple-600 hover:bg-purple-700 text-lg px-8 py-3">
-                  Solicitar Proposta Personalizada
-                </Button>
-              </Link>
-              <p className="text-sm text-gray-600 mt-4">
-                Entre em contato para uma proposta personalizada • Suporte dedicado 24/7
-              </p>
-            </div>
-          </div>
-        </section>
+            {/* Trilhas Regionais */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-green-600" />
+                  Trilhas Regionais
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {learningPaths.map((path) => (
+                    <div key={path.id} className="p-4 border rounded-lg">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h4 className="font-semibold">{path.title}</h4>
+                          <p className="text-sm text-gray-600">{path.region}</p>
+                        </div>
+                        <Badge variant="outline">{path.modules} módulos</Badge>
+                      </div>
+                      <div className="mb-3">
+                        <div className="flex justify-between text-sm mb-1">
+                          <span>Progresso</span>
+                          <span>{path.progress}%</span>
+                        </div>
+                        <Progress value={path.progress} className="h-2" />
+                      </div>
+                      <Button size="sm" className="w-full">
+                        Continuar Trilha
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-        {/* Contact Section */}
-        <section className="py-16 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Precisa de uma solução personalizada?
-            </h3>
-            <p className="text-lg text-gray-600 mb-8">
-              Nossa equipe de especialistas está pronta para desenvolver uma solução específica para sua rede de ensino
-            </p>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <MessageSquare className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Consultoria Gratuita</h4>
-                  <p className="text-sm text-gray-600">Análise das suas necessidades</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <Zap className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Implementação Rápida</h4>
-                  <p className="text-sm text-gray-600">Deploy em até 30 dias</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <Clock className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Suporte Contínuo</h4>
-                  <p className="text-sm text-gray-600">Acompanhamento permanente</p>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Eventos e Campeonatos */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-orange-600" />
+                  Eventos da Rede
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {networkChallenges.map((challenge) => (
+                    <div key={challenge.id} className="p-4 border rounded-lg">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="font-semibold">{challenge.title}</h4>
+                        <Badge variant={challenge.status === 'active' ? 'default' : 'secondary'}>
+                          {challenge.status === 'active' ? 'Ativo' : 'Em Breve'}
+                        </Badge>
+                      </div>
+                      <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
+                        <div>📅 {challenge.period}</div>
+                        <div>👥 {challenge.participants} participantes</div>
+                        <div>🏆 {challenge.prize}</div>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        className="w-full"
+                        disabled={challenge.status !== 'active'}
+                      >
+                        {challenge.status === 'active' ? 'Participar' : 'Aguardar'}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </section>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Ranking Global */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-yellow-500" />
+                  Ranking Global de Escolas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {globalRanking.map((school) => (
+                    <div key={school.position} className={`p-3 rounded-lg border ${school.isMe ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50'}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-xs font-bold">
+                          {school.position}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{school.school}</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span>{school.students} alunos</span>
+                            <span>•</span>
+                            <span>{school.avgScore}% média</span>
+                          </div>
+                        </div>
+                        {school.isMe && <Badge variant="secondary" className="text-xs">Sua Escola</Badge>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Certificados Digitais */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-blue-600" />
+                  Meus Certificados
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {certificates.map((cert) => (
+                    <div key={cert.id} className="p-3 border rounded-lg">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="font-semibold text-sm">{cert.title}</h4>
+                        {cert.verified && (
+                          <Badge variant="default" className="text-xs">
+                            <Zap className="w-3 h-3 mr-1" />
+                            Verificado
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 mb-2">{cert.date}</p>
+                      <Button size="sm" variant="outline" className="w-full text-xs">
+                        Baixar PDF
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Acesso Rápido */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Acesso Rápido</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Button variant="outline" className="w-full justify-start text-sm">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Chat com Suporte
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start text-sm">
+                    <Users className="w-4 h-4 mr-2" />
+                    Fórum da Rede
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start text-sm">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    Relatórios Detalhados
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start text-sm">
+                    <Globe className="w-4 h-4 mr-2" />
+                    Portal da Rede
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
