@@ -1,47 +1,53 @@
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; // Importe Navigate
-import { AuthProvider, useAuth } from "@/contexts/AuthContext"; // Importe useAuth
+import { useAuth } from "@/pages/AuthContext";
+import { investmentPlatformsData, InvestmentIconMap } from './data/investmentPlatformsData';
+import { courseContentData, CourseIconMap } from './data/courseContentData';
 
 // Importe suas páginas
 import Index from "./pages/Index";
+import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
+import Aulas from "./pages/Aulas";
+import ContratarPlanoForm from "./pages/ContratarPlanoForm";
+import CourseContent from "./pages/CourseContent";
+import EscolaPremium from "./pages/EscolaPremium";
+import EscolaBasica from "./pages/EscolaBasica";
 import Sobre from "./pages/Sobre";
 import Servicos from "./pages/Servicos";
 import PorqueNos from "./pages/PorqueNos";
+import RedeEnsino from "./pages/RedeEnsino";
 import Equipe from "./pages/Equipe";
 import Login from "./pages/Login";
 import Cursos from "./pages/Cursos";
 import Simuladores from "./pages/Simuladores";
 import FAQ from "./pages/FAQ";
-import FormularioPagamento from "./pages/ContratarPlanoForm"; // Renomeado para consistência
+import InvestmentPlatforms from "./pages/InvestmentPlatforms";
+import FormularioPagamento from "./pages/ContratarPlanoForm";
 import ConsultoresFinanceiros from "./pages/ConsultoresFinanceiros";
 import PlanosCorporativos from "./pages/PlanosCorporativos";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
-import BibliotecaCompleta from './pages/BibliotecaCompleta'; 
+import BibliotecaCompleta from './pages/BibliotecaCompleta';
 import SettingsPage from "./pages/SettingsPage";
 
 // --- Importação do novo componente unificado ---
-import EducacaoECorporativo from './pages/EducacaoECorporativo'; 
+import EducacaoECorporativo from './pages/EducacaoECorporativo';
 
 // --- Declaração do QueryClient (NECESSÁRIO) ---
 const queryClient = new QueryClient();
 
-// --- Componente de Rota Protegida (Melhorado para usar useAuth) ---
-// Removido o import duplicado e a re-declaração. Use este.
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth(); // Assume que useAuth retorna 'user' e 'loading'
+  const { user, loading } = useAuth();
 
   if (loading) {
-    // Opcional: Mostre um spinner ou loading screen enquanto verifica o status do usuário
     return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
   }
 
   if (!user) {
-    // Redireciona para a página de login se não houver usuário logado
     return <Navigate to="/login" replace />;
   }
 
@@ -53,61 +59,67 @@ const App = () => (
     <AuthProvider>
       <TooltipProvider>
         <Toaster />
-        <Sonner /> {/* Este é o Toaster da biblioteca Sonner */}
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/sobre" element={<Sobre />} />
-            <Route path="/servicos" element={<Servicos />} />
-            <Route path="/porque-nos" element={<PorqueNos />} />
-            <Route path="/simuladores" element={<Simuladores />} />
-            <Route path="/planos-corporativos" element={<PlanosCorporativos />} />
-            
-            {/* --- Nova rota unificada --- */}
-            <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
-            {/* Rota para o formulário de contratação (agora com nome consistente) */}
-            <Route path="/contratar-plano" element={<FormularioPagamento />} /> {/* Uso de FormularioPagamento como o ContratarPlanoForm */}
+        <Sonner />
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/servicos" element={<Servicos />} />
+          <Route path="/porque-nos" element={<PorqueNos />} />
+          <Route path="/simuladores" element={<Simuladores />} />
+          <Route path="/planos-corporativos" element={<PlanosCorporativos />} />
 
-            <Route path="/equipe" element={<Equipe />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/update-password" element={<UpdatePassword />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/pagamento" element={<FormularioPagamento />} /> {/* A rota /pagamento ainda existe, apontando para o mesmo formulário */}
-            <Route path="/consultores" element={<ConsultoresFinanceiros />} />
-            <Route path="/biblioteca-completa" element={<BibliotecaCompleta />} />
-            
-            {/* Rotas protegidas */}
-            <Route 
-              path="/settings" 
-              element={
-                <ProtectedRoute>
-                  <SettingsPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/cursos-basico" 
-              element={
-                <ProtectedRoute>
-                  <Cursos />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/cursos" 
-              element={
-                <ProtectedRoute>
-                  <Cursos />
-                </ProtectedRoute>
-              } 
-            />
-            {/* Adicione outras rotas protegidas aqui */}
+          <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
+          <Route path="/contratar-plano" element={<FormularioPagamento />} />
 
-            {/* Rota para 404 - sempre a última */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+          <Route path="/equipe" element={<Equipe />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/pagamento" element={<FormularioPagamento />} />
+          <Route path="/consultores" element={<ConsultoresFinanceiros />} />
+          <Route path="/biblioteca-completa" element={<BibliotecaCompleta />} />
+          <Route path="/aulas" element={<Aulas />} />
+          <Route path="/escola-premium" element={<EscolaPremium />} />
+          <Route path="/escola-basico" element={<EscolaBasica/>} />
+
+          <Route path="/investment-plataforms" 
+            element={<InvestmentPlatforms platforms={investmentPlatformsData} IconMap={InvestmentIconMap} />} 
+          />
+          <Route 
+            path="/course-content" 
+            element={<CourseContent courses={courseContentData} IconMap={CourseIconMap} />} 
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cursos-basico"
+            element={
+              <ProtectedRoute>
+                <Cursos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cursos"
+            element={
+              <ProtectedRoute>
+                <Cursos />
+              </ProtectedRoute>
+            }
+          />
+         
+          {/* Rota para 404 - sempre a última */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        {/* REMOVIDO: </BrowserRouter> */}
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>

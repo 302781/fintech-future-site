@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext'; // <--- IMPORTANTE: Importar u
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { user, signOut } = useAuth(); // <--- Usar o hook de autenticação
+  const { user,loading, logout,signOut } = useAuth(); // <--- Usar o hook de autenticação
 
   const navItems = [
     { name: 'INÍCIO', path: '/' },

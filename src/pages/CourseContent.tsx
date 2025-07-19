@@ -16,7 +16,7 @@ interface CourseItem {
 
 interface CourseContentProps {
   courses: CourseItem[];
-  IconMap: { [key: string]: React.ElementType }; // Adicionar IconMap como prop
+  IconMap: { [key: string]: React.ElementType }; 
 }
 
 const CourseContent: React.FC<CourseContentProps> = ({ courses, IconMap }) => {

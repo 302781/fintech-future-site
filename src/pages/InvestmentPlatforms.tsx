@@ -1,10 +1,7 @@
-// src/components/InvestmentPlatforms.tsx
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react'; // Ícone padrão para o link
-
-// Tipos, se não estiverem em um arquivo de tipos global
+import { ArrowRight } from 'lucide-react'; 
 interface PlatformItem {
   id: string;
   name: string;
@@ -15,7 +12,7 @@ interface PlatformItem {
 
 interface InvestmentPlatformsProps {
   platforms: PlatformItem[];
-  IconMap: { [key: string]: React.ElementType }; // Adicionar IconMap como prop
+  IconMap: { [key: string]: React.ElementType };
 }
 
 const InvestmentPlatforms: React.FC<InvestmentPlatformsProps> = ({ platforms, IconMap }) => {
