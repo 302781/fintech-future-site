@@ -1,145 +1,219 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import axios from 'axios';
-import { getErrorMessage } from '../utils/errorUtils'; 
+import { useNavigate } from 'react-router-dom';
 
-// --- Interfaces de Tipagem ---
+// --- Definindo Tipos (Interfaces) ---
+
 interface User {
-  id: number;
+  id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  planType?: string; 
+  user_metadata: {
+    first_name: string;
+    last_name: string;
+    plan_type: string;
+  };
+  level?: number;
+  xp?: number;
 }
 
-// Tipos de retorno para as funções de autenticação
-interface AuthResult {
-  error: { message: string } | null;
-  success?: boolean; // Opcional, usado mais para signUp
-  message?: string; // Opcional, para mensagens de sucesso/erro
+// *** IMPORTANTE: AJUSTE ESTAS INTERFACES CONFORME A RESPOSTA REAL DO SEU BACKEND ***
+//
+// Opção 1: Se o seu backend retorna { token: "...", user: {...} } DIRETAMENTE na resposta.data
+// interface AuthResponse {
+//   token: string;
+//   user: User;
+// }
+// interface UserDataResponse {
+//   user: User;
+// }
+//
+// Opção 2 (ATUALMENTE SELECIONADA): Se o seu backend retorna { data: { token: "...", user: {...} } } aninhado em "data".
+// Mantemos esta como padrão com base em discussões anteriores.
+interface AuthResponse {
+  data: {
+    token: string;
+    user: User;
+  };
 }
+interface UserDataResponse {
+  data: {
+    user: User;
+  };
+}
+// ***********************************************************************************
+
 
 interface AuthContextType {
   user: User | null;
-  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<AuthResult>; // Corrigido o tipo de retorno
-  signIn: (email: string, password: string) => Promise<AuthResult>; // Corrigido o tipo de retorno
-  signOut: () => void;
+  token: string | null;
+  isAuthenticated: boolean;
   loading: boolean;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<boolean>;
+  signOut: () => void;
 }
-// --- Fim das Interfaces de Tipagem ---
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// --- Criar o Contexto ---
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
-  return context;
-};
+// --- Configuração da Instância do Axios (Centralizada) ---
+const api = axios.create({
+  baseURL: 'http://localhost:3001', // <<< AQUI: Confirme a porta do seu backend!
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// --- AuthProvider Componente ---
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const signIn = async (email: string, password: string): Promise<AuthResult> => {
-    setLoading(true);
-    try {
-      const res = await axios.post('http://localhost:3001/signin', { email, password });
-
-      const token = res.data.token;
-      if (token) {
-        localStorage.setItem('authToken', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-        // Adapta o objeto de usuário do backend para a interface User do frontend
-        const backendUser = res.data.user;
-        const formattedUser: User = {
-            id: Number(backendUser.id),
-            email: backendUser.email,
-            firstName: backendUser.user_metadata?.first_name,
-            lastName: backendUser.user_metadata?.last_name,
-            planType: backendUser.user_metadata?.plan_type || backendUser.plan_type, // Ajuste para como seu backend retorna
-        };
-        setUser(formattedUser);
-
-        setLoading(false);
-        return { error: null };
-      } else {
-          // Caso o backend não retorne um token por algum motivo (mesmo com sucesso)
-          setLoading(false);
-          return { error: { message: "Login bem-sucedido, mas nenhum token recebido." } };
-      }
-    } catch (err) { // 'err' agora é inferido corretamente ou você pode tipá-lo como 'unknown'
-      setLoading(false);
-      const message = getErrorMessage(err);
-      return { error: { message } };
-    }
-  };
-
-  const signUp = async (email: string, password: string, firstName: string, lastName: string): Promise<AuthResult> => {
-    setLoading(true);
-    try {
-      const res = await axios.post('http://localhost:3001/signup', { email, password, firstName, lastName });
-
-      setLoading(false);
-      // Sua rota de signup retorna 'success: true' e 'message' no backend.
-      // Adapte a tipagem do retorno para combinar com o que o backend realmente envia.
-      return {
-        error: null,
-        success: res.data.success, // O backend já envia isso
-        message: res.data.message || "Cadastro realizado com sucesso! Agora você pode fazer login."
-      };
-    } catch (err) {
-      setLoading(false);
-      const message = getErrorMessage(err);
-      return { error: { message } };
-    }
-  };
-
-  const signOut = () => {
-    setUser(null);
-    localStorage.removeItem('authToken');
-    delete axios.defaults.headers.common['Authorization'];
-  };
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('authToken');
-      if (token) {
+    const loadUserFromStorage = async () => {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        setToken(storedToken);
         try {
-          // Configure o token para esta requisição específica
-          const res = await axios.get('http://localhost:3001/user', { // Usando /user que já é protegida
-            headers: { Authorization: `Bearer ${token}` }
-          });
-
-          // Seu backend /user retorna { data: { user: {...} } }
-          const backendUser = res.data.data.user;
-          if (backendUser) {
-            const formattedUser: User = {
-                id: Number(backendUser.id),
-                email: backendUser.email,
-                firstName: backendUser.user_metadata?.first_name,
-                lastName: backendUser.user_metadata?.last_name,
-                planType: backendUser.user_metadata?.plan_type,
-            };
-            setUser(formattedUser);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          const response = await api.get<UserDataResponse>('/user'); 
+          
+          if (response.data?.data?.user) { 
+            setUser(response.data.data.user);
           } else {
-            console.warn('Backend /user retornou usuário nulo ou inválido.');
-            localStorage.removeItem('authToken');
+            console.warn('Dados de usuário inválidos retornados pela API /user.');
+            signOut();
           }
-        } catch (error) {
-          console.error('Erro ao validar token ou carregar usuário:', error);
-          localStorage.removeItem('authToken');
-          delete axios.defaults.headers.common['Authorization'];
+        } catch (error: unknown) { 
+          handleAxiosError(error, 'verificar o token ou carregar dados do usuário');
+          signOut();
         }
       }
       setLoading(false);
     };
-    checkAuth();
+
+    loadUserFromStorage();
   }, []);
 
+  const signIn = async (email: string, password: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const response = await api.post<AuthResponse>('/signin', { email, password });
+      
+      const { token: newToken, user: userData } = response.data.data; 
+
+      localStorage.setItem('token', newToken);
+      setToken(newToken);
+      setUser(userData);
+      
+      console.log('Login bem-sucedido!', userData);
+      setLoading(false);
+      return true;
+    } catch (error: unknown) { 
+      handleAxiosError(error, 'login');
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('token');
+      setLoading(false);
+      return false;
+    }
+  };
+
+  const signUp = async (email: string, password: string, firstName: string, lastName: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const response = await api.post<AuthResponse>('/signup', { email, password, firstName, lastName });
+      
+      const { token: newToken, user: userData } = response.data.data; 
+
+      localStorage.setItem('token', newToken);
+      setToken(newToken);
+      setUser(userData);
+
+      console.log('Cadastro bem-sucedido!', userData);
+      setLoading(false);
+      return true;
+    } catch (error: unknown) { 
+      handleAxiosError(error, 'cadastro');
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('token');
+      setLoading(false);
+      return false;
+    }
+  };
+
+  const signOut = () => {
+    setLoading(true);
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization']; 
+    console.log('Usuário deslogado.');
+    setLoading(false);
+    navigate('/login');
+  };
+
+  // Função robusta para lidar com erros do Axios ou erros genéricos
+  const handleAxiosError = (error: unknown, action: string) => {
+    // Primeiro, verifique se é um erro do Axios (mais comum para chamadas de API)
+    // Para resolver 'isAxiosError' não existe, usamos uma verificação mais genérica,
+    // já que 'axios.isAxiosError' pode não ser reconhecido em alguns ambientes.
+    // Tentamos acessar 'response' e 'message' apenas se o erro tiver a estrutura esperada.
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      // O erro é um objeto e tem a propriedade 'response'
+      const axiosError = error as { response?: { data?: { error?: string } }, message?: string };
+      console.error(`Erro da API ao ${action}:`, axiosError.response?.data?.error || axiosError.message || 'Erro desconhecido da API');
+    } else if (error instanceof Error) {
+      // É um erro JavaScript padrão (ex: TypeError, Network error que não vem do Axios com resposta)
+      console.error(`Erro inesperado ao ${action}:`, error.message);
+    } else {
+      // É algo totalmente inesperado (um tipo primitivo, null, etc.)
+      console.error(`Erro desconhecido ao ${action}:`, error);
+    }
+  };
+
+  const contextValue: AuthContextType = {
+    user,
+    token,
+    isAuthenticated: !!token && !!user,
+    loading,
+    signIn,
+    signUp,
+    signOut,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, signUp, signIn, signOut, loading }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
+  return context;
+};
+
+export { api };

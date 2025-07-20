@@ -3,7 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAuth } from "@/pages/AuthContext";
+
+import { useAuth } from "./contexts/AuthContext";
 import { investmentPlatformsData, InvestmentIconMap } from './data/investmentPlatformsData';
 import { courseContentData, CourseIconMap } from './data/courseContentData';
 
@@ -56,8 +57,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
+    <TooltipProvider>
         <Toaster />
         <Sonner />
         <Routes>
@@ -65,7 +65,6 @@ const App = () => (
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/servicos" element={<Servicos />} />
           <Route path="/porque-nos" element={<PorqueNos />} />
-          <Route path="/simuladores" element={<Simuladores />} />
           <Route path="/planos-corporativos" element={<PlanosCorporativos />} />
 
           <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
@@ -81,7 +80,8 @@ const App = () => (
           <Route path="/biblioteca-completa" element={<BibliotecaCompleta />} />
           <Route path="/aulas" element={<Aulas />} />
           <Route path="/escola-premium" element={<EscolaPremium />} />
-          <Route path="/escola-basico" element={<EscolaBasica/>} />
+          <Route path="/escola-basica" element={<EscolaBasica/>} />
+           <Route path="/simuladores" element={<Simuladores/>} />
 
           <Route path="/investment-plataforms" 
             element={<InvestmentPlatforms platforms={investmentPlatformsData} IconMap={InvestmentIconMap} />} 
@@ -119,9 +119,7 @@ const App = () => (
           {/* Rota para 404 - sempre a última */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* REMOVIDO: </BrowserRouter> */}
-      </TooltipProvider>
-    </AuthProvider>
+        </TooltipProvider>
   </QueryClientProvider>
 );
 

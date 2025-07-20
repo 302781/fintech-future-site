@@ -1,3 +1,5 @@
+import React from 'react';
+import { Outlet, Link } from 'react-router-dom';
 import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
@@ -84,6 +86,7 @@ const EscolaBasica = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2 mb-6">
+              <Link to="simuladores">
               <Button 
                 variant={selectedFilter === 'todos' ? 'default' : 'outline'}
                 size="sm"
@@ -99,6 +102,8 @@ const EscolaBasica = () => {
                 <Gamepad2 className="w-4 h-4 mr-1" />
                 Jogos
               </Button>
+              <Gamepad3 className="w-4 h-4 mr-1" /> 
+                  Simuladores
               <Button 
                 variant={selectedFilter === 'video' ? 'default' : 'outline'}
                 size="sm"
@@ -136,6 +141,7 @@ const EscolaBasica = () => {
               >
                 Moeda
               </Button>
+              </Link>
             </div>
 
             {/* Grid de Conteúdo */}
@@ -198,6 +204,10 @@ const EscolaBasica = () => {
             </div>
           </CardContent>
         </Card>
+        <div className="mt-8 pt-8 border-t-2 border-blue-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Simuladores de Finanças</h2>
+          <Outlet /> 
+        </div>
       </div>
     </div>
   );
