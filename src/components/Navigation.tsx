@@ -16,8 +16,6 @@ const Navigation = () => {
     { name: 'SERVIÇOS', path: '/servicos' },
     { name: 'PORQUE NÓS?', path: '/porque-nos' },
     { name: 'EDUCAÇÃO & EMPRESAS', path: '/educacao-e-corporativo' },
-    { name: 'CURSOS', path: '/cursos' },
-    { name: 'SIMULADORES', path: '/simuladores' },
     { name: 'EQUIPE', path: '/equipe' },
   ];
 

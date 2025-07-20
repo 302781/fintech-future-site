@@ -103,37 +103,6 @@ const PorqueNos = () => {
         </div>
       </section>
 
-      {/* Números que Impressionam */}
-      <section className="py-20 fintech-gradient">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Resultados que Falam por Si
-            </h2>
-            <p className="text-xl text-blue-100">
-              Números que comprovam nossa excelência
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { number: "50.000+", label: "Clientes Satisfeitos", description: "em todo o Brasil" },
-              { number: "R$ 2B+", label: "Patrimônio Gerido", description: "com segurança total" },
-              { number: "98%", label: "Taxa de Satisfação", description: "dos nossos clientes" },
-              { number: "4,9/5", label: "Avaliação", description: "nas lojas de apps" }
-            ].map((stat, index) => (
-              <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 text-center">
-                <CardContent className="p-6">
-                  <div className="text-4xl font-bold text-white mb-2">{stat.number}</div>
-                  <div className="text-xl font-semibold text-blue-100 mb-1">{stat.label}</div>
-                  <div className="text-blue-200 text-sm">{stat.description}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Depoimentos */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

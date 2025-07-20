@@ -118,61 +118,59 @@ app.post('/signin', async (req, res) => { // Tornar a função assíncrona
     db.get(
       `SELECT * FROM users WHERE email = ?`,
       [email],
-      async (err, user) => { // Callback também assíncrono para await comparePassword
+      async (err, user) => { 
         if (err) {
           console.error('Erro no login:', err.message);
-          return res.status(500).json({ error: 'Erro interno do servidor.' });
-        }
+          return res.status(500).json({ error: 'Erro interno do servidor' });}
         
-        if (!user) {
-          return res.status(401).json({ error: 'Credenciais inválidas.' });
+         const hashedPasswordFromDb = user.password_hash;
+
+       if (hashedPasswordFromDb === undefined || hashedPasswordFromDb === null) {
+            console.error(`[Login Erro] Hash da senha não encontrado para o usuário: ${email}. Verifique o DB.`);
+            return res.status(500).json({ error: 'Erro interno do servidor: hash da senha ausente.' });
         }
 
-        // Usar comparePassword assíncrono
-        const isPasswordValid = await comparePassword(password, user.password_hash);
+        const isPasswordValid = await comparePassword(password, hashedPasswordFromDb);
 
         if (!isPasswordValid) {
-          return res.status(401).json({ error: 'Credenciais inválidas.' });
-        }
+          return res.status(401).json({ error: 'Credenciais inválidas' });
+        }
 
-        let userMetadata = {};
-        try {
-          userMetadata = JSON.parse(user.user_metadata || '{}');
-        } catch (parseError) {
-          console.warn('Erro ao parsear user_metadata:', parseError);
-        }
+        let userMetadata = {};
 
-        // Gerar JWT após login bem-sucedido
-        const token = jwt.sign(
-          { id: user.id, email: user.email, plan_type: user.plan_type },
-          JWT_SECRET,
-          { expiresIn: '1h' } // Token expira em 1 hora
-        );
+   try {
+          userMetadata = JSON.parse(user.user_metadata || '{}');
+        } catch (parseError) {
+          console.warn('Erro ao parsear user_metadata:', parseError);
+        }
 
-        res.json({
-          success: true,
-          token, // Enviar o token de volta para o frontend
-          user: {
-            id: String(user.id),
-            email: user.email,
-            user_metadata: {
-              first_name: userMetadata.first_name,
-              last_name: userMetadata.last_name,
-              plan_type: user.plan_type // Incluído para consistência
-            }
-          }
-        });
-      }
-    );
-  } catch (error) {
-    console.error('Erro inesperado no login:', error);
-    res.status(500).json({ error: 'Erro interno do servidor.' });
-  }
+        // Gerar JWT após login bem-sucedido
+        const token = jwt.sign(
+          { id: user.id, email: user.email, plan_type: user.plan_type },
+          JWT_SECRET,
+          { expiresIn: '1h' } // Token expira em 1 hora
+        );
+
+        res.json({
+          success: true,
+          token, // Enviar o token de volta para o frontend
+          user: {
+            id: String(user.id),
+            email: user.email,
+            user_metadata: {
+              first_name: userMetadata.first_name,
+              last_name: userMetadata.last_name,
+              plan_type: user.plan_type // Incluído para consistência
+            }
+          }
+        });
+      }
+    );
+  } catch (error) {
+    console.error('Erro inesperado no login:', error);
+    res.status(500).json({ error: 'Erro interno do servidor.' });
+  }
 });
-// --- Fim das Rotas de Autenticação ---
-
-// --- Rota Protegida para Obter Detalhes do Usuário Logado ---
-// Agora esta rota usa o middleware authenticateToken para verificar o JWT
 app.get('/user', authenticateToken, (req, res) => {
   // As informações do usuário estão em req.user (decodificadas do JWT)
   const userFromToken = req.user; 
