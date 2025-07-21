@@ -9,7 +9,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT =  process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -76,7 +76,7 @@ app.post('/signup', async (req, res) => { // Tornar a função assíncrona
           }
           return res.status(500).json({ error: 'Erro ao cadastrar usuário.' });
         }
-        
+
         // Gerar token após cadastro bem-sucedido
         const token = jwt.sign(
           { id: this.lastID, email, plan_type: 'Escola Básica' },
@@ -118,62 +118,67 @@ app.post('/signin', async (req, res) => { // Tornar a função assíncrona
     db.get(
       `SELECT * FROM users WHERE email = ?`,
       [email],
-      async (err, user) => { 
+      async (err, user) => {
         if (err) {
-          console.error('Erro no login:', err.message);
-          return res.status(500).json({ error: 'Erro interno do servidor' });}
-        
-         const hashedPasswordFromDb = user.password_hash;
+          console.error('Erro no login(db.get):', err.message);
+          return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
 
-       if (hashedPasswordFromDb === undefined || hashedPasswordFromDb === null) {
-            console.error(`[Login Erro] Hash da senha não encontrado para o usuário: ${email}. Verifique o DB.`);
-            return res.status(500).json({ error: 'Erro interno do servidor: hash da senha ausente.' });
+        if (!user) { // Segundo, verifique se o usuário foi encontrado
+          console.log(`Tentativa de login para ${email}: usuário não encontrado.`);
+          return res.status(401).json({ error: 'Credenciais inválidas.' });
+        }
+        const hashedPasswordFromDb = user.password_hash;
+        
+        if (hashedPasswordFromDb === undefined || hashedPasswordFromDb === null) {
+          console.error(`[Login Erro] Hash da senha não encontrado para o usuário: ${email}. Verifique o DB.`);
+          return res.status(500).json({ error: 'Erro interno do servidor: hash da senha ausente.' });
         }
 
         const isPasswordValid = await comparePassword(password, hashedPasswordFromDb);
 
         if (!isPasswordValid) {
-          return res.status(401).json({ error: 'Credenciais inválidas' });
-        }
+          return res.status(401).json({ error: 'Credenciais inválidas' });
+        }
 
-        let userMetadata = {};
+        let userMetadata = {};
 
-   try {
-          userMetadata = JSON.parse(user.user_metadata || '{}');
-        } catch (parseError) {
-          console.warn('Erro ao parsear user_metadata:', parseError);
-        }
+        try {
+          userMetadata = JSON.parse(user.user_metadata || '{}');
+        } catch (parseError) {
+          console.warn('Erro ao parsear user_metadata:', parseError);
+        }
 
-        // Gerar JWT após login bem-sucedido
-        const token = jwt.sign(
-          { id: user.id, email: user.email, plan_type: user.plan_type },
-          JWT_SECRET,
-          { expiresIn: '1h' } // Token expira em 1 hora
-        );
+        // Gerar JWT após login bem-sucedido
+        const token = jwt.sign(
+          { id: user.id, email: user.email, plan_type: user.plan_type },
+          JWT_SECRET,
+          { expiresIn: '1h' } // Token expira em 1 hora
+        );
 
-        res.json({
-          success: true,
-          token, // Enviar o token de volta para o frontend
-          user: {
-            id: String(user.id),
-            email: user.email,
-            user_metadata: {
-              first_name: userMetadata.first_name,
-              last_name: userMetadata.last_name,
-              plan_type: user.plan_type // Incluído para consistência
-            }
-          }
-        });
-      }
-    );
-  } catch (error) {
-    console.error('Erro inesperado no login:', error);
-    res.status(500).json({ error: 'Erro interno do servidor.' });
-  }
+        res.json({
+          success: true,
+          token, // Enviar o token de volta para o frontend
+          user: {
+            id: String(user.id),
+            email: user.email,
+            user_metadata: {
+              first_name: userMetadata.first_name,
+              last_name: userMetadata.last_name,
+              plan_type: user.plan_type // Incluído para consistência
+            }
+          }
+        });
+      }
+    );
+  } catch (error) {
+    console.error('Erro inesperado no login:', error);
+    res.status(500).json({ error: 'Erro interno do servidor.' });
+  }
 });
 app.get('/user', authenticateToken, (req, res) => {
   // As informações do usuário estão em req.user (decodificadas do JWT)
-  const userFromToken = req.user; 
+  const userFromToken = req.user;
 
   db.get(`SELECT * FROM users WHERE id = ?`, [userFromToken.id], (err, user) => {
     if (err || !user) {
