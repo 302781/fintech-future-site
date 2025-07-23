@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PrivateRoute from './components/ProtectedRoute';
 import { useAuth } from "./contexts/AuthContextHook";
-import { useNavigate } from './contexts/AuthContextHook';
+
 import { investmentPlatformsData, InvestmentIconMap } from './data/investmentPlatformsData';
 import { courseContentData, CourseIconMap } from './data/courseContentData';
 
@@ -16,12 +16,12 @@ import PorqueNos from "./pages/PorqueNos";
 import EducacaoECorporativo from './pages/EducacaoECorporativo';
 import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
 import Equipe from "./pages/Equipe";
-import PlanosCorporativos from './pages/PlanosCorporativos';
+import PlanosCorporativosForm from './pages/PlanosCorporativosForm';
 import Login from "./pages/Login";
 import ContactPage from './pages/ContactPage';
-import FormularioPagamento from "./pages/ContratarPlanoForm";
+import CheckoutForm from "./pages/ContratarPlanoForm";
+import PlanosPage from './pages/PlanosPage';
 
-import ContratarPlanoForm from "./pages/ContratarPlanoForm";
 import CourseContent from "./pages/CourseContent";
 import EscolaPremium from "./pages/EscolaPremium";
 import EscolaBasica from "./pages/EscolaBasica";
@@ -42,11 +42,9 @@ import SettingsPage from "./pages/SettingsPage";
 import AdminDashboard from './pages/AdminDashboard';
 import VideoPlayer from "./components/VideoPlayer";
 import GamePlayer from "./components/GamePlayer/GamePlayer";
-import { useParams } from "react-router-dom";
 
 const VideoPlayerWrapper: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  // You may want to map id to src, for now assuming src is id
   return <VideoPlayer src={id ?? ""} />;
 }
 
@@ -71,11 +69,7 @@ const App = () => (
     <TooltipProvider>
         <Toaster />
         <Sonner />
-        <Routes future={ 
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-            v7_relativeSplatPath: true, }>
-        
+        <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/planos-corporativos" element={<PlanosCorporativos />} />
           <Route path="/login" element={<Login />} />

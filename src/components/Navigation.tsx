@@ -1,13 +1,16 @@
+import React from 'react';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, LogOut, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContextHook';
+import { Wallet, BarChart, BookOpen, UserCircle, LogIn, MenuIcon, X } from 'lucide-react';
 
-const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Navigation: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const location = useLocation();
-  const { user, loading, signOut } = useAuth(); // 'loading' pode ser útil para desabilitar botões enquanto autentica
+  const { user, loading, signOut } = useAuth(); 
+  const navigate = useNavigate();
 
   const navItems = [
     { name: 'INÍCIO', path: '/' },
@@ -19,7 +22,7 @@ const Navigation = () => {
   ];
 
   const handleLogout = async () => {
-    await signOut();
+    navigate('/login');
     setIsMenuOpen(false);
   };
 
