@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import emailjs from '@emailjs/browser'; // Importar o EmailJS
+import emailjs from '@emailjs/browser'; 
 
 const ContratarPlanoForm = () => {
   const [searchParams] = useSearchParams();
@@ -18,21 +18,20 @@ const ContratarPlanoForm = () => {
     emailContato: '',
     telefone: '',
     nomeInstituicao: '',
-    numeroAlunos: '',
+    numeroAlunos: '', 
     mensagem: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null); 
 
   useEffect(() => {
     const plano = searchParams.get('plano');
     if (plano) {
       setPlanoSelecionado(plano);
     } else {
-      // Redireciona de volta se nenhum plano for especificado
-      // Ou redirecione para uma página de erro/seleção de plano corporativo
-      navigate('/educacao-e-corporativo'); // Ou para uma nova página onde os planos são listados
-      toast.error('Nenhum plano selecionado. Por favor, escolha um plano.');
+      navigate('/educacao-e-corporativo', { replace: true }); 
+      toast.error('Nenhum plano corporativo selecionado. Por favor, escolha um plano.');
     }
   }, [searchParams, navigate]);
 
@@ -44,47 +43,67 @@ const ContratarPlanoForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmissionError(null);
 
-    // Validação básica
     if (!formData.nomeResponsavel || !formData.emailContato || !formData.nomeInstituicao) {
-      toast.error('Por favor, preencha os campos obrigatórios.');
+      toast.error('Por favor, preencha os campos obrigatórios (marcados com *).');
       setIsSubmitting(false);
       return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.emailContato)) {
+      toast.error('Por favor, insira um endereço de e-mail válido.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    const templateParams = {
+      plano_selecionado: planoSelecionado,
+      nome_responsavel: formData.nomeResponsavel,
+      email_contato: formData.emailContato,
+      telefone: formData.telefone,
+      nome_instituicao: formData.nomeInstituicao,
+      numero_aluno: formData.numeroAlunos ? String(formData.numeroAlunos) : 'Não especificado',
+      mensagem: formData.mensagem || 'Nenhuma mensagem adicional.',
+    };
+
     try {
-      // --- Envio de E-mail para o Suporte (usando EmailJS) ---
-      // Certifique-se de substituir 'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID' e 'YOUR_PUBLIC_KEY'
-      // Pelas suas credenciais reais do EmailJS.
+      const serviceId = 'service_vf0ut1v';     
+      const templateId = 'template_f0husmm';   
+      const publicKey = 'SQiKfeM0LI9dmCjCw';  
+
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error("Credenciais do EmailJS não configuradas. Verifique suas variáveis de ambiente.");
+      }
+
       await emailjs.send(
-        'YOUR_SERVICE_ID', // Substitua pelo seu Service ID do EmailJS
-        'YOUR_TEMPLATE_ID', // Substitua pelo seu Template ID do EmailJS
-        {
-          plano_selecionado: planoSelecionado,
-          nome_responsavel: formData.nomeResponsavel,
-          email_contato: formData.emailContato,
-          telefone: formData.telefone,
-          nome_instituicao: formData.nomeInstituicao,
-          numero_aluno: formData.numeroAlunos || 'Não especificado', // Campo opcional
-          mensagem: formData.mensagem || 'Nenhuma mensagem adicional.', // Campo opcional
-        },
-        'YOUR_PUBLIC_KEY' // Substitua pela sua Public Key (User ID) do EmailJS
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
       );
 
       setSubmissionSuccess(true);
       toast.success('Sua solicitação foi enviada com sucesso! Entraremos em contato em breve.');
 
-      // --- Simulação de Aprovação e Redirecionamento ---
-      // Em uma aplicação real, essa aprovação seria feita por você no backend
-      // e só depois o usuário teria seu plano ativado e seria redirecionado.
-      // Para fins de demonstração, vamos simular isso após alguns segundos.
+      // Opcional: Limpar o formulário após o sucesso
+      setFormData({
+        nomeResponsavel: '',
+        emailContato: '',
+        telefone: '',
+        nomeInstituicao: '',
+        numeroAlunos: '',
+        mensagem: '',
+      });
+
       setTimeout(() => {
-        // Redireciona para a tela de cursos com o plano "ativado"
-        navigate(`/cursos?planoAtivo=${encodeURIComponent(planoSelecionado)}`);
-      }, 5000); // Redireciona após 5 segundos para o usuário ler a mensagem
-      
+        navigate(`/login?redirect=/cursos`);
+      }, 5000); 
+
     } catch (error) {
       console.error('Erro ao enviar a solicitação:', error);
+      const errorMessage = (error instanceof Error) ? error.message : 'Erro desconhecido.';
+      setSubmissionError('Houve um erro ao enviar sua solicitação: ' + errorMessage);
       toast.error('Houve um erro ao enviar sua solicitação. Tente novamente mais tarde.');
     } finally {
       setIsSubmitting(false);
@@ -92,67 +111,71 @@ const ContratarPlanoForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
       <Navigation />
 
-      <div className="pt-20 py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-[#1A247E] mb-2">
-                Solicitar Plano: {planoSelecionado || 'Carregando...'}
-              </CardTitle>
-              <CardDescription className="text-gray-600">
-                Preencha os dados abaixo e nossa equipe entrará em contato para finalizar a contratação.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {submissionSuccess ? (
-                <div className="text-center py-10">
-                  <h3 className="text-2xl font-bold text-green-600 mb-4">Solicitação Recebida!</h3>
-                  <p className="text-gray-700 mb-4">
-                    Agradecemos seu interesse no plano **{planoSelecionado}**.
-                    Sua solicitação foi enviada com sucesso e nossa equipe de suporte entrará em contato em breve para os próximos passos.
-                  </p>
-                  <p className="text-gray-500 text-sm">Você será redirecionado para a tela de cursos em alguns segundos...</p>
+      <div className="pt-20 py-16 w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Card className="shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-bold text-[#1A247E] mb-2">
+              Solicitar Plano: {planoSelecionado || 'Carregando...'}
+            </CardTitle>
+            <CardDescription className="text-gray-600">
+              Preencha os dados abaixo e nossa equipe entrará em contato para finalizar a contratação do plano **{planoSelecionado}**.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {submissionSuccess ? (
+              <div className="text-center py-10">
+                <h3 className="text-2xl font-bold text-green-600 mb-4">Solicitação Recebida!</h3>
+                <p className="text-gray-700 mb-4">
+                  Agradecemos seu interesse no plano **{planoSelecionado}**.
+                  Sua solicitação foi enviada com sucesso e nossa equipe de suporte entrará em contato em breve para os próximos passos.
+                </p>
+                <p className="text-gray-500 text-sm">Você será redirecionado para a tela de login para continuar em alguns segundos...</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <Label htmlFor="nomeResponsavel">Nome do Responsável <span className="text-red-500">*</span></Label>
+                  <Input id="nomeResponsavel" value={formData.nomeResponsavel} onChange={handleChange} placeholder="Seu nome completo" required />
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <Label htmlFor="emailContato">Email de Contato <span className="text-red-500">*</span></Label>
+                  <Input id="emailContato" type="email" value={formData.emailContato} onChange={handleChange} placeholder="seu@email.com" required />
+                </div>
+                <div>
+                  <Label htmlFor="telefone">Telefone</Label>
+                  <Input id="telefone" value={formData.telefone} onChange={handleChange} placeholder="(XX) XXXXX-XXXX" />
+                </div>
+                <div>
+                  <Label htmlFor="nomeInstituicao">Nome da Instituição/Rede <span className="text-red-500">*</span></Label>
+                  <Input id="nomeInstituicao" value={formData.nomeInstituicao} onChange={handleChange} placeholder="Nome da sua escola ou rede" required />
+                </div>
+                {planoSelecionado === 'Rede de Ensino' && ( // Verifica o valor exato do plano
                   <div>
-                    <Label htmlFor="nomeResponsavel">Nome do Responsável <span className="text-red-500">*</span></Label>
-                    <Input id="nomeResponsavel" value={formData.nomeResponsavel} onChange={handleChange} placeholder="Seu nome completo" required />
+                    <Label htmlFor="numeroAlunos">Número Aproximado de Alunos/Usuários</Label>
+                    <Input id="numeroAlunos" type="number" value={formData.numeroAlunos} onChange={handleChange} placeholder="Ex: 1000" />
                   </div>
-                  <div>
-                    <Label htmlFor="emailContato">Email de Contato <span className="text-red-500">*</span></Label>
-                    <Input id="emailContato" type="email" value={formData.emailContato} onChange={handleChange} placeholder="seu@email.com" required />
-                  </div>
-                  <div>
-                    <Label htmlFor="telefone">Telefone</Label>
-                    <Input id="telefone" value={formData.telefone} onChange={handleChange} placeholder="(XX) XXXXX-XXXX" />
-                  </div>
-                  <div>
-                    <Label htmlFor="nomeInstituicao">Nome da Instituição/Rede <span className="text-red-500">*</span></Label>
-                    <Input id="nomeInstituicao" value={formData.nomeInstituicao} onChange={handleChange} placeholder="Nome da sua escola ou rede" required />
-                  </div>
-                  {planoSelecionado === 'Rede de Ensino' && (
-                    <div>
-                      <Label htmlFor="numeroAlunos">Número Aproximado de Alunos/Usuários</Label>
-                      <Input id="numeroAlunos" type="number" value={formData.numeroAlunos} onChange={handleChange} placeholder="Ex: 1000" />
-                    </div>
-                  )}
-                  <div>
-                    <Label htmlFor="mensagem">Mensagem Adicional (Opcional)</Label>
-                    <Textarea id="mensagem" value={formData.mensagem} onChange={handleChange} placeholder="Descreva suas necessidades ou tire dúvidas..." rows={4} />
-                  </div>
+                )}
+                <div>
+                  <Label htmlFor="mensagem">Mensagem Adicional (Opcional)</Label>
+                  <Textarea id="mensagem" value={formData.mensagem} onChange={handleChange} placeholder="Descreva suas necessidades ou tire dúvidas..." rows={4} />
+                </div>
 
-                  <Button type="submit" className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3" disabled={isSubmitting}>
-                    {isSubmitting ? 'Enviando...' : 'Enviar Solicitação'}
-                  </Button>
-                </form>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                {submissionError && (
+                  <p className="text-red-500 text-sm text-center font-medium">
+                    {submissionError}
+                  </p>
+                )}
+
+                <Button type="submit" className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3" disabled={isSubmitting}>
+                  {isSubmitting ? 'Enviando...' : 'Enviar Solicitação'}
+                </Button>
+              </form>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

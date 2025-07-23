@@ -10,7 +10,7 @@ import imgLuis from '@/assets/equipe/Luis.png';
 interface Member {
   name: string;
   role: string;
-  description: Array;
+  description: string;
   image: string; 
   linkedin: string;
   email: string;
@@ -99,12 +99,14 @@ const Equipe = () => {
                     <a 
                       href={member.linkedin}
                       className="p-2 bg-[#1A247E] text-white rounded-full hover:bg-[#2D4DE0] transition-colors"
+                      aria-label={`LinkedIn de ${member.name}`} 
                     >
                       <Linkedin size={16} />
                     </a>
                     <a 
                       href={`mailto:${member.email}`}
                       className="p-2 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors"
+                      aria-label={`LinkedIn de ${member.name}`} 
                     >
                       <Mail size={16} />
                     </a>

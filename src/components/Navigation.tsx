@@ -1,14 +1,13 @@
-// src/components/ui/navigation.tsx
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, LayoutDashboard } from 'lucide-react'; // Importa novos ícones
-import { useAuth } from '@/contexts/AuthContext'; // <--- IMPORTANTE: Importar useAuth
+import { Menu, X, LogOut, LayoutDashboard } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContextHook';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { user,loading, signOut } = useAuth(); // <--- Usar o hook de autenticação
+  const { user, loading, signOut } = useAuth(); // 'loading' pode ser útil para desabilitar botões enquanto autentica
 
   const navItems = [
     { name: 'INÍCIO', path: '/' },
@@ -21,15 +20,13 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     await signOut();
-    setIsMenuOpen(false); // Fecha o menu mobile após o logout
-    // O navigate('/') já está no signOut do AuthContext
+    setIsMenuOpen(false);
   };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#1A247E] to-[#2D4DE0] backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
           <Link to="/" className="text-white text-3xl lg:text-4xl font-bold hover:scale-105 transition-transform">
             FinTech
           </Link>
@@ -49,41 +46,48 @@ const Navigation = () => {
               </Link>
             ))}
 
-            {user ? ( // <--- Renderização condicional
+            {/* Renderização condicional para usuários logados na versão desktop */}
+            {user ? (
               <>
-                <Link to="/cursos"> {/* Exemplo: botão para o painel do usuário */}
-                  <Button className="bg-white text-[#1A247E] hover:bg-blue-50 font-semibold px-6">
+                <Link to="/cursos">
+                  <Button variant="ghost" className="text-white hover:bg-gray-700/50">
                     <LayoutDashboard className="mr-2 h-4 w-4" /> MEUS CURSOS
                   </Button>
                 </Link>
-                <Button 
-                  onClick={handleLogout} 
-                  className="bg-red-500 text-white hover:bg-red-600 font-semibold px-6"
+                <Button
+                  onClick={handleLogout}
+                  variant="ghost"
+                  className="text-white hover:bg-gray-700/50"
                 >
                   <LogOut className="mr-2 h-4 w-4" /> SAIR
                 </Button>
               </>
             ) : (
-              <Link to="/login">
-                <Button className="bg-white text-[#1A247E] hover:bg-blue-50 font-semibold px-6">
-                  LOGIN
-                </Button>
-              </Link>
+                // <Link to="/login"> // Removendo o botão de Login da navbar principal
+                //   <Button className="bg-white text-[#1A247E] hover:bg-blue-50">
+                //     LOGIN
+                //   </Button>
+                // </Link>
+                // Você pode adicionar um link para o login aqui APENAS se quiser
+                // que ele apareça na navbar para não-logados.
+                // Mas, como o objetivo é remover, deixamos vazio ou com outro CTA
+                null // Ou algum outro botão que incentive a escolha do plano
             )}
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button (Hamburger) */}
           <div className="lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white hover:text-blue-200"
+              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"} // Acessibilidade
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation Menu */}
         {isMenuOpen && (
           <div className="lg:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-[#1A247E]/95 rounded-b-lg">
@@ -97,26 +101,28 @@ const Navigation = () => {
                   {item.name}
                 </Link>
               ))}
-              {user ? ( // <--- Renderização condicional para mobile
+              {user ? ( // Renderização condicional para mobile: Se usuário logado
                 <>
                   <Link to="/cursos" onClick={() => setIsMenuOpen(false)}>
                     <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
                       <LayoutDashboard className="mr-2 h-4 w-4" /> MEUS CURSOS
                     </Button>
                   </Link>
-                  <Button 
-                    onClick={handleLogout} 
+                  <Button
+                    onClick={handleLogout}
                     className="w-full mt-2 bg-red-500 text-white hover:bg-red-600"
                   >
                     <LogOut className="mr-2 h-4 w-4" /> SAIR
                   </Button>
                 </>
               ) : (
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
-                    LOGIN
-                  </Button>
-                </Link>
+                // Removendo o botão de LOGIN da versão mobile também
+                // <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                //   <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
+                //     LOGIN
+                //   </Button>
+                // </Link>
+                null // Ou outro CTA, se necessário.
               )}
             </div>
           </div>

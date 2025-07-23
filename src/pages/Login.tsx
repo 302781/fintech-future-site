@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom'; // Importe useLocation
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,25 +8,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Shield, Lock } from 'lucide-react';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContextHook';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null); // Manter para feedback direto no formulário, se quiser
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // Hook para acessar a URL atual
 
-  // Redirecionar se já estiver logado
+  // Obter o caminho de redirecionamento da URL (ex: /login?redirect=/dashboard)
+  const redirectPath = new URLSearchParams(location.search).get('redirect') || '/dashboard';
+
+  // Redirecionar se já estiver logado OU após login/cadastro bem-sucedido
   useEffect(() => {
+    // Só redireciona se o usuário JÁ ESTIVER logado e não estiver em um estado de loading
+    // Isso evita redirecionamentos indesejados durante o processo de autenticação
     if (user && !isLoading) {
-      navigate('/dashboard');
+      toast.success('Você já está logado!'); // Mensagem para feedback
+      navigate(redirectPath, { replace: true }); // Redireciona para o caminho desejado
     }
-  }, [user, isLoading, navigate]);
+  }, [user, isLoading, navigate, redirectPath]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null); // Limpa erros anteriores
 
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get('email') as string;
@@ -40,17 +48,22 @@ const Login = () => {
 
     try {
       await signIn(email, password);
+      // Se o login for bem-sucedido, o useEffect acima cuidará do redirecionamento
+      toast.success('Login realizado com sucesso!');
     } catch (err: unknown) {
-      setError('Falha no login. Verifique suas credenciais.');
-      toast.error('Falha no login. Verifique suas credenciais.');
+      const errorMessage = (err as Error).message || 'Falha no login. Verifique suas credenciais.';
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error("Erro capturado na UI de Login:", err);
-      setIsLoading(false);
+    } finally {
+      setIsLoading(false); // Garante que o loading seja desativado em caso de erro
     }
   };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null); // Limpa erros anteriores
 
     const formData = new FormData(e.target as HTMLFormElement);
     const email = formData.get('registerEmail') as string;
@@ -72,7 +85,12 @@ const Login = () => {
 
     try {
       await signUp(email, password, firstName, lastName);
+      // Se o cadastro for bem-sucedido, o useEffect acima cuidará do redirecionamento
+      toast.success('Cadastro realizado com sucesso! Bem-vindo(a)!');
     } catch (err: unknown) {
+      const errorMessage = (err as Error).message || 'Falha no cadastro. Tente novamente.';
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error("Erro capturado na UI de Cadastro:", err);
     } finally {
       setIsLoading(false);
@@ -81,7 +99,8 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
-      <Navigation />
+      {/* A navegação já não tem o botão de login, então não há problema em mantê-la aqui */}
+      <Navigation /> 
       <div className="w-full max-w-md mt-8">
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-8">
@@ -94,7 +113,13 @@ const Login = () => {
             <Card className="bg-white/95 backdrop-blur-sm">
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl font-bold text-gray-900">Bem-vindo de volta!</CardTitle>
-                <CardDescription>Entre com suas credenciais para acessar sua conta</CardDescription>
+                <CardDescription>
+                    {/* Mensagem customizada para usuários que acabaram de pagar */}
+                    {location.search.includes('redirect') 
+                        ? 'Entre para acessar seu novo plano!' 
+                        : 'Entre com suas credenciais para acessar sua conta'
+                    }
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleLogin} className="space-y-4">
@@ -140,6 +165,8 @@ const Login = () => {
                     </Link>
                   </div>
 
+                  {error && <p className="text-red-500 text-sm text-center">{error}</p>} {/* Exibe erro */}
+
                   <Button
                     type="submit"
                     className="w-full bg-[#1A247E] hover:bg-[#2D4DE0]"
@@ -157,7 +184,13 @@ const Login = () => {
             <Card className="bg-white/95 backdrop-blur-sm">
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl font-bold text-gray-900">Crie sua conta</CardTitle>
-                <CardDescription>Junte-se à FinTech e transforme sua vida financeira</CardDescription>
+                <CardDescription>
+                    {/* Mensagem customizada para usuários que acabaram de pagar */}
+                    {location.search.includes('redirect') 
+                        ? 'Crie sua conta para ativar seu novo plano!' 
+                        : 'Junte-se à FinTech e transforme sua vida financeira'
+                    }
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleRegister} className="space-y-4">
@@ -241,6 +274,8 @@ const Login = () => {
                       <a href="#" className="text-[#1A247E] hover:underline">Política de Privacidade</a>
                     </label>
                   </div>
+
+                  {error && <p className="text-red-500 text-sm text-center">{error}</p>} {/* Exibe erro */}
 
                   <Button
                     type="submit"

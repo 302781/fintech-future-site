@@ -1,44 +1,55 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { useAuth } from "./contexts/AuthContext";
+import PrivateRoute from './components/ProtectedRoute';
+import { useAuth } from "./contexts/AuthContextHook";
+import { useNavigate } from './contexts/AuthContextHook';
 import { investmentPlatformsData, InvestmentIconMap } from './data/investmentPlatformsData';
 import { courseContentData, CourseIconMap } from './data/courseContentData';
 
-// Importe suas páginas
 import Index from "./pages/Index";
+import Sobre from "./pages/Sobre";
+import PorqueNos from "./pages/PorqueNos";
+import EducacaoECorporativo from './pages/EducacaoECorporativo';
 import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
-import Aulas from "./pages/Aulas";
+import Equipe from "./pages/Equipe";
+import PlanosCorporativos from './pages/PlanosCorporativos';
+import Login from "./pages/Login";
+import ContactPage from './pages/ContactPage';
+import FormularioPagamento from "./pages/ContratarPlanoForm";
+
 import ContratarPlanoForm from "./pages/ContratarPlanoForm";
 import CourseContent from "./pages/CourseContent";
 import EscolaPremium from "./pages/EscolaPremium";
 import EscolaBasica from "./pages/EscolaBasica";
-import Sobre from "./pages/Sobre";
 import Servicos from "./pages/Servicos";
-import PorqueNos from "./pages/PorqueNos";
 import RedeEnsino from "./pages/RedeEnsino";
-import Equipe from "./pages/Equipe";
-import Login from "./pages/Login";
+import Aulas from "./pages/Aulas";
 import Cursos from "./pages/Cursos";
 import Simuladores from "./pages/Simuladores";
 import FAQ from "./pages/FAQ";
 import InvestmentPlatforms from "./pages/InvestmentPlatforms";
-import FormularioPagamento from "./pages/ContratarPlanoForm";
 import ConsultoresFinanceiros from "./pages/ConsultoresFinanceiros";
-import PlanosCorporativos from "./pages/PlanosCorporativos";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import BibliotecaCompleta from './pages/BibliotecaCompleta';
+import Biblioteca from './pages/Biblioteca';
 import SettingsPage from "./pages/SettingsPage";
+import AdminDashboard from './pages/AdminDashboard';
+import VideoPlayer from "./components/VideoPlayer";
+import GamePlayer from "./components/GamePlayer/GamePlayer";
+import { useParams } from "react-router-dom";
 
-// --- Importação do novo componente unificado ---
-import EducacaoECorporativo from './pages/EducacaoECorporativo';
+const VideoPlayerWrapper: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  // You may want to map id to src, for now assuming src is id
+  return <VideoPlayer src={id ?? ""} />;
+}
 
-// --- Declaração do QueryClient (NECESSÁRIO) ---
 const queryClient = new QueryClient();
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -60,29 +71,44 @@ const App = () => (
     <TooltipProvider>
         <Toaster />
         <Sonner />
-        <Routes>
+        <Routes future={ 
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+            v7_relativeSplatPath: true, }>
+        
           <Route path="/" element={<Index />} />
+          <Route path="/planos-corporativos" element={<PlanosCorporativos />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/contato" element={<ContactPage />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/servicos" element={<Servicos />} />
           <Route path="/porque-nos" element={<PorqueNos />} />
-          <Route path="/planos-corporativos" element={<PlanosCorporativos />} />
-
-          <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
+          <Route path="/contato" element={<ContactPage />} />
           <Route path="/contratar-plano" element={<FormularioPagamento />} />
 
+          <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
           <Route path="/equipe" element={<Equipe />} />
-          <Route path="/login" element={<Login />} />
+
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/pagamento" element={<FormularioPagamento />} />
-          <Route path="/consultores" element={<ConsultoresFinanceiros />} />
+          <Route 
+            path="video/:id" 
+            element={
+              <VideoPlayerWrapper />
+            } 
+          /> 
           <Route path="/biblioteca-completa" element={<BibliotecaCompleta />} />
+          <Route path="/biblioteca" element={<Biblioteca />} />
           <Route path="/aulas" element={<Aulas />} />
           <Route path="/escola-premium" element={<EscolaPremium />} />
           <Route path="/escola-basica" element={<EscolaBasica/>} />
            <Route path="/simuladores" element={<Simuladores/>} />
-
+          <Route path="video/:id" element={<VideoPlayer src={''} />} /> 
+          <Route path="jogo/:id" element={<GamePlayer />} /> 
+          <Route path="/dashboard" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} /> 
+        { <Route path="/assinaturas-corporativa" element={<AssinaturasCorporativas />} /> }
           <Route path="/investment-plataforms" 
             element={<InvestmentPlatforms platforms={investmentPlatformsData} IconMap={InvestmentIconMap} />} 
           />

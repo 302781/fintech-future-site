@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookUser, Clock, Award, LogOut, GraduationCap, TrendingUp, DollarSign, Lightbulb, PiggyBank, Briefcase, Landmark, Handshake, Info } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContextHook';
 import { toast } from "@/components/ui/sonner";
 
 interface CourseItem {
@@ -31,11 +31,11 @@ interface PlanContent {
 }
 
 interface User {
-    id: number;
+    id: string;
     email: string;
     firstName?: string;
     lastName?: string;
-    planType?: string; 
+    planType?: string; // Certifique-se de que o AuthContext retorna 'planType'
 }
 
 interface CourseContentProps {
@@ -186,14 +186,12 @@ const Cursos = () => {
 
   useEffect(() => {
     if (user) {
-      // **IMPORTANTE**: Use as propriedades do objeto 'user' diretamente,
-      // pois elas já foram mapeadas em AuthContext para a interface User.
-      const detectedPlan = user.planType || 'Escola Básica'; // Agora 'planType' está direto em 'user'
+      
+      const detectedPlan = (user as User).planType || 'Escola Básica'; 
       
       setUserProfile({
         id: user.id,
-        firstName: user.firstName || 'Usuário',
-        lastName: user.lastName || '',
+        // Remova o acesso a firstName e lastName se não existirem no AuthContext user
         email: user.email,
         planType: detectedPlan,
       });
@@ -225,10 +223,10 @@ const Cursos = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-8">
               <div>
+                <h1 className="text-4xl lg:text-6xl font-bold text-white mb-4"></h1>
                 <h1 className="text-4xl lg:text-6xl font-bold text-white mb-4">
-                  Olá, {userProfile?.firstName}!
-                </h1>
-                <p className="text-xl text-white/80">
+                  Olá, {userProfile?.email}!
+                </h1><p>
                   Seu plano atual: <span className="font-semibold text-white">{userPlan}</span>
                 </p>
                 <p className="text-xl text-white/80 mt-2">

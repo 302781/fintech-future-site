@@ -1,11 +1,10 @@
-// src/pages/Cursos.tsx
 import React, { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookUser, Clock, Award, LogIn, GraduationCap, TrendingUp, DollarSign, Lightbulb, PiggyBank, Briefcase, Landmark, Handshake, Info, PlusCircle, CheckCircle, User, Users } from 'lucide-react'; 
-import { useAuth } from '@/contexts/AuthContext'; 
+import { useAuth } from '@/contexts/AuthContextHook'; 
 import { toast } from 'sonner';
 
 import CourseContent from '@/components/CourseContent'

@@ -5,10 +5,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
+import {
+  Dialog, // Importar Dialog
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'; // Certifique-se de que esses componentes estão no seu caminho
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from "@/components/ui/use-toast"; // Para notificações de toast
+
+import {
   Trophy, Crown, MessageCircle, Users, Target, Calendar,
   TrendingUp, Globe, Award, MapPin, Zap, BarChart3,
-  QrCode, HeadphonesIcon, FileText, Brain, Lightbulb
+  QrCode, HeadphonesIcon, FileText, Brain, Lightbulb,
+  CreditCard, // Ícone para assinatura
+  ShieldAlert, // Ícone para alerta/cancelamento
+  CalendarCheck // Ícone para plano cancelado
 } from 'lucide-react';
 
 const RedeEnsino = () => {
@@ -19,21 +35,29 @@ const RedeEnsino = () => {
     completedCourses: 45000
   });
 
+  // --- NOVOS ESTADOS PARA GERENCIAR ASSINATURA ---
+  const [subscriptionStatus, setSubscriptionStatus] = useState<'active' | 'canceled' | 'expired'>('active'); // Status atual da assinatura
+  const [currentPeriodEnd, setCurrentPeriodEnd] = useState('2025-12-31'); // Data de fim do período de faturamento
+  const [isCancelling, setIsCancelling] = useState(false); // Para controlar o estado de carregamento do cancelamento
+  const [cancellationReason, setCancellationReason] = useState(""); // Motivo do cancelamento
+  const { toast } = useToast(); // Hook para mostrar toasts
+  // --- FIM DOS NOVOS ESTADOS ---
+
   const adaptiveSuggestions = [
-    { 
-      title: 'Foque em Matemática Financeira', 
+    {
+      title: 'Foque em Matemática Financeira',
       reason: 'Baseado no seu desempenho, você se beneficiaria destes exercícios',
       difficulty: 'medium',
       estimatedTime: '20 min'
     },
-    { 
-      title: 'Revisão: Conceitos de Juros', 
+    {
+      title: 'Revisão: Conceitos de Juros',
       reason: 'Identifiquei algumas dificuldades neste tópico',
       difficulty: 'easy',
       estimatedTime: '15 min'
     },
-    { 
-      title: 'Desafio Avançado: Portfólio', 
+    {
+      title: 'Desafio Avançado: Portfólio',
       reason: 'Você está pronto para conteúdos mais complexos',
       difficulty: 'hard',
       estimatedTime: '45 min'
@@ -41,17 +65,17 @@ const RedeEnsino = () => {
   ];
 
   const networkChallenges = [
-    { 
-      id: 1, 
-      title: 'Campeonato Regional de Finanças', 
+    {
+      id: 1,
+      title: 'Campeonato Regional de Finanças',
       period: 'Dezembro 2024',
       participants: 850,
       prize: 'Certificado + Tablet',
       status: 'active'
     },
-    { 
-      id: 2, 
-      title: 'Desafio Sustentabilidade', 
+    {
+      id: 2,
+      title: 'Desafio Sustentabilidade',
       period: 'Janeiro 2025',
       participants: 1200,
       prize: 'Viagem Educativa',
@@ -60,17 +84,17 @@ const RedeEnsino = () => {
   ];
 
   const learningPaths = [
-    { 
-      id: 1, 
-      title: 'Trilha Sudeste: Empreendedorismo', 
+    {
+      id: 1,
+      title: 'Trilha Sudeste: Empreendedorismo',
       region: 'SP, RJ, MG, ES',
       progress: 65,
       modules: 8,
       difficulty: 'intermediate'
     },
-    { 
-      id: 2, 
-      title: 'Trilha Norte: Economia Local', 
+    {
+      id: 2,
+      title: 'Trilha Norte: Economia Local',
       region: 'AM, PA, AC, RO',
       progress: 30,
       modules: 6,
@@ -92,10 +116,38 @@ const RedeEnsino = () => {
     { id: 3, title: 'Planejamento Financeiro Familiar', date: '2024-08-10', verified: false }
   ];
 
+  // --- NOVA FUNÇÃO PARA GERENCIAR O CANCELAMENTO ---
+  const handleCancelSubscription = () => {
+    setIsCancelling(true);
+    // Em uma aplicação real:
+    // 1. Chamar sua API de backend para iniciar o cancelamento da assinatura
+    //    Ex: await fetch('/api/rede-ensino/cancel-plan', {
+    //          method: 'POST',
+    //          headers: { 'Content-Type': 'application/json' },
+    //          body: JSON.stringify({ reason: cancellationReason, networkId: 'suaRedeID' })
+    //        });
+    // 2. O backend se comunicaria com o provedor de pagamentos (Stripe, PagSeguro etc.)
+    // 3. O backend retornaria o novo status e a data de fim do período.
+
+    // Simulação do cancelamento (para o frontend)
+    setTimeout(() => {
+      // Sucesso simulado
+      setSubscriptionStatus('canceled');
+      toast({
+        title: "Cancelamento Solicitado!",
+        description: `Seu Plano Premium foi cancelado e permanecerá ativo até ${new Date(currentPeriodEnd).toLocaleDateString('pt-BR')}.`,
+        variant: "default",
+      });
+      setIsCancelling(false);
+      // Opcional: fechar o modal de cancelamento aqui se for necessário
+    }, 1500); // Simula um atraso de rede
+  };
+  // --- FIM DA NOVA FUNÇÃO ---
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-100">
       <Navigation />
-      
+
       <div className="pt-20 px-4 max-w-7xl mx-auto">
         {/* Header Personalizado da Rede */}
         <div className="bg-gradient-to-r from-emerald-600 to-blue-600 rounded-2xl shadow-lg p-8 mb-8 text-white">
@@ -105,8 +157,8 @@ const RedeEnsino = () => {
                 <img src="/placeholder-logo.png" alt="Logo da Rede" className="w-12 h-12" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold">Bem-vindo, Estudante!</h1>
-                <p className="text-emerald-100">Rede Nacional de Educação Financeira</p>
+                <h1 className="text-3xl font-bold">Bem-vindo, Rede de Ensino!</h1> {/* Título mais apropriado */}
+                <p className="text-emerald-100">Sua plataforma completa de educação financeira</p> {/* Descrição ajustada */}
                 <div className="flex items-center gap-4 mt-2">
                   <div className="flex items-center gap-2">
                     <Globe className="w-4 h-4" />
@@ -119,7 +171,7 @@ const RedeEnsino = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex gap-3">
               <Button variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-600">
                 <QrCode className="w-4 h-4 mr-2" />
@@ -185,12 +237,12 @@ const RedeEnsino = () => {
                           {suggestion.title}
                         </h4>
                         <Badge variant={
-                          suggestion.difficulty === 'easy' ? 'secondary' : 
-                          suggestion.difficulty === 'medium' ? 'default' : 
-                          'destructive'
+                          suggestion.difficulty === 'easy' ? 'secondary' :
+                            suggestion.difficulty === 'medium' ? 'default' :
+                              'destructive'
                         }>
-                          {suggestion.difficulty === 'easy' ? 'Fácil' : 
-                           suggestion.difficulty === 'medium' ? 'Médio' : 'Avançado'}
+                          {suggestion.difficulty === 'easy' ? 'Fácil' :
+                            suggestion.difficulty === 'medium' ? 'Médio' : 'Avançado'}
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-600 mb-3">{suggestion.reason}</p>
@@ -262,8 +314,8 @@ const RedeEnsino = () => {
                         <div>👥 {challenge.participants} participantes</div>
                         <div>🏆 {challenge.prize}</div>
                       </div>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         className="w-full"
                         disabled={challenge.status !== 'active'}
                       >
@@ -340,6 +392,103 @@ const RedeEnsino = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* --- NOVA SEÇÃO: GERENCIAMENTO DE ASSINATURA --- */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-indigo-600" />
+                  Gerenciar Assinatura
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 border rounded-lg bg-indigo-50">
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <h4 className="font-semibold">Plano Premium da Rede</h4>
+                      <p className="text-sm text-gray-600">
+                        Status: <span className={`font-bold ${
+                          subscriptionStatus === 'active' ? 'text-green-600' :
+                          subscriptionStatus === 'canceled' ? 'text-yellow-600' : 'text-red-600'
+                        }`}>
+                          {subscriptionStatus === 'active' ? 'Ativo' :
+                           subscriptionStatus === 'canceled' ? 'Cancelado (Não renova)' : 'Expirado'}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-gray-500">Ativo até:</div>
+                    <div className="font-semibold text-sm">
+                      {new Date(currentPeriodEnd).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                    </div>
+                  </div>
+                </div>
+
+                {subscriptionStatus === 'active' && (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="destructive" className="w-full">
+                        <ShieldAlert className="w-4 h-4 mr-2" />
+                        Cancelar Plano Premium
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-destructive">
+                          <ShieldAlert className="w-6 h-6" />
+                          Confirmar Cancelamento
+                        </DialogTitle>
+                        <DialogDescription>
+                          Seu plano será cancelado e não será renovado automaticamente após o dia{" "}
+                          <span className="font-bold">
+                            {new Date(currentPeriodEnd).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                          </span>. Você ainda terá acesso a todos os recursos premium até essa data.
+                          Lamentamos vê-lo partir!
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="reason">Por que você está cancelando? (Opcional)</Label>
+                          <Textarea
+                            id="reason"
+                            placeholder="Seu feedback é importante para nós..."
+                            value={cancellationReason}
+                            onChange={(e) => setCancellationReason(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsCancelling(false)} disabled={isCancelling}>
+                          Manter Plano
+                        </Button>
+                        <Button
+                          onClick={handleCancelSubscription}
+                          disabled={isCancelling}
+                          className="bg-destructive hover:bg-destructive/90"
+                        >
+                          {isCancelling ? "Cancelando..." : "Sim, Cancelar Plano"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
+
+                {subscriptionStatus === 'canceled' && (
+                  <div className="p-3 bg-yellow-100 border border-yellow-400 text-yellow-800 rounded-md flex items-center gap-3">
+                    <CalendarCheck className="h-5 w-5" />
+                    <p className="text-sm">
+                      Seu plano está **cancelado** e não será renovado. O acesso premium permanece ativo até{" "}
+                      <span className="font-semibold">
+                         {new Date(currentPeriodEnd).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}.
+                      </span>
+                      {" "}Para reativar, entre em contato com o suporte.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            {/* --- FIM DA NOVA SEÇÃO --- */}
 
             {/* Acesso Rápido */}
             <Card>

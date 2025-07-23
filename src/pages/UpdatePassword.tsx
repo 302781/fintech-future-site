@@ -12,7 +12,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from 'sonner';
 import Navigation from '@/components/Navigation';
 import { Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContextHook';
+
+interface session {
+  userId: string;
+  email: string;
+}
+
+export interface AuthContextType {
+  session: session | null;
+}
 
 const UpdatePassword = () => {
   const [password, setPassword] = useState('');
@@ -23,36 +32,46 @@ const UpdatePassword = () => {
   const { session } = useAuth();
 
   useEffect(() => {
-    // This component relies on the onAuthStateChange in AuthContext to handle
-    // the PASSWORD_RECOVERY event and establish a session when the user
-    // arrives from a password recovery link.
-  }, [session]);
-
-  const handleUpdatePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error('As senhas não coincidem.');
-      return;
-    }
-    if (password.length < 8) {
-        toast.error('A senha deve ter no mínimo 8 caracteres.');
-        return;
-    }
-
-    setIsLoading(true);
-
-    const { error } = await SQLite.auth.updateUser({ password });
-
-    if (error) {
-      toast.error('Erro ao atualizar a senha: ' + error.message);
-    } else {
-      toast.success('Senha atualizada com sucesso! Você pode fazer login agora.');
-      await MySql.auth.signOut();
+    if (!session) {
       navigate('/login');
     }
+  }, [session, navigate]);
 
-    setIsLoading(false);
-  };
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (password !== confirmPassword) {
+    toast.error('As senhas não coincidem.');
+    return;
+  }
+  if (password.length < 8) {
+    toast.error('A senha deve ter no mínimo 8 caracteres.');
+    return;
+  }
+
+  setIsLoading(true);
+
+    try {
+    const response = await fetch('/api/auth/update-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      toast.error('Erro ao atualizar a senha: ' + (result.error || 'Erro desconhecido'));
+    } else {
+      toast.success('Senha atualizada com sucesso! Você pode fazer login agora.');
+      // Se necessário, faça logout do usuário aqui
+      navigate('/login');
+    }
+  } catch (error) {
+    toast.error('Erro ao atualizar a senha: ' + (error as Error).message);
+  }
+
+  setIsLoading(false);
+};
 
   if (!session) {
       return (

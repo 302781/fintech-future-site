@@ -1,13 +1,8 @@
-// Remova Navigation, div.min-h-screen, pt-20 e o Header section
-// Mantenha apenas o conteúdo principal dos consultores e o "Como Funciona"
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Calendar, MessageCircle, Award, Clock, Phone } from 'lucide-react';
-// import { Link } from 'react-router-dom'; // Certifique-se que Link ainda é necessário se não houver navegação interna aqui
-
-// **** ADICIONE ESTA INTERFACE AQUI ****
+import { Link } from 'react-router-dom'; 
 interface Consultor {
   id: number;
   nome: string;
@@ -23,7 +18,6 @@ interface Consultor {
 }
 
 const ConsultoresFinanceirosContent = () => {
-  // **** AGORA TIPAMOS O ARRAY consultores COM A INTERFACE ****
   const consultores: Consultor[] = [
     {
       id: 1,

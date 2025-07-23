@@ -29,7 +29,6 @@ const ContratarPlanoForm = () => {
     if (plano) {
       setPlanoSelecionado(plano);
     } else {
-      // Redireciona de volta se nenhum plano for especificado
       navigate('/educacao-e-corporativo');
       toast.error('Nenhum plano selecionado. Por favor, escolha um plano.');
     }
@@ -44,7 +43,6 @@ const ContratarPlanoForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Validação básica
     if (!formData.nomeResponsavel || !formData.emailContato || !formData.nomeInstituicao) {
       toast.error('Por favor, preencha os campos obrigatórios.');
       setIsSubmitting(false);
@@ -52,12 +50,9 @@ const ContratarPlanoForm = () => {
     }
 
     try {
-      // --- Envio de E-mail para o Suporte (usando EmailJS) ---
-      // Certifique-se de substituir 'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID' e 'YOUR_PUBLIC_KEY'
-      // Pelas suas credenciais reais do EmailJS.
       await emailjs.send(
-        'YOUR_SERVICE_ID', // Substitua pelo seu Service ID do EmailJS
-        'YOUR_TEMPLATE_ID', // Substitua pelo seu Template ID do EmailJS
+        'service_vf0ut1v',
+        'template_f0husmm',
         {
           plano_selecionado: planoSelecionado,
           nome_responsavel: formData.nomeResponsavel,

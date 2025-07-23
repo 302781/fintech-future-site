@@ -1,14 +1,14 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { db } from 'src/lib/db'; 
+import { db } from 'src/lib/db';
 import Stripe from 'stripe';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import Navigation from '@/components/Navigation';
 
@@ -20,16 +20,22 @@ const ForgotPassword = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const redirectTo = `${window.location.origin}/update-password`;
+    try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
 
-    const { error } = await MySql.auth.resetPasswordForEmail(email, {
-      redirectTo,
-    });
+      const result = await response.json();
 
-    if (error) {
-      toast.error('Erro ao solicitar redefinição: ' + error.message);
-    } else {
-      toast.success('Se existir uma conta com este e-mail, um link de redefinição será enviado.');
+      if (!response.ok) {
+        toast.error('Erro ao solicitar redefinição: ' + (result.error || 'Erro desconhecido'));
+      } else {
+        toast.success('Se existir uma conta com este e-mail, um link de redefinição será enviado.');
+      }
+    } catch (error) {
+      toast.error('Erro ao solicitar redefinição: ' + (error as Error).message);
     }
 
     setIsLoading(false);

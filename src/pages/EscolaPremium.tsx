@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useEffect} from 'react'; 
+import { useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { 
-  Play, Trophy, Star, Crown, MessageCircle, Users, Target, 
+import {
+  Play, Trophy, Star, Crown, MessageCircle, Users, Target,
   Gamepad2, Video, BookOpen, Search, Calendar, Medal,
   Settings, Bell
 } from 'lucide-react';
@@ -69,7 +69,7 @@ const EscolaPremium = () => {
   const [avatarCustomization, setAvatarCustomization] = useState({
     outfit: 'casual',
     background: 'classroom',
-    name: 'Maria' 
+    name: 'Maria'
   });
 
   const [weeklyMissions, setWeeklyMissions] = useState<Mission[]>([
@@ -78,7 +78,7 @@ const EscolaPremium = () => {
     { id: 3, title: 'Faça 10 atividades', progress: 7, total: 10, xp: 100, completed: false }
   ]);
 
-    const [classRanking, setClassRanking] = useState<StudentRank[]>([
+  const [classRanking, setClassRanking] = useState<StudentRank[]>([
     { position: 1, name: 'Ana Silva', xp: 2100, avatar: '👩‍🎓' },
     { position: 2, name: 'Pedro Costa', xp: 1800, avatar: '👨‍🎓' },
     { position: 3, name: 'Maria Santos', xp: 1250, avatar: '👩‍🎓', isMe: true },
@@ -86,42 +86,42 @@ const EscolaPremium = () => {
     { position: 5, name: 'Sofia Lima', xp: 950, avatar: '👩‍🎓' }
   ]);
 
-   const [achievements, setAchievements] = useState<Achievement[]>([
+  const [achievements, setAchievements] = useState<Achievement[]>([
     { id: 1, title: 'Economista Júnior', description: 'Complete 10 atividades de poupança', icon: '💰', unlocked: true },
     { id: 2, title: 'Investidor Iniciante', description: 'Termine todos os jogos de investimento', icon: '📈', unlocked: true },
     { id: 3, title: 'Consumidor Consciente', description: 'Acerte 90% das questões sobre consumo', icon: '🛒', unlocked: false },
     { id: 4, title: 'Mestre das Finanças', description: 'Alcance o nível 10', icon: '👑', unlocked: false }
   ]);
   const [premiumContent, setPremiumContent] = useState<PremiumContentItem[]>([
-    { 
-      id: 'game-multi1', 
-      type: 'game', 
+    {
+      id: 'game-multi1',
+      type: 'game',
       title: 'Simulador de Investimentos',
       description: 'Jogo com múltiplas fases sobre aplicações financeiras',
       phases: 5,
       difficulty: 'medium',
-      completed: false 
+      completed: false
     },
-    { 
-      id: 'video-quiz1', 
-      type: 'video', 
+    {
+      id: 'video-quiz1',
+      type: 'video',
       title: 'Planejamento Financeiro + Quiz',
       description: 'Vídeo interativo com perguntas durante a exibição',
       duration: '12min',
       quizzes: 3,
-      completed: true 
+      completed: true
     },
-    { 
-      id: 'collab1', 
-      type: 'collaborative', 
+    {
+      id: 'collab1',
+      type: 'collaborative',
       title: 'Projeto: Orçamento Familiar',
       description: 'Desafio colaborativo para criar um orçamento em grupo',
       participants: 4,
-      completed: false 
+      completed: false
     }
   ]);
 
-   const [notifications, setNotifications] = useState<Notification[]>([
+  const [notifications, setNotifications] = useState<Notification[]>([
     { id: 1, text: 'Nova missão semanal disponível!', time: '2h', type: 'mission' },
     { id: 2, text: 'Professor João respondeu sua pergunta', time: '1d', type: 'chat' },
     { id: 3, text: 'Você subiu para 3º lugar no ranking!', time: '2d', type: 'ranking' }
@@ -130,41 +130,39 @@ const EscolaPremium = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        //Exemplo fictício de chamadas API
         const missionsResponse = await axios.get('/api/missions');
-        setWeeklyMissions(missionsResponse.data);
+        setWeeklyMissions(missionsResponse.data as Mission[]);
 
         const rankingResponse = await axios.get('/api/ranking');
-        setClassRanking(rankingResponse.data);
+        setClassRanking(rankingResponse.data as StudentRank[]);
 
         const achievementsResponse = await axios.get('/api/achievements');
-        setAchievements(achievementsResponse.data);
+        setAchievements(achievementsResponse.data as Achievement[]);
 
         const contentResponse = await axios.get('/api/premium-content');
-        setPremiumContent(contentResponse.data);
+        setPremiumContent(contentResponse.data as PremiumContentItem[]);
 
         const notificationsResponse = await axios.get('/api/notifications');
-        setNotifications(notificationsResponse.data);
+        setNotifications(notificationsResponse.data as Notification[]);
 
-        //O nome do usuário e o nível viriam do seu contexto de autenticação ou de outra API de perfil
         const userProfileResponse = await axios.get('/api/profile');
-        setAvatarCustomization(prev => ({ ...prev, name: userProfileResponse.data.firstName }));
-        setCurrentLevel(userProfileResponse.data.level);
-        setXpPoints(userProfileResponse.data.xp);
-        setXpToNextLevel(userProfileResponse.data.xpToNextLevel);
+        const userProfile = userProfileResponse.data as { firstName: string; level: number; xp: number; xpToNextLevel: number };
+        setAvatarCustomization(prev => ({ ...prev, name: userProfile.firstName }));
+        setCurrentLevel(userProfile.level);
+        setXpPoints(userProfile.xp);
+        setXpToNextLevel(userProfile.xpToNextLevel);
 
-        } catch (error) {
+      } catch (error) {
         console.error("Erro ao carregar dados do Escola Premium:", error);
-        // Implemente um toast ou mensagem de erro para o usuário
       }
     };
     fetchUserData();
   }, []);
 
-   return (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
       <Navigation />
-      
+
       <div className="pt-20 px-4 max-w-7xl mx-auto">
         {/* Header Premium do Estudante */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
@@ -193,11 +191,11 @@ const EscolaPremium = () => {
                   <div className="space-y-4">
                     <div>
                       <label htmlFor="avatar-name" className="block text-sm font-medium mb-2">Nome</label>
-                      <input 
+                      <input
                         id="avatar-name" // Adicionado ID para acessibilidade
-                        type="text" 
+                        type="text"
                         value={avatarCustomization.name}
-                        onChange={(e) => setAvatarCustomization({...avatarCustomization, name: e.target.value})}
+                        onChange={(e) => setAvatarCustomization({ ...avatarCustomization, name: e.target.value })}
                         className="w-full p-2 border rounded-lg"
                       />
                     </div>
@@ -205,15 +203,15 @@ const EscolaPremium = () => {
                       <label className="block text-sm font-medium mb-2">Roupa</label>
                       <div className="flex gap-2">
                         {/* 4. Funcionalidade: Adicionado onClick para botões de roupa */}
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant={avatarCustomization.outfit === 'casual' ? 'default' : 'outline'}
                           onClick={() => setAvatarCustomization(prev => ({ ...prev, outfit: 'casual' }))}
                         >
                           Casual
                         </Button>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant={avatarCustomization.outfit === 'formal' ? 'default' : 'outline'}
                           onClick={() => setAvatarCustomization(prev => ({ ...prev, outfit: 'formal' }))}
                         >
@@ -224,7 +222,7 @@ const EscolaPremium = () => {
                   </div>
                 </DialogContent>
               </Dialog>
-              
+
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Olá, {avatarCustomization.name}!</h1>
                 <p className="text-gray-600">Plano Escola Premium</p>
@@ -315,7 +313,7 @@ const EscolaPremium = () => {
                         </div>
                         <h4 className="font-semibold mb-2">{item.title}</h4>
                         <p className="text-sm text-gray-600 mb-3">{item.description}</p>
-                        
+
                         {/* Renderização condicional de detalhes com base no tipo */}
                         {item.type === 'game' && item.phases && item.difficulty && (
                           <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">

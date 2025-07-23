@@ -6,7 +6,7 @@ import { BookUser, Users, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const EducacaoECorporativo = () => {
-  const [selectedAge, setSelectedAge] = useState('adultos'); // Definindo adultos como padrão inicial
+  const [selectedAge, setSelectedAge] = useState('adultos'); 
 
   const ageGroups = {
     criancas: {

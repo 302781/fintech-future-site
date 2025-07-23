@@ -1,0 +1,24 @@
+import { createContext, useContext } from 'react';
+import { User } from './AuthContext'; 
+
+interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<boolean>;
+  signOut: () => void;
+}
+
+// Criar o Contexto
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Hook personalizado para usar o contexto
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
+  return context;
+};

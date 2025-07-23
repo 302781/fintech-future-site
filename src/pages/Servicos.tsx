@@ -157,12 +157,8 @@ const Servicos = () => {
         </div>
       </section>
 
-      {/* Seção de Consultores Financeiros Integrada */}
       <ConsultoresFinanceirosContent />
-
-      {/* Adicione o Footer se ele não estiver no seu layout principal */}
-      {/* Exemplo de Footer para manter a consistência se ele não estiver sendo importado */}
-      {/* <footer className="bg-gray-900 text-white py-12">
+ <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -201,7 +197,6 @@ const Servicos = () => {
           </div>
         </div>
       </footer>
-      */}
     </div>
   );
 };
