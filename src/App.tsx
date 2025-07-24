@@ -39,7 +39,7 @@ import UpdatePassword from "./pages/UpdatePassword";
 import BibliotecaCompleta from './pages/BibliotecaCompleta';
 import Biblioteca from './pages/Biblioteca';
 import SettingsPage from "./pages/SettingsPage";
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './components/AdminDashboard';
 import VideoPlayer from "./components/VideoPlayer";
 import GamePlayer from "./components/GamePlayer/GamePlayer";
 
