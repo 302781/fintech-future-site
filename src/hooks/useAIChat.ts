@@ -1,11 +1,5 @@
-// src/hooks/useAIChat.ts
 import { useState, useCallback } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // Para gerar IDs únicos para as mensagens
-
-// Se você ainda não tem uuid, instale:
-// npm install uuid @types/uuid
-// ou
-// yarn add uuid @types/uuid
+import { v4 as uuidv4 } from 'uuid'; 
 
 export interface ChatMessage {
   id: string;

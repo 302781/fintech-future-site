@@ -1,10 +1,9 @@
-// src/components/AISupport.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardHeader } from './ui/card';
 import { Badge } from './ui/badge';
-import { useAIChat, ChatMessage } from 'src/hooks/useAIChat'; // Agora este caminho deve estar correto
+import { useAIChat, ChatMessage } from '../hooks/useAIChat';
 import { MessageCircle, Send, X, Minimize2, Maximize2 } from 'lucide-react';
 
 export const AISupport: React.FC = () => {

@@ -48,9 +48,7 @@ const ContactPage: React.FC = () => {
     }
 
     try {
-      // --- IMPORTANTE: LÓGICA DE ENVIO DO FORMULÁRIO ---
-      // Aqui é onde você enviaria os dados para o seu backend ou um serviço de e-mail.
-      // Exemplo com fetch API:
+    
       const response = await fetch('/api/send-email', { // Substitua por sua rota de API
         method: 'POST',
         headers: {
@@ -105,23 +103,21 @@ const ContactPage: React.FC = () => {
             <CardContent className="space-y-4 text-gray-700 dark:text-gray-300">
               <div className="flex items-center">
                 <Mail className="mr-3 text-[#1A247E] dark:text-blue-400" size={20} />
-                <span>contato@fintech.com.br</span>
+                <span>mariavitoru349@gmail.com</span>
               </div>
               <div className="flex items-center">
                 <Phone className="mr-3 text-[#1A247E] dark:text-blue-400" size={20} />
-                <span>+55 (11) 99999-9999</span>
+                <span>+55 (61) 98403-6278</span>
               </div>
               <div className="flex items-start">
                 <MapPin className="mr-3 text-[#1A247E] dark:text-blue-400 mt-1" size={20} />
                 <span>
-                  Av. Paulista, 1000 - 10º Andar<br />
-                  Bela Vista, São Paulo - SP, 01310-100
+                  Brasilia-DF<br />
                 </span>
               </div>
               <div className="mt-6">
                 <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">Horário de Atendimento:</h3>
-                <p>Segunda a Sexta: 9h às 18h</p>
-                <p>Sábados, Domingos e Feriados: Fechado</p>
+                <p>Suporte 24h</p>
               </div>
             </CardContent>
           </Card>
