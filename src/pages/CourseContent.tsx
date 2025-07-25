@@ -29,7 +29,7 @@ const CourseContent: React.FC<CourseContentProps> = ({ courses, IconMap }) => {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {courses.map((course) => {
-        const IconComponent = course.icon ? IconMap[course.icon] : null; // Obtém o componente do ícone
+        const IconComponent = course.icon ? IconMap[course.icon] : null; 
         return (
           <Card key={course.id} className="flex flex-col h-full hover:shadow-lg transition-shadow duration-200">
             <CardContent className="flex-grow p-6">

@@ -15,12 +15,13 @@ import PorqueNos from "./pages/PorqueNos";
 import EducacaoECorporativo from './pages/EducacaoECorporativo';
 import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
 import Equipe from "./pages/Equipe";
-import PlanosCorporativosForm from './pages/PlanosCorporativosForm'; // Importação existente
+import PlanosCorporativosForm from './pages/PlanosCorporativosForm'; 
+import Homepage from './pages/Homepage';
 import Login from "./pages/Login";
 import ContactPage from './pages/ContactPage';
 import CheckoutForm from "./pages/ContratarPlanoForm"; // Este é o componente que você importou para formulário de pagamento
 import PlanosPage from './pages/PlanosPage';
-
+import Consultores from './components/Consultores';
 import CourseContent from "./pages/CourseContent";
 import EscolaPremium from "./pages/EscolaPremium";
 import EscolaBasica from "./pages/EscolaBasica";
@@ -43,6 +44,8 @@ import VideoPlayer from "./components/VideoPlayer";
 import GamePlayer from "./components/GamePlayer/GamePlayer";
 import SecuritySettingPage from "./components/SecuritySettingPage";
 import PrivateRoute from './components/PrivateRoute'; 
+import CheckoutPage from './pages/CheckountPage'; 
+import ReciboPage from './pages/ReciboPage'; 
 
 const VideoPlayerWrapper: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -74,7 +77,6 @@ const App = () => (
       <Sonner />
       <Routes>
         <Route path="/" element={<Index />} />
-
         <Route path="/planos-corporativos" element={<PlanosCorporativosForm />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contato" element={<ContactPage />} />
@@ -82,12 +84,24 @@ const App = () => (
         <Route path="/servicos" element={<Servicos />} />
         <Route path="/porque-nos" element={<PorqueNos />} />
         <Route path="/contato" element={<ContactPage />} />
-        {/* Usando CheckoutForm conforme o import */}
+        <Route path="/consultores" element={<Consultores />} />
         <Route path="/contratar-plano" element={<CheckoutForm />} />
-
+        <Route path="/planos" element={<PlanosPage />} />
         <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
         <Route path="/equipe" element={<Equipe />} />
 
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/recibo" element={<ReciboPage />} />
+        
+        {/* Rotas para páginas de conteúdo */}
+        <Route path="/homepage" element={<Homepage />} />
+        <Route path="/consultores-financeiros" element={<ConsultoresFinanceiros />} />
+        <Route path="/rede-ensino" element={<RedeEnsino />} />
+        <Route path="/video-player" element={<VideoPlayerWrapper />} />
+        <Route path="/game-player" element={<GamePlayer />} />
+        <Route path="/video/:id" element={<VideoPlayerWrapper />} />
+        <Route path="/game/:id" element={<GamePlayer />} />
+        
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/faq" element={<FAQ />} />
@@ -109,6 +123,7 @@ const App = () => (
         {/* Usando PrivateRouteComponent definido abaixo */}
         <Route path="/dashboard" element={<PrivateRouteComponent><AdminDashboard /></PrivateRouteComponent>} />
         <Route path="/assinaturas-corporativa" element={<AssinaturasCorporativas />} />
+
         <Route path="/investment-plataforms"
           element={<InvestmentPlatforms platforms={investmentPlatformsData} IconMap={InvestmentIconMap} />}
         />

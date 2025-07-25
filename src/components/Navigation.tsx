@@ -66,15 +66,7 @@ const Navigation: React.FC = () => {
                 </Button>
               </>
             ) : (
-                // <Link to="/login"> // Removendo o botão de Login da navbar principal
-                //   <Button className="bg-white text-[#1A247E] hover:bg-blue-50">
-                //     LOGIN
-                //   </Button>
-                // </Link>
-                // Você pode adicionar um link para o login aqui APENAS se quiser
-                // que ele apareça na navbar para não-logados.
-                // Mas, como o objetivo é remover, deixamos vazio ou com outro CTA
-                null // Ou algum outro botão que incentive a escolha do plano
+                <Link to="/consultores" className="text-white hover:text-blue-200">Consultores</Link>
             )}
           </div>
 

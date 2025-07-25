@@ -35,7 +35,7 @@ interface User {
     email: string;
     firstName?: string;
     lastName?: string;
-    planType?: string; // Certifique-se de que o AuthContext retorna 'planType'
+    planType?: string; 
 }
 
 interface CourseContentProps {

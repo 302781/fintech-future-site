@@ -54,11 +54,9 @@ interface UserProfileState {
   firstName: string;
   lastName: string;
   email: string | null;
-  planType: keyof AllPlansContent; // Tipado para ser uma das chaves de AllPlansContent
+  planType: keyof AllPlansContent; 
 }
 
-// --- CONFIGURAÇÃO INICIAL DOS PLANOS (MOVIDA PARA CÁ) ---
-// Em um projeto real, isso viria de uma API ou de um arquivo de dados dedicado.
 const initialConfig: AllPlansContent = {
   'Escola Básica': {
     details: {
@@ -83,8 +81,8 @@ const initialConfig: AllPlansContent = {
   'Escola Premium': {
     details: {
       description: 'Amplie seus conhecimentos com conteúdos avançados, treinamentos para professores e mais.',
-      minStudents: 31, // Exemplo: para escolas com mais de X alunos
-      maxStudents: 100, // Exemplo: limite superior para este plano
+      minStudents: 31,
+      maxStudents: 100,
       teacherTrainingSpots: 5,
       additionalFeatures: ['Acesso a todos os cursos básicos e avançados', 'Comunidade premium', 'Workshops ao vivo mensais', 'Relatórios de progresso personalizados', 'Suporte prioritário via chat'],
       accessDuration: '2 anos',
@@ -113,7 +111,7 @@ const initialConfig: AllPlansContent = {
   'Rede de Ensino': {
     details: {
       description: 'Solução completa para grandes redes de ensino, com acesso ilimitado e suporte dedicado.',
-      minStudents: 101, // Exemplo: para redes com mais de X alunos
+      minStudents: 101, 
       teacherTrainingSpots: 20,
       additionalFeatures: ['Acesso ilimitado a todo o conteúdo', 'Comunidade VIP', 'Consultoria personalizada', 'Integração com sistemas educacionais (LMS)', 'Dashboard de acompanhamento em tempo real', 'Suporte 24/7'],
       accessDuration: 'Ilimitado',
@@ -124,7 +122,6 @@ const initialConfig: AllPlansContent = {
       { id: 're1', title: 'Gestão de Carteiras Profissional', description: 'Estratégias avançadas para gerenciamento de grandes portfólios.', icon: 'Briefcase', tags: ['Profissional', 'Gestão'] },
       { id: 're2', title: 'Análise Fundamentalista Avançada', description: 'Aprenda a analisar empresas para investimentos de valor.', icon: 'Lightbulb', tags: ['Avançado', 'Análise'] },
       { id: 're3', title: 'Derivativos e Hedge', description: 'Compreenda os derivativos e estratégias de proteção.', icon: 'DollarSign', tags: ['Especializado', 'Risco'] },
-      // Inclui todos os cursos dos planos anteriores
       { id: 'eb1', title: 'Fundamentos da Educação Financeira', description: 'Aprenda os conceitos básicos para gerenciar suas finanças.', icon: 'DollarSign', tags: ['Iniciante', 'Básico'] },
       { id: 'eb2', title: 'Orçamento Inteligente', description: 'Crie e siga um orçamento que funcione para você.', icon: 'PiggyBank', tags: ['Iniciante', 'Planejamento'] },
       { id: 'eb3', title: 'Primeiros Passos no Investimento', description: 'Entenda como começar a investir com segurança.', icon: 'TrendingUp', tags: ['Iniciante', 'Investimento'] },

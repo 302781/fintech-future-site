@@ -61,9 +61,9 @@ const AssinaturaCorporativa = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  {/* Redireciona para o formulário, passando o plano na URL */}
+                  {/* Trocar o link*/}
                   <Button asChild className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3">
-                    <Link to="/contratar-plano?plano=Escola Básica">Contratar Plano</Link>
+                    <Link to="/contratar-plano?plano=Escola Básica">Contratar Plano</Link> 
                   </Button>
                 </CardFooter>
               </Card>
@@ -102,7 +102,7 @@ const AssinaturaCorporativa = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  {/* Redireciona para o formulário, passando o plano na URL */}
+                  {/* Trocar o link*/}
                   <Button asChild className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3">
                     <Link to="/contratar-plano?plano=Escola Premium">Contratar Plano</Link>
                   </Button>

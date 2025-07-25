@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -25,7 +24,8 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/login">
+              {/* Ajuste o link para '/planos' se essa for a rota definida no App.tsx */}
+              <Link to="/planos"> 
                 <Button 
                   size="lg" 
                   className="bg-white text-[#1A247E] hover:bg-blue-50 text-lg px-8 py-4 h-auto font-semibold group"
@@ -56,7 +56,6 @@ const Hero = () => {
               />
             </div>
             
-            {/* Elementos decorativos flutuantes */}
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-bounce"></div>
             <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-blue-300/30 rounded-full animate-pulse"></div>
           </div>

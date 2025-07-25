@@ -26,10 +26,10 @@ const ContratarPlanoForm = () => {
 
   useEffect(() => {
     const plano = searchParams.get('plano');
-    if (plano) {
-      setPlanoSelecionado(plano);
+    if (plano === 'corporativo') {
+      setPlanoSelecionado('Plano Corporativo');
     } else {
-      navigate('/educacao-e-corporativo');
+      navigate('/planos');
       toast.error('Nenhum plano selecionado. Por favor, escolha um plano.');
     }
   }, [searchParams, navigate]);
@@ -62,14 +62,14 @@ const ContratarPlanoForm = () => {
           numero_aluno: formData.numeroAlunos || 'Não especificado',
           mensagem: formData.mensagem || 'Nenhuma mensagem adicional.',
         },
-        'YOUR_PUBLIC_KEY' // Substitua pela sua Public Key (User ID) do EmailJS
+        'SQiKfeM0LI9dmCjCw' 
       );
 
       setSubmissionSuccess(true);
       toast.success('Sua solicitação foi enviada com sucesso! Entraremos em contato em breve.');
 
       setTimeout(() => {
-        navigate(`/cursos?planoAtivo=${encodeURIComponent(planoSelecionado)}`);
+        navigate(`/login`);
       }, 5000);
       
     } catch (error) {
@@ -103,7 +103,7 @@ const ContratarPlanoForm = () => {
                     Agradecemos seu interesse no plano **{planoSelecionado}**.
                     Sua solicitação foi enviada com sucesso e nossa equipe de suporte entrará em contato em breve para os próximos passos.
                   </p>
-                  <p className="text-gray-500 text-sm">Você será redirecionado para a tela de cursos em alguns segundos...</p>
+                  <p className="text-gray-500 text-sm">Você será redirecionado para a tela de login em alguns segundos...</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -123,7 +123,8 @@ const ContratarPlanoForm = () => {
                     <Label htmlFor="nomeInstituicao">Nome da Instituição/Rede <span className="text-red-500">*</span></Label>
                     <Input id="nomeInstituicao" value={formData.nomeInstituicao} onChange={handleChange} placeholder="Nome da sua escola ou rede" required />
                   </div>
-                  {planoSelecionado === 'Rede de Ensino' && (
+                  
+                  {planoSelecionado === 'Plano Corporativo' && (
                     <div>
                       <Label htmlFor="numeroAlunos">Número Aproximado de Alunos/Usuários</Label>
                       <Input id="numeroAlunos" type="number" value={formData.numeroAlunos} onChange={handleChange} placeholder="Ex: 1000" />

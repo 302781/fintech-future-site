@@ -28,7 +28,7 @@ const Equipe = () => {
       email: "luis.guilherme@fintech.com"
     },
     {
-      name: "Maria Eduarda Sodre Alves",
+      name: "Maria Eduarda Sodré Alves",
       role: "Product Owner",
       description: [
         "- Liderança do projeto e tomada de decisões estratégicas. - Gerenciamento do Trello(tasks, prazos e prioridades).",

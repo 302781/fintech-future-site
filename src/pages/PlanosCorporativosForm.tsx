@@ -86,7 +86,6 @@ const ContratarPlanoForm = () => {
       setSubmissionSuccess(true);
       toast.success('Sua solicitação foi enviada com sucesso! Entraremos em contato em breve.');
 
-      // Opcional: Limpar o formulário após o sucesso
       setFormData({
         nomeResponsavel: '',
         emailContato: '',
