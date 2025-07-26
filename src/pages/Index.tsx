@@ -22,15 +22,12 @@ const Index = () => {
           <p className="text-xl text-gray-600 mb-8">
             Junte-se a milhares de pessoas que já descobriram o poder da educação financeira
           </p>
-          <Link to="/planos">
-            <Button
-              size="lg"
-              className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4 h-auto group">
-                
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+          <Button asChild size="lg" className="bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4 h-auto group">
+            <Link to="/assinaturas-corporativas" className="flex items-center">
               Explore Nossos Planos
-            </Button>
-          </Link>
+              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+            </Link>
+          </Button>
         </div>
       </section>
 

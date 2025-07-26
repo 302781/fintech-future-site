@@ -14,7 +14,7 @@ const AssinaturaCorporativa = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       <div className="pt-20">
         <section className="fintech-gradient py-20 text-white text-center">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,7 +28,7 @@ const AssinaturaCorporativa = () => {
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Escolha o Plano Ideal para Sua Instituição</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Plano Escola Básica */}
               <Card className="flex flex-col justify-between shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -61,9 +61,9 @@ const AssinaturaCorporativa = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  {/* Trocar o link*/}
+                  
                   <Button asChild className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg py-3">
-                    <Link to="/contratar-plano?plano=Escola Básica">Contratar Plano</Link> 
+                    <Link to="/contratar-plano?plano=escola-basica">Contratar Plano</Link>
                   </Button>
                 </CardFooter>
               </Card>
