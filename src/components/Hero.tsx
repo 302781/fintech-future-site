@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const DASHBOARD_IMAGE_URL = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80";
+
 const Hero = () => {
   return (
     <section className="fintech-gradient min-h-screen flex items-center pt-20">
@@ -24,8 +26,7 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Ajuste o link para '/planos' se essa for a rota definida no App.tsx */}
-              <Link to="/planos"> 
+              <Link to="/planos" aria-label="Ir para a página de planos para começar agora"> 
                 <Button 
                   size="lg" 
                   className="bg-white text-[#1A247E] hover:bg-blue-50 text-lg px-8 py-4 h-auto font-semibold group"
@@ -34,7 +35,7 @@ const Hero = () => {
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
                 </Button>
               </Link>
-              <Link to="/sobre">
+              <Link to="/sobre" aria-label="Ir para a página Sobre para saber mais sobre nós">
                 <Button 
                   size="lg" 
                   variant="outline" 
@@ -50,9 +51,10 @@ const Hero = () => {
           <div className="relative animate-fadeInUp">
             <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 animate-pulse-slow">
               <img 
-                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                alt="Dashboard Financeiro"
-                className="w-full h-auto rounded-2xl shadow-2xl"
+                src={DASHBOARD_IMAGE_URL}
+                alt="Dashboard financeiro com gráficos de investimento e economia" // Melhor descrição alt
+                className="w-full h-auto rounded-2xl shadow-2xl object-cover" // object-cover para melhor ajuste
+                loading="lazy" // Otimização de carregamento para imagens que não estão acima da dobra
               />
             </div>
             
