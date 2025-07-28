@@ -50,6 +50,7 @@ import UpdatePassword from "./pages/UpdatePassword";
 import SettingsPage from "./pages/SettingsPage";
 import SecuritySettingPage from "./components/SecuritySettingPage";
 import PrivateRoute from './components/PrivateRoute'; 
+import AgendamentoPage from './pages/AgendamentoPage';
 
 
 const VideoPlayerWrapper: React.FC = () => {
@@ -78,7 +79,6 @@ const PrivateRouteComponent: React.FC<{ children: React.ReactNode }> = ({ childr
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
       <Sonner />
       <Routes>
         //Inicio
@@ -103,6 +103,7 @@ const App = () => (
         <Route path="/pagamento" element={<CheckoutForm />} />
         // Entrar
         <Route path="/login" element={<Login />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<PrivateRouteComponent><AdminDashboard /></PrivateRouteComponent>} />
         //Contato e Ajuda
         <Route path="/contato" element={<ContactPage />} />
@@ -119,6 +120,7 @@ const App = () => (
         <Route path="/video/:id" element={<VideoPlayerWrapper />} />
         <Route path="/game/:id" element={<GamePlayer />} />
         <Route path="/consultores" element={<Consultores />} />
+        <Route path="/agendamento" element={<AgendamentoPage />} />
         <Route path="/investment-plataforms"element={<InvestmentPlatforms platforms={investmentPlatformsData} IconMap={InvestmentIconMap} />}/>
         <Route path="/course-content"element={<CourseContent courses={courseContentData} IconMap={CourseIconMap} />}/>
          <Route path="/cursos-basico" element={

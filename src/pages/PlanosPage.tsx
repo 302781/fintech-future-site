@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Navigation from '@/components/Navigation'; // Assumindo que este caminho está correto
+import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner'; // Usando sonner para notificações
-import emailjs from '@emailjs/browser'; // Para envio de e-mails
-import { Loader2 } from 'lucide-react'; // Ícone de carregamento
+import { toast } from 'sonner';
+import emailjs from '@emailjs/browser';
+// Se você for usar o Loader2, descomente e instale:
+// import { Loader2 } from 'lucide-react';
 
-// --- Interfaces para Dados do Formulário ---
+// --- Interfaces, Schemas, etc. ---
 interface ContratarPlanoFormData {
   nomeResponsavel: string;
   emailContato: string;
-  telefone?: string; // Telefone é opcional e não obrigatório para validação básica
-  nomeInstituicao?: string; // Apenas para planos corporativos
-  numeroAlunos?: string; // Apenas para planos corporativos, como string para input
-  mensagem?: string; // Apenas para planos corporativos, opcional
-  // Campos de pagamento individual (preenchidos apenas se o plano for de pagamento)
+  telefone?: string;
+  nomeInstituicao?: string;
+  numeroAlunos?: string;
+  mensagem?: string;
   cpf?: string;
   planValue?: string;
   paymentMethod?: string;
@@ -27,101 +27,92 @@ interface ContratarPlanoFormData {
   transactionLocation?: string;
 }
 
-// --- Interfaces para Erros de Validação ---
 interface FormErrors {
   [key: string]: string;
 }
 
-// --- Configuração do EmailJS ---
-// Substitua estes valores pelos seus próprios Service ID, Template ID e Public Key do EmailJS
 const EMAILJS_SERVICE_ID = 'service_vf0ut1v';
 const EMAILJS_TEMPLATE_ID_CORPORATIVO = 'template_f0husmm';
 const EMAILJS_PUBLIC_KEY = 'SQiKfeM0LI9dmCjCw';
 
-// --- Dados dos Planos (Consolidados aqui para o formulário de contratação) ---
-// Este objeto define as características de cada plano relevante para este formulário.
-// Os IDs devem ser os mesmos usados nas URLs (ex: ?plano=premium)
 interface PlanDetails {
-  label: string; // Título a ser exibido no formulário
-  description: string; // Descrição exibida no cabeçalho do formulário
-  isCorporativo: boolean; // True se este plano exige o formulário de contato corporativo (solicitação de orçamento)
-  requiredFields: Array<keyof ContratarPlanoFormData>; // Campos obrigatórios para este tipo de plano
+  label: string;
+  description: string;
+  isCorporativo: boolean;
+  requiredFields: Array<keyof ContratarPlanoFormData>;
+  price?: string;
 }
 
 const availablePlans: { [key: string]: PlanDetails } = {
-  // Planos Individuais (levam a um formulário de pagamento direto)
   'premium': {
     label: 'Plano Premium Individual',
     description: 'Preencha seus dados para ativar o Plano Premium e acessar todos os recursos.',
     isCorporativo: false,
     requiredFields: ['nomeResponsavel', 'emailContato', 'cpf', 'planValue', 'paymentMethod'],
+    price: '49,90',
   },
-  // Planos Corporativos (levam a um formulário de solicitação de orçamento)
   'escola-basica': {
     label: 'Plano Corporativo: Escola Básica',
-    description: 'Preencha os dados da sua instituição para solicitar uma cotação para o Plano Escola Básica.',
+    description: 'Preencha os dados da sua instituição para solicitar o Plano Escola Básica por R$ 299/mês.',
     isCorporativo: true,
     requiredFields: ['nomeResponsavel', 'emailContato', 'nomeInstituicao'],
+    price: '299,00',
   },
   'escola-premium': {
     label: 'Plano Corporativo: Escola Premium',
-    description: 'Preencha os dados da sua instituição para solicitar uma cotação para o Plano Escola Premium.',
+    description: 'Preencha os dados da sua instituição para solicitar o Plano Escola Premium por R$ 599/mês.',
     isCorporativo: true,
     requiredFields: ['nomeResponsavel', 'emailContato', 'nomeInstituicao'],
+    price: '599,00',
   },
   'rede-de-ensino': {
     label: 'Plano Corporativo: Rede de Ensino',
     description: 'Preencha os dados da sua instituição para solicitar uma cotação para o Plano Rede de Ensino.',
     isCorporativo: true,
     requiredFields: ['nomeResponsavel', 'emailContato', 'nomeInstituicao'],
+    price: 'A combinar',
   },
-  'corporativo': { // Usado como o plano genérico "Corporativo" na página de Planos
+  'corporativo': {
     label: 'Plano Corporativo Personalizado',
     description: 'Preencha os dados da sua instituição para solicitar uma cotação personalizada.',
     isCorporativo: true,
     requiredFields: ['nomeResponsavel', 'emailContato', 'nomeInstituicao'],
+    price: 'A combinar',
   },
-  // 'solucoes-corporativas' é um alias que será mapeado para 'corporativo'
   'solucoes-corporativas': {
     label: 'Soluções Corporativas',
     description: 'Preencha os dados da sua instituição para solicitar uma cotação para Soluções Corporativas.',
     isCorporativo: true,
     requiredFields: ['nomeResponsavel', 'emailContato', 'nomeInstituicao'],
+    price: 'A combinar',
+  },
+  'basico': {
+    label: 'Plano Básico Individual',
+    description: 'Preencha seus dados para ativar o Plano Básico.',
+    isCorporativo: false,
+    requiredFields: ['nomeResponsavel', 'emailContato', 'cpf', 'planValue', 'paymentMethod'],
+    price: '29,90',
   },
 };
 
-/**
- * Formata um CPF adicionando pontos e traço.
- * @param cpf String de CPF a ser formatada.
- * @returns CPF formatado.
- */
 const formatarCPF = (cpf: string): string => {
-  return cpf.replace(/\D/g, '') // Remove tudo que não é dígito
-            .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o primeiro ponto
-            .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o segundo ponto
-            .replace(/(\d{3})(\d{1,2})$/, '$1-$2'); // Adiciona o traço
+  return cpf.replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 };
 
-/**
- * Formata um valor numérico para o formato de moeda (Ex: 1.234,56).
- * @param valor String do valor a ser formatada.
- * @returns Valor formatado.
- */
 const formatarValor = (valor: string): string => {
-  return valor.replace(/\D/g, '') // Remove tudo que não é dígito
-              .replace(/(\d)(\d{2})$/, '$1,$2') // Adiciona a vírgula para centavos
-              .replace(/(?=(\d{3})+(\D))\B/g, '.'); // Adiciona pontos para milhares
+  return valor.replace(/\D/g, '')
+              .padStart(3, '0')
+              .replace(/(\d)(\d{2})$/, '$1,$2')
+              .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
 };
 
-/**
- * Componente ContratarPlanoForm
- * Este formulário permite aos usuários contratar planos ou solicitar cotações,
- * adaptando-se ao tipo de plano selecionado via URL.
- */
 const ContratarPlanoForm: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [planoSelecionado, setPlanoSelecionado] = useState<string>(''); // Armazena a chave normalizada do plano
+  const [planoSelecionado, setPlanoSelecionado] = useState<string>('');
   const [formData, setFormData] = useState<ContratarPlanoFormData>({
     nomeResponsavel: '',
     emailContato: '',
@@ -137,29 +128,26 @@ const ContratarPlanoForm: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
-  const [errors, setErrors] = useState<FormErrors>({}); // Estado para erros de validação
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  // Use useMemo para obter os detalhes do plano atual de forma eficiente
   const currentPlanDetails = useMemo(() => {
-    // Normaliza o nome do plano selecionado para a chave correta no `availablePlans`
     const normalizedPlanoKey = planoSelecionado.toLowerCase().replace(/\s/g, '-');
     return availablePlans[normalizedPlanoKey] || { label: 'Plano Desconhecido', description: 'Plano não encontrado.', isCorporativo: false, requiredFields: [] };
   }, [planoSelecionado]);
 
-  // Efeito para inicializar o plano selecionado da URL
   useEffect(() => {
     const planoParam = searchParams.get('plano');
     if (planoParam) {
       const normalizedPlanoKey = planoParam.toLowerCase().replace(/\s/g, '-');
-      if (availablePlans[normalizedPlanoKey]) {
-        // Armazena a chave normalizada no estado `planoSelecionado`
-        setPlanoSelecionado(normalizedPlanoKey);
+      const planDetails = availablePlans[normalizedPlanoKey];
 
-        // Preenche o valor do plano se for um plano individual conhecido
-        if (normalizedPlanoKey === 'premium') {
-            setFormData(prev => ({ ...prev, planValue: formatarValor('4990') })); // Exemplo: R$ 49,90
+      if (planDetails) {
+        setPlanoSelecionado(normalizedPlanoKey);
+        if (planDetails.price && planDetails.price !== 'A combinar') {
+          setFormData(prev => ({ ...prev, planValue: planDetails.price }));
+        } else {
+          setFormData(prev => ({ ...prev, planValue: '' }));
         }
-        // Adicionar outros valores padrão para planos individuais se necessário
       } else {
         toast.error(`Plano "${planoParam}" não reconhecido. Redirecionando para a página de planos.`);
         navigate('/planos', { replace: true });
@@ -170,15 +158,14 @@ const ContratarPlanoForm: React.FC = () => {
     }
   }, [searchParams, navigate]);
 
-  /**
-   * Valida os campos do formulário com base no tipo de plano.
-   * @param data Os dados do formulário.
-   * @returns Um objeto contendo mensagens de erro por campo.
-   */
   const validateForm = useCallback((data: ContratarPlanoFormData, requiredFields: Array<keyof ContratarPlanoFormData>): FormErrors => {
     const newErrors: FormErrors = {};
 
     requiredFields.forEach(field => {
+      // planValue só é obrigatório se o plano NÃO for corporativo
+      if (field === 'planValue' && currentPlanDetails.isCorporativo) {
+        return;
+      }
       if (!data[field]) {
         newErrors[field] = 'Este campo é obrigatório.';
       }
@@ -190,55 +177,44 @@ const ContratarPlanoForm: React.FC = () => {
     if (data.cpf && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(data.cpf)) {
       newErrors.cpf = 'CPF inválido. Use o formato XXX.XXX.XXX-XX.';
     }
-    // Adicionar validação de valor se for um plano de pagamento e o campo estiver preenchido
-    if (data.planValue && !/^\d{1,3}(?:\.\d{3})*,\d{2}$/.test(data.planValue)) {
-      newErrors.planValue = 'Valor inválido. Use o formato 0,00 ou 0.000,00.';
+    // A validação de valor para planos INDIVIDUAIS
+    if (!currentPlanDetails.isCorporativo && data.planValue && !/^(\d{1,3}(\.\d{3})*|\d+)(,\d{2})?$/.test(data.planValue)) {
+        newErrors.planValue = 'Valor inválido. Use o formato 0,00 ou 0.000,00.';
     }
 
     return newErrors;
-  }, []);
+  }, [currentPlanDetails]);
 
-  /**
-   * Lida com a mudança de valor em campos de input e textarea.
-   * Aplica formatação para CPF e Valor do Plano.
-   * @param e Evento de mudança.
-   */
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
     let formattedValue = value;
 
     if (id === 'cpf') {
-      formattedValue = formatarCPF(value).substring(0, 14); // Limita o tamanho do CPF formatado
+      formattedValue = formatarCPF(value).substring(0, 14);
     } else if (id === 'planValue') {
-      formattedValue = formatarValor(value);
+      if (!currentPlanDetails.isCorporativo || currentPlanDetails.price === 'A combinar') {
+         formattedValue = formatarValor(value);
+      } else {
+         formattedValue = value;
+      }
     }
 
     setFormData((prev) => ({ ...prev, [id]: formattedValue }));
-    setErrors((prev) => ({ ...prev, [id]: '' })); // Limpa o erro ao digitar
-  }, []);
+    setErrors((prev) => ({ ...prev, [id]: '' }));
+  }, [currentPlanDetails]);
 
-  /**
-   * Lida com a mudança de valor em campos Select.
-   * @param field Campo do formulário que está sendo alterado.
-   * @param value Novo valor do campo.
-   */
   const handleSelectChange = useCallback((field: keyof ContratarPlanoFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: '' })); // Limpa o erro ao mudar
+    setErrors((prev) => ({ ...prev, [field]: '' }));
   }, []);
 
-  /**
-   * Lida com o envio do formulário.
-   * Dependendo do plano, envia um e-mail ou simula um pagamento.
-   * @param e Evento de envio do formulário.
-   */
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setErrors({}); // Limpa erros anteriores
+    setErrors({});
     setSubmissionSuccess(false);
 
-    const planData = currentPlanDetails; // Use os detalhes do plano memoizados
+    const planData = currentPlanDetails;
     const currentErrors = validateForm(formData, planData.requiredFields);
 
     if (Object.keys(currentErrors).length > 0) {
@@ -250,7 +226,6 @@ const ContratarPlanoForm: React.FC = () => {
 
     try {
       if (planData.isCorporativo) {
-        // Lógica de envio de e-mail para planos corporativos
         const templateParams = {
           plano_selecionado: planData.label,
           nome_responsavel: formData.nomeResponsavel,
@@ -259,47 +234,39 @@ const ContratarPlanoForm: React.FC = () => {
           nome_instituicao: formData.nomeInstituicao || 'Não informado',
           numero_aluno: formData.numeroAlunos || 'Não especificado',
           mensagem: formData.mensagem || 'Nenhuma mensagem adicional.',
+          valor_plano: planData.price && planData.price !== 'A combinar' ? `R$ ${planData.price}/mês` : 'Cotação necessária',
         };
 
-        // Envia o e-mail via EmailJS
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_CORPORATIVO, templateParams, EMAILJS_PUBLIC_KEY);
         setSubmissionSuccess(true);
         toast.success('Sua solicitação foi enviada com sucesso! Entraremos em contato em breve.');
 
-        // Redireciona para login/dashboard após alguns segundos
         setTimeout(() => {
           navigate(`/login?redirect=/dashboard`);
-        }, 5000);
+        }, 2000);
 
       } else {
-        // Lógica de simulação de pagamento para planos individuais (premium, etc.)
-        // Em um cenário real, aqui você integraria com um gateway de pagamento (ex: Stripe, PagSeguro)
         toast.success('Simulando pagamento...');
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Simula o processamento do pagamento
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         setSubmissionSuccess(true);
         toast.success('Pagamento processado com sucesso! Você será redirecionado para o seu recibo.');
 
-        // Redireciona para uma página de recibo com os dados do pedido
         navigate(`/recibo?plano=${planoSelecionado}&valor=${formData.planValue || ''}&nome=${formData.nomeResponsavel}&data=${new Date().toISOString()}&id=TRANS_SIMULADO_${Date.now()}`);
       }
-    } catch (error: unknown) { // Tratamento de erros seguro com 'unknown'
+    } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro inesperado ao processar sua solicitação.';
       console.error('Erro na submissão do formulário:', error);
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, planoSelecionado, currentPlanDetails, navigate, validateForm]); // Dependências do useCallback
+  }, [formData, planoSelecionado, currentPlanDetails, navigate, validateForm]);
 
-  // Exibe tela de carregamento enquanto o plano é inicializado da URL
+  // Se planoSelecionado não estiver definido, retorna null para evitar a renderização do formulário incompleto
+  // O useEffect já lida com o redirecionamento.
   if (!planoSelecionado) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-[#1A247E] mr-2" />
-        <p className="text-xl text-gray-700">Carregando plano...</p>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -328,7 +295,6 @@ const ContratarPlanoForm: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Campos Comuns a todos os planos */}
                 <div>
                   <Label htmlFor="nomeResponsavel">Nome do Responsável <span className="text-red-500">*</span></Label>
                   <Input
@@ -363,8 +329,7 @@ const ContratarPlanoForm: React.FC = () => {
                   <Input id="telefone" value={formData.telefone} onChange={handleChange} placeholder="(XX) XXXXX-XXXX" />
                 </div>
 
-                {/* Campos Específicos para Planos Corporativos */}
-                {currentPlanDetails.isCorporativo && (
+                {currentPlanDetails.isCorporativo ? (
                   <>
                     <div>
                       <Label htmlFor="nomeInstituicao">Nome da Instituição/Rede <span className="text-red-500">*</span></Label>
@@ -373,7 +338,7 @@ const ContratarPlanoForm: React.FC = () => {
                         value={formData.nomeInstituicao}
                         onChange={handleChange}
                         placeholder="Nome da sua escola ou rede"
-                        required={currentPlanDetails.isCorporativo} // Obrigatório apenas para corporativo
+                        required={true}
                         className={errors.nomeInstituicao ? 'border-red-500' : ''}
                         aria-invalid={errors.nomeInstituicao ? 'true' : 'false'}
                         aria-describedby={errors.nomeInstituicao ? 'nomeInstituicao-error' : undefined}
@@ -384,15 +349,23 @@ const ContratarPlanoForm: React.FC = () => {
                       <Label htmlFor="numeroAlunos">Número Aproximado de Alunos/Usuários (Opcional)</Label>
                       <Input id="numeroAlunos" type="number" value={formData.numeroAlunos} onChange={handleChange} placeholder="Ex: 1000" />
                     </div>
+                    {currentPlanDetails.price && currentPlanDetails.price !== 'A combinar' && (
+                        <div>
+                            <Label htmlFor="planValue">Valor do Plano (R$)</Label>
+                            <Input
+                                id="planValue"
+                                value={`R$ ${formData.planValue || ''}/mês`}
+                                readOnly
+                                className="bg-gray-100 cursor-not-allowed"
+                            />
+                        </div>
+                    )}
                     <div>
                       <Label htmlFor="mensagem">Mensagem Adicional (Opcional)</Label>
                       <Textarea id="mensagem" value={formData.mensagem} onChange={handleChange} placeholder="Descreva suas necessidades ou tire dúvidas..." rows={4} />
                     </div>
                   </>
-                )}
-
-                {/* Campos de Pagamento para Planos Individuais */}
-                {!currentPlanDetails.isCorporativo && (
+                ) : (
                   <>
                     <div>
                       <Label htmlFor="cpf">CPF do Responsável <span className="text-red-500">*</span></Label>
@@ -401,7 +374,7 @@ const ContratarPlanoForm: React.FC = () => {
                         value={formData.cpf}
                         onChange={handleChange}
                         placeholder="Ex: 987.654.321-00"
-                        required={!currentPlanDetails.isCorporativo}
+                        required={true}
                         maxLength={14}
                         className={errors.cpf ? 'border-red-500' : ''}
                         aria-invalid={errors.cpf ? 'true' : 'false'}
@@ -416,7 +389,7 @@ const ContratarPlanoForm: React.FC = () => {
                         value={formData.planValue}
                         onChange={handleChange}
                         placeholder="Ex: 500,00 ou 1.250,00"
-                        required={!currentPlanDetails.isCorporativo}
+                        required={true}
                         className={errors.planValue ? 'border-red-500' : ''}
                         aria-invalid={errors.planValue ? 'true' : 'false'}
                         aria-describedby={errors.planValue ? 'planValue-error' : undefined}
@@ -428,7 +401,7 @@ const ContratarPlanoForm: React.FC = () => {
                       <Select
                         value={formData.paymentMethod}
                         onValueChange={(value) => handleSelectChange('paymentMethod', value)}
-                        required={!currentPlanDetails.isCorporativo}
+                        required={true}
                       >
                         <SelectTrigger className={errors.paymentMethod ? 'border-red-500' : ''} aria-invalid={errors.paymentMethod ? 'true' : 'false'} aria-describedby={errors.paymentMethod ? 'paymentMethod-error' : undefined}>
                           <SelectValue placeholder="Selecione a forma" />
@@ -442,7 +415,6 @@ const ContratarPlanoForm: React.FC = () => {
                       </Select>
                       {errors.paymentMethod && <p id="paymentMethod-error" className="text-red-500 text-sm mt-1">{errors.paymentMethod}</p>}
                     </div>
-                    {/* Campos de data e localização da transação (opcionais, mas comuns em pagamentos) */}
                     <div>
                       <Label htmlFor="paymentDate">Data do Pagamento (Opcional)</Label>
                       <Input
@@ -464,7 +436,7 @@ const ContratarPlanoForm: React.FC = () => {
                   </>
                 )}
 
-                {errors.form && ( // Erro geral do formulário, se houver
+                {errors.form && (
                   <p className="text-red-500 text-sm text-center font-medium">
                     {errors.form}
                   </p>

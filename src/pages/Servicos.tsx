@@ -41,7 +41,7 @@ const mainServicesData: MainServiceItem[] = [
     description: "Plataforma completa de investimentos com análise automatizada, recomendações personalizadas e acompanhamento em tempo real.",
     features: ["Carteiras automatizadas", "Análise de risco", "Rebalanceamento automático", "Relatórios detalhados"],
     imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    link: "/servicos/investimentos" // Exemplo de link mais específico
+    link: "/sobre"
   },
   {
     icon: <Wallet className="w-16 h-16 text-[#1A247E]" />,
@@ -49,7 +49,7 @@ const mainServicesData: MainServiceItem[] = [
     description: "Controle total das suas finanças com categorização automática, alertas inteligentes e metas personalizadas.",
     features: ["Controle de gastos", "Planejamento orçamentário", "Alertas automáticos", "Análise de padrões"],
     imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    link: "/servicos/gestao-pessoal" // Exemplo de link mais específico
+    link: "/sobre"
   },
   {
     icon: <Target className="w-16 h-16 text-[#1A247E]" />,
@@ -57,7 +57,7 @@ const mainServicesData: MainServiceItem[] = [
     description: "Defina e alcance seus objetivos com nossa ferramenta de planejamento inteligente e simuladores avançados.",
     features: ["Simuladores de aposentadoria", "Planejamento de metas", "Projeções futuras", "Cenários otimistas/pessimistas"],
     imageUrl: "https://images.unsplash.com/photo-1628348068343-c6a848d2b93f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    link: "/servicos/planejamento" // Exemplo de link mais específico
+    link: "/sobre"
   }
 ];
 

@@ -206,7 +206,7 @@ const EducacaoECorporativo = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Link to="/contratar-plano?plano=Soluções Corporativas" aria-label="Ver planos corporativos e solicitar proposta">
+                  <Link to="/planos" aria-label="Ver planos corporativos e solicitar proposta">
                     <Button className="w-full bg-[#1A247E] hover:bg-[#2D4DE0] text-lg px-8 py-4">
                       Ver Planos e Solicitar Proposta
                     </Button>
