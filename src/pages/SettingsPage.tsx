@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle, Trash2, Edit, Save, X, Loader2 } from 'lucide-react'; // Adicionado Loader2
 import { toast } from 'sonner';
+import { FooterSection } from './Index';
 
 // --- Interfaces de Conteúdo (Consolidadas aqui) ---
 interface CourseItem {
@@ -989,3 +990,31 @@ const SettingsPage: React.FC = () => {
 };
 
 export default SettingsPage;
+/**
+ * Dados para as seções do rodapé.
+ */
+export const footerSectionsData: FooterSection[] = [
+  {
+    title: "Empresa",
+    links: [
+      { label: "Sobre Nós", to: "/sobre" },
+      { label: "Equipe", to: "/equipe" },
+      { label: "Contato", to: "/contato" },
+    ],
+  },
+  {
+    title: "Produtos",
+    links: [
+      { label: "Serviços", to: "/servicos" },
+      { label: "Por Que Nós?", to: "/porque-nos" },
+      { label: "Educação & Empresas", to: "/educacao-e-corporativo" },
+    ],
+  },
+  {
+    title: "Suporte",
+    links: [
+      { label: "Central de Ajuda", to: "/faq" },
+      { label: "Configurações de Segurança", to: "/" },
+    ],
+  },
+];

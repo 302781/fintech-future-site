@@ -31,7 +31,7 @@ const teamMembersData: Member[] = [
       "Auxílio no desenvolvimento do site (código e integrações básicas)."
     ],
     image: imgLuis,
-    linkedin: "#", // Substitua pelo link real do LinkedIn
+    linkedin: "#", 
     email: "luis.guilherme@fintech.com"
   },
   {
@@ -45,8 +45,8 @@ const teamMembersData: Member[] = [
       "Pesquisa de mercado e análise de viabilidade financeira."
     ],
     image: imgEduarda,
-    linkedin: "#", // Substitua pelo link real do LinkedIn
-    email: "maria.eduarda@fintech.com"
+    linkedin: "http://www.linkedin.com/in/maria-eduarda-sodré-alves", 
+    email: "mdudasodre@gmail.com"
   },
   {
     name: "Maria Vitoria",
@@ -56,12 +56,11 @@ const teamMembersData: Member[] = [
       "Desenvolvimento do site (implementação do frontend e backend)."
     ],
     image: imgVitoria,
-    linkedin: "#", // Substitua pelo link real do LinkedIn
-    email: "maria.vitoria@fintech.com"
+    linkedin: "https://www.linkedin.com/in/maria-vit%C3%B3ria-ferreira-lopes-9865b7284", 
+    email: "vitoria410df@gmail.com"
   },
 ];
 
-// --- Subcomponente para renderizar um Card de Membro da Equipe ---
 interface TeamMemberCardProps {
   member: Member;
 }

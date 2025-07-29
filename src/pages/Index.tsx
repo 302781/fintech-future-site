@@ -5,6 +5,7 @@ import Services from '@/components/Services'; // Importa seu componente Services
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { footerSectionsData } from './SettingsPage';
 
 /**
  * @interface FooterSectionLink
@@ -21,39 +22,10 @@ interface FooterSectionLink {
  * @property {string} title - O título da seção do rodapé.
  * @property {FooterSectionLink[]} links - Um array de objetos de link para a seção.
  */
-interface FooterSection {
+export interface FooterSection {
   title: string;
   links: FooterSectionLink[];
 }
-
-/**
- * Dados para as seções do rodapé.
- */
-const footerSectionsData: FooterSection[] = [
-  {
-    title: "Empresa",
-    links: [
-      { label: "Sobre Nós", to: "/sobre" },
-      { label: "Equipe", to: "/equipe" },
-      { label: "Contato", to: "/contato" },
-    ],
-  },
-  {
-    title: "Produtos",
-    links: [
-      { label: "Serviços", to: "/servicos" },
-      { label: "Por Que Nós?", to: "/porque-nos" },
-      { label: "Educação & Empresas", to: "/educacao-e-corporativo" },
-    ],
-  },
-  {
-    title: "Suporte",
-    links: [
-      { label: "Central de Ajuda", to: "/faq" },
-      { label: "Configurações de Segurança", to: "/seguranca" },
-    ],
-  },
-];
 
 /**
  * Componente funcional para o Rodapé da página.
@@ -106,11 +78,6 @@ const Footer: React.FC = () => {
 };
 
 
-/**
- * Componente principal da Página Inicial.
- * Orquestra as seções da landing page, incluindo navegação, hero, serviços,
- * uma chamada para ação e o rodapé.
- */
 const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col"> {/* Use flex-col para o layout */}
