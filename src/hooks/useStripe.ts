@@ -1,106 +1,90 @@
 
 import { useState } from 'react';
-import { db } from 'src/lib/db';
-import Stripe from 'stripe';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
- 
-export const useStripe = () => {
-  const [loading, setLoading] = useState(false);
+import { toast } from 'sonner';
+import { paymentsApi } from '..
+/api/payments';
+import axios, { AxiosError, isAxiosError } from 'axios'; 
+import { SubscriptionStatusResponse } from '@/types/api/subscriptions';
 
-  const redirectToCheckout = async (priceId: string, successPath?: string) => {
+export const useStripe = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const redirectToCheckout = async (priceId: string, successPath?: string): Promise<void> => {
     try {
       setLoading(true);
-      
-      const { data: { session } } = await MySql.auth.getSession();
-      if (!session) {
+
+      const jwtToken = localStorage.getItem('jwt_token');
+      if (!jwtToken) {
         toast.error('Você precisa estar logado para fazer uma assinatura.');
         setLoading(false);
         return;
       }
 
       console.log('Calling create-checkout-session with priceId:', priceId, 'and successPath:', successPath);
-      
-      const { data, error } = await MySql.functions.invoke('create-checkout-session', {
-        body: { priceId, successPath },
-      });
 
-      if (error) {
-        console.error('Error creating checkout session:', error);
-        let errorMessage = 'Erro ao processar pagamento. Tente novamente.';
-       
-        if (error.context && typeof error.context.json === 'function') {
-          try {
-            const functionError = await error.context.json();
-            if (functionError.error) {
-              errorMessage = functionError.error;
-            }
-          } catch(e) {
-            console.error("Could not parse error from function", e);
-          }
-        }
-        throw new Error(errorMessage);
-      }
+      const data = await paymentsApi.createCheckoutSession(priceId, successPath);
 
       if (data?.url) {
         window.open(data.url, '_blank');
       } else {
-        throw new Error('No checkout URL received');
+        throw new Error('URL de checkout não recebida do backend.');
       }
     } catch (error) {
-      console.error('Error:', error);
-      toast.error(error.message || 'Erro ao processar pagamento. Tente novamente.');
+      console.error('Erro na redireção do checkout:', error);
+      let message = 'Erro desconhecido ao processar pagamento. Tente novamente.';
+
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (isAxiosError(error) && error.response?.data && typeof error.response.data === 'object' && 'message' in error.response.data) {
+        // Usa isAxiosError importado
+        message = (error.response.data as { message: string }).message;
+      }
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
-  const checkSubscription = async () => {
+  const checkSubscription = async (): Promise<SubscriptionStatusResponse | { subscribed: false }> => {
     try {
-      const { data: { session } } = await MySql.auth.getSession();
-      if (!session) {
+      if (!localStorage.getItem('jwt_token')) {
         return { subscribed: false };
       }
-
-      const { data, error } = await MySql.functions.invoke('check-subscription');
-      
-      if (error) {
-        console.error('Error checking subscription:', error);
-        return { subscribed: false };
-      }
-
-      return data;
+      return await paymentsApi.checkSubscriptionStatus();
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Erro na verificação da assinatura:', error);
       return { subscribed: false };
     }
   };
 
-  const openCustomerPortal = async () => {
+  const openCustomerPortal = async (): Promise<void> => {
     try {
       setLoading(true);
-      
-      const { data: { session } } = await MySql.auth.getSession();
-      if (!session) {
+
+      const jwtToken = localStorage.getItem('jwt_token');
+      if (!jwtToken) {
         toast.error('Você precisa estar logado para gerenciar sua assinatura.');
+        setLoading(false);
         return;
       }
 
-      const { data, error } = await MySql.functions.invoke('customer-portal');
-
-      if (error) {
-        console.error('Error opening customer portal:', error);
-        throw new Error(error.message);
-      }
+      const data = await paymentsApi.openStripeCustomerPortal();
 
       if (data?.url) {
         window.open(data.url, '_blank');
       } else {
-        throw new Error('No portal URL received');
+        throw new Error('URL do portal do cliente não recebida do backend.');
       }
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('Erro ao abrir portal de gerenciamento. Tente novamente.');
+      console.error('Erro ao abrir portal do cliente:', error);
+      let message = 'Erro desconhecido ao abrir portal de gerenciamento. Tente novamente.';
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (isAxiosError(error) && error.response?.data && typeof error.response.data === 'object' && 'message' in error.response.data) {
+        // Usa isAxiosError importado
+        message = (error.response.data as { message: string }).message;
+      }
+      toast.error(message);
     } finally {
       setLoading(false);
     }

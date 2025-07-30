@@ -103,10 +103,15 @@ const formatarCPF = (cpf: string): string => {
 };
 
 const formatarValor = (valor: string): string => {
-  return valor.replace(/\D/g, '')
-              .padStart(3, '0')
-              .replace(/(\d)(\d{2})$/, '$1,$2')
-              .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  const cleanedValue = valor.replace(/\D/g, '');
+  if (!cleanedValue) {
+    return '';
+  }
+  const cents = cleanedValue.padStart(3, '0');
+  const real = cents.slice(0, -2);
+  const decimal = cents.slice(-2);
+
+  return `${real.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')},${decimal}`;
 };
 
 const ContratarPlanoForm: React.FC = () => {

@@ -111,7 +111,6 @@ const Navigation: React.FC = () => {
                   </Button>
                 </>
               ) : (
-                // Removendo o botão de LOGIN da versão mobile também
                 // <Link to="/login" onClick={() => setIsMenuOpen(false)}>
                 //   <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
                 //     LOGIN

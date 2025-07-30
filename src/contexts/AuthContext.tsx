@@ -2,7 +2,7 @@ import React, { useState, useEffect, ReactNode } from 'react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContextHook';
-import api from '@/api/index';
+import api from '@/types/api/index';
 export interface UserMetadata {
   first_name: string;
   last_name: string;
