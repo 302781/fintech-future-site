@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useParams, Navigate } from 'rea
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAuth } from "./contexts/AuthContextHook"; 
-
+import { AuthProvider } from 'src/contexts/AuthContext';
 //Inicio
 import Index from "./pages/Index";
 import Sobre from "./pages/Sobre";
