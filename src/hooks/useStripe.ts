@@ -1,12 +1,16 @@
-
+// src/hooks/useStripe.ts
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { paymentsApi } from '..
-/api/payments';
-import axios, { AxiosError, isAxiosError } from 'axios'; 
-import { SubscriptionStatusResponse } from '@/types/api/subscriptions';
+// Apenas importa as APIs que agora usam fetch internamente
+import { paymentsApi } from '../api/payment';
 
-export const useStripe = () => {
+import {
+  SubscriptionStatusResponse,
+  BackendErrorResponse
+} from '../types/api'; // <--- CORRIGIDO AQUI!
+
+
+export const useStripe = () => { // Ou useStripeFetch
   const [loading, setLoading] = useState<boolean>(false);
 
   const redirectToCheckout = async (priceId: string, successPath?: string): Promise<void> => {
@@ -19,8 +23,6 @@ export const useStripe = () => {
         setLoading(false);
         return;
       }
-
-      console.log('Calling create-checkout-session with priceId:', priceId, 'and successPath:', successPath);
 
       const data = await paymentsApi.createCheckoutSession(priceId, successPath);
 
@@ -35,9 +37,10 @@ export const useStripe = () => {
 
       if (error instanceof Error) {
         message = error.message;
-      } else if (isAxiosError(error) && error.response?.data && typeof error.response.data === 'object' && 'message' in error.response.data) {
-        // Usa isAxiosError importado
-        message = (error.response.data as { message: string }).message;
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
+        message = (error as { message: string }).message;
+      } else if (typeof error === 'string') {
+        message = error;
       }
       toast.error(message);
     } finally {
@@ -80,9 +83,10 @@ export const useStripe = () => {
       let message = 'Erro desconhecido ao abrir portal de gerenciamento. Tente novamente.';
       if (error instanceof Error) {
         message = error.message;
-      } else if (isAxiosError(error) && error.response?.data && typeof error.response.data === 'object' && 'message' in error.response.data) {
-        // Usa isAxiosError importado
-        message = (error.response.data as { message: string }).message;
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
+        message = (error as { message: string }).message;
+      } else if (typeof error === 'string') {
+        message = error;
       }
       toast.error(message);
     } finally {

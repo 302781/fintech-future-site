@@ -1,41 +1,28 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import db from './db.js'; // Assumindo que db.js configura a conexão SQLite
+import db from './db.js'; 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { v4 as uuidv4 } from 'uuid'; // Para IDs de mensagens no chat AI, se aplicável
+import { v4 as uuidv4 } from 'uuid';
 
-// Carrega variáveis de ambiente do arquivo .env
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001; // Porta do servidor, padrão 3001
+const PORT = process.env.PORT || 3001; 
 
-// --- Configurações Iniciais do Express ---
-
-// Middleware CORS: Permite que seu frontend (em um domínio/porta diferente)
-// faça requisições para este backend. Em produção, considere restringir as origens.
-// Exemplo: cors({ origin: 'http://seu-dominio-frontend.com' })
+cors({ origin: 'https://localhost:3001' })
 app.use(cors());
 
-// Middleware bodyParser: Analisa corpos de requisição JSON.
 app.use(bodyParser.json());
 
-// JWT_SECRET: Chave secreta para assinar e verificar JSON Web Tokens.
-// CRÍTICO: Em produção, essa chave deve ser MUITO complexa e armazenada de forma SEGURA
-// em variáveis de ambiente, nunca diretamente no código.
-const JWT_SECRET = process.env.JWT_SECRET || 'umaChaveSecretaMuitoForteEAleatoriaQueNinguemVaiAdivinhar!@#$12345';
-if (JWT_SECRET === 'umaChaveSecretaMuitoForteEAleatoriaQueNinguemVaiAdivinhar!@#$12345') {
+const JWT_SECRET = process.env.JWT_SECRET || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30';
+if (JWT_SECRET === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30') {
   console.warn('AVISO: A variável de ambiente JWT_SECRET não está definida. Usando uma chave padrão. Por favor, defina JWT_SECRET em seu arquivo .env para produção.');
 }
 
-// SALT_ROUNDS para bcrypt: Define a complexidade do hashing da senha.
-// Um valor de 10 é um bom equilíbrio entre segurança e desempenho para a maioria dos casos.
 const SALT_ROUNDS = 10;
-
-// --- Funções de Autenticação e Autorização ---
 
 /**
  * Hasheia uma senha usando bcrypt.

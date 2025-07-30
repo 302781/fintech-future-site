@@ -1,7 +1,7 @@
 
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51RH7a1RvHw6hJ7PcQsG6HwirhndTkQGExYls8AN1tYbrdOODKLOpCanIte0NFMeUASFSykkkJu1otCI3ADzK0ZV600PMcMcMKm');
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51RH7a1RvHw6hJ7PcAFNzVWuLmxlzQX2ZvwzRnYDLSNPnRkvZKGXBaONcXRq48H1f0NylzHvSadcbuoGfnXVnBx7c00zg87FD6e');
 
 export { stripePromise };
 
@@ -25,14 +25,13 @@ export const createCheckoutSession = async (priceId: string, customerEmail?: str
   return response.json();
 };
 
-// IDs dos produtos e preços configurados no Stripe
 export const STRIPE_PRODUCTS = {
   ESCOLA_BASICA: {
     productId: 'prod_SRYprhWJIABi0a',
-    priceId: 'price_1RWfhmRvHw6hJ7Pc5SKfc6Oo', // R$ 299/mês
+    priceId: 'prod_SRYprhWJIABi0a', 
   },
   ESCOLA_PREMIUM: {
     productId: 'prod_SRYrdnCahxGch3',
-    priceId: 'price_1RWfjgRvHw6hJ7PcLaTee9gT', // R$ 599/mês
+    priceId: 'prod_SRYrdnCahxGch3', 
   },
 };
