@@ -1,9 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useParams, Navigate } from 'react-router-dom'; // Adicionado useParams e Navigate
+import { Routes, Route, useParams, Navigate } from 'react-router-dom'; // Adicionado useParams e Navigate
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from 'src/contexts/AuthContext';
+// REMOVA AuthProvider daqui, pois ele já está em main.tsx envolvendo App
+import { useAuth } from './contexts/AuthContext'; // <--- CORRIGIDO: Importa useAuth do AuthContext.ts
+
 //Inicio
 import Index from "./pages/Index";
 import Sobre from "./pages/Sobre";
@@ -13,18 +15,19 @@ import EducacaoECorporativo from './pages/EducacaoECorporativo';
 import Equipe from "./pages/Equipe";
 //Assinaturas
 import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
-import PlanosCorporativosForm from './pages/PlanosCorporativosForm'; 
+import PlanosCorporativosForm from './pages/PlanosCorporativosForm';
 import Homepage from './pages/Homepage';
 import CheckoutForm from "./components/PaymentForm";
 import PlanosPage from './pages/PlanosPage';
 import { investmentPlatformsData, InvestmentIconMap } from './data/investmentPlatformsData';
-import CheckoutPage from './pages/CheckountPage'; 
+import CheckoutPage from './pages/CheckountPage';
 import ReciboPage from './pages/ReciboPage';
 import EscolaPremium from "./pages/EscolaPremium";
 import EscolaBasica from "./pages/EscolaBasica";
 import RedeEnsino from "./pages/RedeEnsino";
 import InvestmentPlatforms from "./pages/InvestmentPlatforms";
-import ConsultoresFinanceiros from "./pages/ConsultoresFinanceiros"; 
+import ConsultoresFinanceiros from "./pages/ConsultoresFinanceiros";
+import SchoolRegistration from './pages/SchoolRegistration';
 //Entrar
 import Login from "./components/auth/Login";
 import AdminDashboard from './components/AdminDashboard';
@@ -48,7 +51,7 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import SettingsPage from "./pages/SettingsPage";
 import SecuritySettingPage from "./components/SecuritySettingPage";
-import PrivateRoute from './components/PrivateRoute'; 
+import PrivateRoute from './components/PrivateRoute'; // Se você ainda usar esse, verifique sua importação interna de useAuth
 import AgendamentoPage from './pages/AgendamentoPage';
 
 
@@ -60,7 +63,7 @@ const VideoPlayerWrapper: React.FC = () => {
 const queryClient = new QueryClient();
 
 const PrivateRouteComponent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuth(); // useAuth está sendo importado corretamente agora
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Carregando...</div>;
@@ -80,14 +83,15 @@ const App = () => (
     <TooltipProvider>
       <Sonner />
       <Routes>
-        //Inicio
+        {/* ... suas rotas ... */}
+        {/* Inicio */}
         <Route path="/" element={<Index />} />
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/servicos" element={<Servicos />} />
         <Route path="/porque-nos" element={<PorqueNos />} />
         <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
         <Route path="/equipe" element={<Equipe />} />
-        // Assinaturas
+        {/* Assinaturas */}
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/assinaturas-corporativas" element={<AssinaturasCorporativas />} />
         <Route path="/consultores-financeiros" element={<ConsultoresFinanceiros />} />
@@ -100,15 +104,16 @@ const App = () => (
         <Route path="/escola-basica" element={<EscolaBasica />} />
         <Route path="/rede-ensino" element={<RedeEnsino />} />
         <Route path="/pagamento" element={<CheckoutForm />} />
-        // Entrar
+        <Route path="/school-registration" element={<SchoolRegistration />} />
+        {/* Entrar */}
         <Route path="/login" element={<Login />} />
         <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<PrivateRouteComponent><AdminDashboard /></PrivateRouteComponent>} />
-        //Contato e Ajuda
+        {/* Contato e Ajuda */}
         <Route path="/contato" element={<ContactPage />} />
         <Route path="/faq" element={<FAQ />} />
 
-        //Cursos
+        {/* Cursos */}
         <Route path="/cursos" element={<Cursos />} />
         <Route path="/aulas" element={<Aulas />} />
         <Route path="/simuladores" element={<Simuladores />} />
@@ -120,10 +125,10 @@ const App = () => (
         <Route path="/game/:id" element={<GamePlayer />} />
         <Route path="/consultores" element={<Consultores />} />
         <Route path="/agendamento" element={<AgendamentoPage />} />
-        <Route path="/investment-plataforms"element={<InvestmentPlatforms platforms={investmentPlatformsData} IconMap={InvestmentIconMap} />}/>
-        <Route path="/course-content"element={<CourseContent courses={courseContentData} IconMap={CourseIconMap} />}/>
-         <Route path="/cursos-basico" element={
-            <PrivateRouteComponent> 
+        <Route path="/investment-plataforms" element={<InvestmentPlatforms platforms={investmentPlatformsData} IconMap={InvestmentIconMap} />} />
+        <Route path="/course-content" element={<CourseContent courses={courseContentData} IconMap={CourseIconMap} />} />
+        <Route path="/cursos-basico" element={
+            <PrivateRouteComponent>
               <Cursos />
             </PrivateRouteComponent>
           }
@@ -137,16 +142,16 @@ const App = () => (
           }
         />
 
-        // Configurações
+        {/* Configurações */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/update-password" element={<UpdatePassword />} />
-        <Route path="/settings"element={
-            <PrivateRouteComponent> 
+        <Route path="/settings" element={
+            <PrivateRouteComponent>
               <SettingsPage />
             </PrivateRouteComponent>
           }
         />
-       <Route
+        <Route
           path="/seguranca"
           element={
             <PrivateRouteComponent>

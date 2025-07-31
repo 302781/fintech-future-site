@@ -1,16 +1,24 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom'; 
+
 import App from './App.tsx';
 import './index.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'sonner';
 import { AuthProvider } from './providers/AuthProvider'; 
 
-createRoot(document.getElementById("root")!).render(
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Router> 
+    <BrowserRouter> 
       <AuthProvider> 
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
       </AuthProvider>
-    </Router>
+    </BrowserRouter> 
+    <Toaster /> 
   </React.StrictMode>,
 );

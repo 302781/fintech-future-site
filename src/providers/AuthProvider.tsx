@@ -1,48 +1,25 @@
-// src/providers/AuthProvider.tsx
-// Este arquivo conterá apenas o componente AuthProvider.
-
-import React, { useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { useState, useEffect, useCallback, ReactNode, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Importe o AuthContext do novo arquivo dedicado
-import { AuthContext } from '../contexts/AuthContext'; // <--- IMPORTAÇÃO CORRETA AQUI!
+import { AuthContext } from '../contexts/AuthContext'; 
+import { API_BASE_BASE_URL, getAuthHeaders, handleFetchError } from '../utils/api'; 
 
 import {
-  UserCredentials,
   AuthFetchResponse,
   UserDataFetchResponse,
   User,
-  BackendErrorResponse,
-} from '../types/api'; 
-const API_BASE_BASE_URL = import.meta.env.VITE_NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+} from '../types/api';
 
-const getAuthHeaders = (): HeadersInit => {
-  const jwtToken = localStorage.getItem('jwt_token');
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-  if (jwtToken) {
-    headers['Authorization'] = `Bearer ${jwtToken}`;
-  }
-  return headers;
-};
-
-const handleFetchError = async (response: Response): Promise<Error> => {
-  let errorMessage = `Erro do servidor: ${response.status} ${response.statusText}`;
-  try {
-    const errorData: BackendErrorResponse = await response.json();
-    if (errorData && errorData.message) {
-      errorMessage = errorData.message;
-    }
-  } catch (parseError) {
-    console.error('Falha ao parsear erro do servidor como JSON:', parseError);
-  }
-  return new Error(errorMessage);
-};
-
-// --- AuthProvider Componente ---
 interface AuthProviderProps {
   children: ReactNode;
 }
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -70,11 +47,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
 
         if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                signOut();
-                return;
-            }
-            throw await handleFetchError(response);
+          if (response.status === 401 || response.status === 403) {
+            signOut();
+            return;
+          }
+          throw await handleFetchError(response);
         }
 
         const data: UserDataFetchResponse = await response.json();
@@ -88,9 +65,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } catch (error) {
         let message = 'Erro desconhecido ao verificar o token ou carregar dados do usuário.';
         if (error instanceof Error) {
-            message = error.message;
+          message = error.message;
         } else if (typeof error === 'object' && error !== null && 'message' in error) {
-            message = (error as { message: string }).message;
+          message = (error as { message: string }).message;
         }
         console.error(message, error);
         signOut();
@@ -130,9 +107,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       let message = 'Erro desconhecido ao fazer login.';
       if (error instanceof Error) {
-          message = error.message;
+        message = error.message;
       } else if (typeof error === 'object' && error !== null && 'message' in error) {
-          message = (error as { message: string }).message;
+        message = (error as { message: string }).message;
       }
       console.error(message, error);
       setUser(null);
@@ -170,9 +147,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       let message = 'Erro desconhecido ao fazer cadastro.';
       if (error instanceof Error) {
-          message = error.message;
+        message = error.message;
       } else if (typeof error === 'object' && error !== null && 'message' in error) {
-          message = (error as { message: string }).message;
+        message = (error as { message: string }).message;
       }
       console.error(message, error);
       setUser(null);

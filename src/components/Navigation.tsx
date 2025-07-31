@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, LogOut, LayoutDashboard } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContextHook';
+import { useAuth } from '@/hooks/useAuth';
 import { Wallet, BarChart, BookOpen, UserCircle, LogIn, MenuIcon, X } from 'lucide-react';
 
 const Navigation: React.FC = () => {
@@ -19,6 +19,7 @@ const Navigation: React.FC = () => {
     { name: 'PORQUE NÓS?', path: '/porque-nos' },
     { name: 'EDUCAÇÃO & EMPRESAS', path: '/educacao-e-corporativo' },
     { name: 'EQUIPE', path: '/equipe' },
+    { name: 'Login', path: '/login' },
   ];
 
   const handleLogout = async () => {
@@ -49,7 +50,6 @@ const Navigation: React.FC = () => {
               </Link>
             ))}
 
-            {/* Renderização condicional para usuários logados na versão desktop */}
             {user ? (
               <>
                 <Link to="/cursos">
@@ -66,7 +66,7 @@ const Navigation: React.FC = () => {
                 </Button>
               </>
             ) : (
-                <Link to="/consultores" className="text-white hover:text-blue-200">Consultores</Link>
+                <Link to="/consultores" className="text-white hover:text-blue-200"></Link>
             )}
           </div>
 
@@ -111,12 +111,12 @@ const Navigation: React.FC = () => {
                   </Button>
                 </>
               ) : (
-                // <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                //   <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
-                //     LOGIN
-                //   </Button>
-                // </Link>
-                null // Ou outro CTA, se necessário.
+                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                   <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
+                     LOGIN
+                   </Button>
+                </Link>
+
               )}
             </div>
           </div>

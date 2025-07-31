@@ -1,9 +1,9 @@
-// src/pages/Plans.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Plans = () => {
   const navigate = useNavigate();

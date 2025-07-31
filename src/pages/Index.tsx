@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import Navigation from '@/components/Navigation'; // Certifique-se de que este caminho está correto
-import Hero from '@/components/Hero'; // Importa seu componente Hero
-import Services from '@/components/Services'; // Importa seu componente Services
+import Navigation from '@/components/Navigation'; 
+import Hero from '@/components/Hero'; 
+import Services from '@/components/Services'; 
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
@@ -9,8 +9,8 @@ import { footerSectionsData } from './SettingsPage';
 
 /**
  * @interface FooterSectionLink
- * @property {string} label - O texto visível do link.
- * @property {string} to - O caminho para o qual o link aponta.
+ * @property {string} label 
+ * @property {string} to 
  */
 interface FooterSectionLink {
   label: string;
@@ -27,12 +27,8 @@ export interface FooterSection {
   links: FooterSectionLink[];
 }
 
-/**
- * Componente funcional para o Rodapé da página.
- * Otimizado com useMemo para dados estáticos.
- */
 const Footer: React.FC = () => {
-  // Memoiza os dados das seções do rodapé para evitar recriação desnecessária
+
   const sections = useMemo(() => footerSectionsData, []);
 
   return (
