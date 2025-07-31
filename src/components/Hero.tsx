@@ -1,45 +1,51 @@
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-const DASHBOARD_IMAGE_URL = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80";
+import { Button } from "@/components/ui/button";
+import heroImage from "@/assets/hero-finance.jpg";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
-    <section className="fintech-gradient min-h-screen flex items-center pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative min-h-screen flex items-center py-16 overflow-hidden bg-fintech-blue dark:bg-gray-950">
+
+      <div className="absolute inset-0">
+        <img
+          src={heroImage}
+          alt="Pessoas estudando e investindo, representando educação financeira e construção de patrimônio."
+          className="w-full h-full object-cover opacity-20 dark:opacity-10"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-fintech-blue/90 to-fintech-blue-light/80 dark:from-gray-950/90 dark:to-gray-900/80"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 text-center lg:text-left">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Texto Principal */}
-          <div className="animate-fadeInUp">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight mb-8">
-              APRENDA A{' '}
-              <span className="hero-text">ECONOMIZAR</span>
-              <br />
-              <span className="hero-text">INVESTIR</span> E{' '}
-              <span className="hero-text">PLANEJAR</span>
-              <br />
-              SEU FUTURO!
+          <div className="animate-fadeInUp pt-10 pb-6 lg:py-0">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-6">
+              Transforme Sua <br />
+              <span className="block bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">
+                Vida Financeira
+              </span>
             </h1>
-            
-            <p className="text-xl lg:text-2xl text-blue-100 mb-8 max-w-lg">
-              Transforme sua relação com o dinheiro e construa o futuro financeiro que você sempre sonhou.
+
+            <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-xl mx-auto lg:mx-0 opacity-95 leading-relaxed">
+              Aprenda a **economizar**, **investir** e **planejar** seu futuro com nossos cursos práticos e ferramentas interativas.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/planos" aria-label="Ir para a página de planos para começar agora"> 
-                <Button 
-                  size="lg" 
-                  className="bg-white text-[#1A247E] hover:bg-blue-50 text-lg px-8 py-4 h-auto font-semibold group"
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
+              <Link to="/cursos" aria-label="Começar agora e ver todos os cursos">
+                <Button
+                  size="lg"
+                  className="bg-white text-fintech-blue-dark hover:bg-blue-50 text-lg px-8 py-4 h-auto font-semibold group transition-all duration-300"
                 >
-                  Comece Agora
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                  Começar Agora
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link to="/sobre" aria-label="Ir para a página Sobre para saber mais sobre nós">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-white text-white hover:bg-white hover:text-[#1A247E] text-lg px-8 py-4 h-auto"
+              <Link to="/sobre" aria-label="Saber mais sobre nossa plataforma de educação financeira">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white text-white hover:bg-white/10 hover:text-white text-lg px-8 py-4 h-auto transition-all duration-300"
                 >
                   Saiba Mais
                 </Button>
@@ -47,19 +53,32 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Imagem/Gráfico */}
-          <div className="relative animate-fadeInUp">
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 animate-pulse-slow">
-              <img 
-                src={DASHBOARD_IMAGE_URL}
-                alt="Dashboard financeiro com gráficos de investimento e economia" // Melhor descrição alt
-                className="w-full h-auto rounded-2xl shadow-2xl object-cover" // object-cover para melhor ajuste
-                loading="lazy" // Otimização de carregamento para imagens que não estão acima da dobra
+          <div className="relative flex justify-center lg:justify-end animate-fadeInUp">
+            <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-6 md:p-8 animate-pulse-slow">
+              <img
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                alt="Dashboard financeiro com gráficos de investimento e economia, simbolizando o controle e o crescimento do dinheiro."
+                className="w-full h-auto rounded-2xl shadow-2xl object-cover border border-white/20"
+                loading="lazy"
               />
+              <div className="absolute -top-6 -right-6 w-28 h-28 bg-white/20 rounded-full animate-bounce-slow opacity-70"></div>
+              <div className="absolute -bottom-10 -left-10 w-20 h-20 bg-blue-300/30 rounded-full animate-pulse opacity-60"></div>
             </div>
-            
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-bounce"></div>
-            <div className="absolute -bottom-8 -left-8 w-16 h-16 bg-blue-300/30 rounded-full animate-pulse"></div>
+          </div>
+        </div>
+
+        <div className="mt-20 py-8 bg-white/10 dark:bg-black/20 rounded-xl backdrop-blur-sm shadow-xl max-w-4xl mx-auto flex flex-col md:flex-row justify-around items-center gap-8 px-6">
+          <div className="text-center">
+            <p className="text-4xl md:text-5xl font-extrabold text-white">50k+</p>
+            <p className="text-blue-100 text-lg">Alunos Satisfeitos</p>
+          </div>
+          <div className="text-center">
+            <p className="text-4xl md:text-5xl font-extrabold text-white">4.9<span className="text-yellow-300">★</span></p>
+            <p className="text-blue-100 text-lg">Avaliação Média</p>
+          </div>
+          <div className="text-center">
+            <p className="text-4xl md:text-5xl font-extrabold text-white">100+</p>
+            <p className="text-blue-100 text-lg">Aulas e Conteúdos</p>
           </div>
         </div>
       </div>

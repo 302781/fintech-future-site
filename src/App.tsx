@@ -15,7 +15,7 @@ import Equipe from "./pages/Equipe";
 import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
 import PlanosCorporativosForm from './pages/PlanosCorporativosForm'; 
 import Homepage from './pages/Homepage';
-import CheckoutForm from "./pages/PaymentForm";
+import CheckoutForm from "./components/PaymentForm";
 import PlanosPage from './pages/PlanosPage';
 import { investmentPlatformsData, InvestmentIconMap } from './data/investmentPlatformsData';
 import CheckoutPage from './pages/CheckountPage'; 
@@ -26,7 +26,7 @@ import RedeEnsino from "./pages/RedeEnsino";
 import InvestmentPlatforms from "./pages/InvestmentPlatforms";
 import ConsultoresFinanceiros from "./pages/ConsultoresFinanceiros"; 
 //Entrar
-import Login from "./pages/Login";
+import Login from "./components/auth/Login";
 import AdminDashboard from './components/AdminDashboard';
 //Contato e Ajuda
 import ContactPage from './pages/ContactPage';
@@ -44,7 +44,7 @@ import VideoPlayer from "./components/VideoPlayer";
 import GamePlayer from "./components/GamePlayer/GamePlayer";
 //Configurações
 import NotFound from "./pages/NotFound";
-import ForgotPassword from "./pages/ForgotPassword";
+import ForgotPassword from "./components/auth/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import SettingsPage from "./pages/SettingsPage";
 import SecuritySettingPage from "./components/SecuritySettingPage";

@@ -1,7 +1,3 @@
-// src/api/payments.ts
-// import api from './index'; // Esta linha será removida
-
-// Importe as interfaces de tipagem relevantes do seu arquivo de tipos
 import {
   CheckoutSessionResponse,
   SubscriptionStatusResponse,

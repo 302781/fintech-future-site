@@ -19,4 +19,4 @@ export const getErrorMessage = (err: unknown): string => {
         return err.message || 'Erro de servidor desconhecido.';
     }
     return 'Ocorreu um erro inesperado.';
-};
+}; 

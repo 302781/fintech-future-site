@@ -232,7 +232,7 @@ const UpdatePassword: React.FC = () => {
                 ) : (
                   "Atualizar Senha"
                 )}
-              </Button>
+              </Button> 
             </form>
           </CardContent>
         </Card>

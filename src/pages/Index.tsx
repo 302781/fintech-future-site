@@ -110,7 +110,7 @@ const HomePage: React.FC = () => {
         </section>
       </main>
 
-      <Footer /> {/* O rodapé agora é um subcomponente */}
+      <Footer />
     </div>
   );
 };

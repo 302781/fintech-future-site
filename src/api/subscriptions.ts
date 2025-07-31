@@ -1,6 +1,6 @@
-import api from './index'; 
+import api from 'src/types/api'; 
 import {
-  SubscriptionStatusResponse,
+  SubscriptionStatusResponse, 
 } from '../types/api'; 
 
 interface ChangeSubscriptionPlanRequest {
