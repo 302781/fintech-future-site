@@ -13,6 +13,7 @@ import Servicos from "./pages/Servicos";
 import PorqueNos from "./pages/PorqueNos";
 import EducacaoECorporativo from './pages/EducacaoECorporativo';
 import Equipe from "./pages/Equipe";
+import Login from "./components/auth/Login";
 //Assinaturas
 import AssinaturasCorporativas from "./pages/AssinaturasCorporativas";
 import PlanosCorporativosForm from './pages/PlanosCorporativosForm';
@@ -29,7 +30,7 @@ import InvestmentPlatforms from "./pages/InvestmentPlatforms";
 import ConsultoresFinanceiros from "./pages/ConsultoresFinanceiros";
 import SchoolRegistration from './pages/SchoolRegistration';
 //Entrar
-import Login from "./components/auth/Login";
+
 import AdminDashboard from './components/AdminDashboard';
 //Contato e Ajuda
 import ContactPage from './pages/ContactPage';
@@ -91,6 +92,7 @@ const App = () => (
         <Route path="/porque-nos" element={<PorqueNos />} />
         <Route path="/educacao-e-corporativo" element={<EducacaoECorporativo />} />
         <Route path="/equipe" element={<Equipe />} />
+         <Route path="/login" element={<Login />} />
         {/* Assinaturas */}
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/assinaturas-corporativas" element={<AssinaturasCorporativas />} />
@@ -106,7 +108,6 @@ const App = () => (
         <Route path="/pagamento" element={<CheckoutForm />} />
         <Route path="/school-registration" element={<SchoolRegistration />} />
         {/* Entrar */}
-        <Route path="/login" element={<Login />} />
         <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<PrivateRouteComponent><AdminDashboard /></PrivateRouteComponent>} />
         {/* Contato e Ajuda */}

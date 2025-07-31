@@ -1,15 +1,13 @@
 import React from 'react';
-import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, LogOut, LayoutDashboard, LogIn, X } from 'lucide-react'; // Removi MenuIcon
 import { useAuth } from '@/hooks/useAuth';
-import { Wallet, BarChart, BookOpen, UserCircle, LogIn, MenuIcon, X } from 'lucide-react';
 
 const Navigation: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const location = useLocation();
-  const { user, loading, signOut } = useAuth(); 
+  const { user, loading, signOut } = useAuth(); // 'loading' pode ser útil para desabilitar botões enquanto autentica
   const navigate = useNavigate();
 
   const navItems = [
@@ -19,12 +17,13 @@ const Navigation: React.FC = () => {
     { name: 'PORQUE NÓS?', path: '/porque-nos' },
     { name: 'EDUCAÇÃO & EMPRESAS', path: '/educacao-e-corporativo' },
     { name: 'EQUIPE', path: '/equipe' },
-    { name: 'Login', path: '/login' },
   ];
 
   const handleLogout = async () => {
-    navigate('/login');
-    setIsMenuOpen(false);
+    // Chame a função de signOut do seu hook de autenticação
+    await signOut(); 
+    navigate('/login'); // Redireciona para a página de login após o logout
+    setIsMenuOpen(false); // Garante que o menu mobile feche
   };
 
   return (
@@ -50,7 +49,10 @@ const Navigation: React.FC = () => {
               </Link>
             ))}
 
-            {user ? (
+            {/* Renderização Condicional para Desktop (Login/Logout) */}
+            {loading ? ( // Opcional: mostrar algo enquanto carrega o status do usuário
+              <div className="text-white">Carregando...</div>
+            ) : user ? (
               <>
                 <Link to="/cursos">
                   <Button variant="ghost" className="text-white hover:bg-gray-700/50">
@@ -66,7 +68,14 @@ const Navigation: React.FC = () => {
                 </Button>
               </>
             ) : (
-                <Link to="/consultores" className="text-white hover:text-blue-200"></Link>
+              <Link to="/login"> {/* Link de Login para Desktop */}
+                <Button
+                  variant="ghost"
+                  className="text-white hover:bg-gray-700/50"
+                >
+                  <LogIn className="mr-2 h-4 w-4" /> ENTRAR
+                </Button>
+              </Link>
             )}
           </div>
 
@@ -75,7 +84,7 @@ const Navigation: React.FC = () => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white hover:text-blue-200"
-              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"} // Acessibilidade
+              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -96,7 +105,10 @@ const Navigation: React.FC = () => {
                   {item.name}
                 </Link>
               ))}
-              {user ? ( // Renderização condicional para mobile: Se usuário logado
+              {/* Renderização Condicional para Mobile (Login/Logout) */}
+              {loading ? (
+                <div className="block px-3 py-2 text-white">Carregando...</div>
+              ) : user ? (
                 <>
                   <Link to="/cursos" onClick={() => setIsMenuOpen(false)}>
                     <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
@@ -111,12 +123,11 @@ const Navigation: React.FC = () => {
                   </Button>
                 </>
               ) : (
-                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
                    <Button className="w-full mt-2 bg-white text-[#1A247E] hover:bg-blue-50">
-                     LOGIN
+                      <LogIn className="mr-2 h-4 w-4" /> LOGIN
                    </Button>
                 </Link>
-
               )}
             </div>
           </div>
