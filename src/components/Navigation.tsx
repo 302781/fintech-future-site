@@ -15,7 +15,7 @@ const Navigation: React.FC = () => {
     { name: 'SOBRE-NÓS', path: '/sobre' },
     { name: 'SERVIÇOS', path: '/servicos' },
     { name: 'PORQUE NÓS?', path: '/porque-nos' },
-    { name: 'EDUCAÇÃO & EMPRESAS', path: '/educacao-e-corporativo' },
+    //{ name: 'EDUCAÇÃO & EMPRESAS', path: '/educacao-e-corporativo' },
     { name: 'EQUIPE', path: '/equipe' },
   ];
 

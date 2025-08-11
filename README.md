@@ -72,3 +72,17 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+ observaçao acrcencerta no src/app.tsx :"<Route path="/homepage" element={<Homepage />} />
+        <Route path="/assinaturas-corporativas" element={<AssinaturasCorporativas />} />
+        <Route path="/consultores-financeiros" element={<ConsultoresFinanceiros />} />
+        <Route path="/planos-corporativos" element={<PlanosCorporativosForm />} />
+        <Route path="/paymentform" element={<CheckoutForm />} />
+        <Route path="/planos" element={<PlanosPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/recibo" element={<ReciboPage />} />
+        <Route path="/escola-premium" element={<EscolaPremium />} />
+        <Route path="/escola-basica" element={<EscolaBasica />} />
+        <Route path="/rede-ensino" element={<RedeEnsino />} />
+        <Route path="/pagamento" element={<CheckoutForm />} />
+        <Route path="/school-registration" element={<SchoolRegistration />} />"
+        

@@ -18,7 +18,8 @@ const HomePage: React.FC = () => {
         <Services />
 
         {/* Seção de Chamada para Ação (CTA) - Podemos adicionar um botão de login aqui para teste */}
-        <section className="py-20 bg-white">
+
+        {/*<section className="py-20 bg-white">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Pronto para Transformar suas Finanças?
@@ -37,7 +38,6 @@ const HomePage: React.FC = () => {
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
                 </Link>
               </Button>
-              {/* ADICIONE ESTE BOTÃO/LINK PARA LOGIN */}
               <Button
                 asChild
                 size="lg"
@@ -51,6 +51,7 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </section>
+        */}
       </main>
 
       <Footer />
